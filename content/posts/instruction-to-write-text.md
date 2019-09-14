@@ -2,7 +2,7 @@
 date: 2019-08-30
 title: 'Instruction to Write Text'
 template: post
-thumbnail: '../thumbnails/writing.png'
+thumbnail: './thumbnails/writing.png'
 slug: instruction-to-write-text
 categories: 
 tags: instruction texter writer 
@@ -22,7 +22,7 @@ Der Text wurde speziel als Instruktion vorbereitet, den auf jedem Editor möglic
 2  date: 2019-08-30
 3  title: 'Instruction to Write Text'
 4  template: post
-5  thumbnail: '../thumbnails/writing.png'
+5  thumbnail: './thumbnails/writing.png'
 6  slug: instruction-to-write-text
 7  categories: 
 8  tags: instruction texter writer 
@@ -128,7 +128,7 @@ About \*this >Quote\*
 
 ### Images
 ```bash
-    ![Github_image](../images/github.png)
+    ![Github_image](./images/github.png)
 ```
 in out:
-![Github_image](../images/github.png)
+![Github_image](./images/github.png)
