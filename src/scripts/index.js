@@ -1,6 +1,8 @@
 "use strict";
 import { View } from "./parser/View.js";
 import Language from "./parser/Language.js";
+
+//import markable text to parse 
 import text from "../../content/posts/instruction-to-write-text.md";
 
 // Import PrismJS package
