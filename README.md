@@ -8,4 +8,8 @@ example to write : <https://meugenom.github.io/markable-to-html/>
 - scss
 - prism.js 
 
-open src/scripts/index.js for using 
+## Features
+- text in markdown
+- javascript ES6
+- sass styles
+- possibility to use other languages
