@@ -81,9 +81,9 @@ in out:
 
 ### Quoting text
 
-```html
-    > Promise me you’ll always remember: You’re braver than you believe, and stronger than you seem, and smarter than you think.
-    > <cite> - A.A.Milne</cite>    
+```bash   
+    &gt Promise me you’ll always remember: You’re braver than you believe, and stronger than you seem, and smarter than you think.
+    &gt &ltcite&gt - A.A.Milne&lt/cite&gt    
 ```
 in out:
 > Promise me you’ll always remember: You’re braver than you believe, and stronger than you seem, and smarter than you think.
