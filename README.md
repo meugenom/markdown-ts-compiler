@@ -1,6 +1,6 @@
 # Parser for markup text to html
 
-example to write : <https://meugenom.github.io/markable-to-html/>
+example to write : <https://eugenemdev.github.io/markable-to-html/>
 
 ## What's used:
 - javascript ES6
