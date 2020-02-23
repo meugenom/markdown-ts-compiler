@@ -1,13 +1,14 @@
+/* eslint-disable no-useless-escape */
 const CONFIG = {
   rules: {
-    "*": "h1",
-    "**": "h2",
-    "***": "h3",
-    "****": "h4"
+    '*': 'h1',
+    '**': 'h2',
+    '***': 'h3',
+    '****': 'h4'
   },
   separator: {
-    newLine: "\n",
-    newSpace: " "
+    newLine: '\n',
+    newSpace: ' '
   },
 
   ImagesPattern: /^!\[(.*?)\]/,
@@ -36,12 +37,12 @@ const CONFIG = {
   tagsPattern: /tags:(.*)/,
   categoriesPattern: /categories:(.*)/,
 
-  english: "@en",
-  german: "@de",
-  russian: "@ru",
-  multi: "@all",
+  english: '@en',
+  german: '@de',
+  russian: '@ru',
+  multi: '@all',
 
-  version: "0.0.1rc"
-};
+  version: '0.0.1rc'
+}
 
-export default CONFIG;
+export default CONFIG

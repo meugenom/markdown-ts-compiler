@@ -1,43 +1,44 @@
 
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const isDevelopment = process.env.NODE_ENV === 'development';
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const isDevelopment = process.env.NODE_ENV === 'development'
 
-//copy files from /src to /dist
-const CopyWebpackPlugin= require('copy-webpack-plugin');
+// copy files from /src to /dist
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
-  entry:  [ 'babel-polyfill',
-            './src/scripts/index.js',
-            './src/scss/style.scss'
-          ],
-          output: {
-            path: path.resolve(__dirname, 'dist'),
-            filename: 'bundle.js'
-          },
+  entry: ['babel-polyfill',
+    './src/scripts/index.js',
+    './src/scss/style.scss'
+  ],
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
   module: {
     rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       },
       {
         test: /\.html$/,
-        use: [ {
+        use: [{
           loader: 'html-loader',
           options: {
+            interpolate: true,
             minimize: true
           }
-        }],
+        }]
       },
       {
         test: /\.md$/i,
-        use: 'raw-loader',
+        use: 'raw-loader'
       },
       {
         test: /\.module\.s(a|c)ss$/,
@@ -82,39 +83,41 @@ module.exports = {
             loader: 'image-webpack-loader',
             options: {
               bypassOnDebug: true, // webpack@1.x
-              disable: true, // webpack@2.x and newer
-            },
-          },
-        ],
-      }      
+              disable: true // webpack@2.x and newer
+            }
+          }
+        ]
+      }
     ]
   },
   resolve: {
     extensions: ['.js', '.jsx', '.scss']
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Webpack 4 Starter',
-      template: './src/index.html',
-      inject: true,
-      minify: {
+    new HtmlWebpackPlugin(
+      {
+        title: 'webpack html to dist',
+        template: './src/index.html',
+        inject: true,
+        minify: {
           removeComments: true,
           collapseWhitespace: false
+        }
       }
-  }),
+    ),
     new MiniCssExtractPlugin({
       filename: isDevelopment ? '[name].css' : '[name].css',
       chunkFilename: isDevelopment ? '[id].css' : '[id].css'
     }),
     new CopyWebpackPlugin([
-    {
-      from: './content/posts/images',
-      to: './images'
-    },
-    {
-      from: './content/posts/thumbnails',
-      to: './thumbnails'
-    }
+      {
+        from: './content/posts/images',
+        to: './images'
+      },
+      {
+        from: './content/posts/thumbnails',
+        to: './thumbnails'
+      }
     ])
   ]
-};
+}
