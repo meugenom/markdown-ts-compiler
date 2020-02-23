@@ -117,14 +117,6 @@ module.exports = {
       {
         from: './content/posts/thumbnails',
         to: './thumbnails'
-      },
-      {
-        from: './dist/bundle.js',
-        to: './lib/src.js'
-      },
-      {
-        from: './src/index.html',
-        to: './lib/index.html'
       }
     ])
   ]

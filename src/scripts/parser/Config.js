@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 const CONFIG = {
   rules: {
     '*': 'h1',
@@ -7,7 +8,7 @@ const CONFIG = {
   },
   separator: {
     newLine: '\n',
-    newSpace: ''
+    newSpace: ' '
   },
 
   ImagesPattern: /^!\[(.*?)\]/,
