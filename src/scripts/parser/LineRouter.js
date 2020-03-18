@@ -40,7 +40,6 @@ export class LineRouter extends WordRouter {
               : arrayOfWords[0] === '#'
                 ? new HeadType(line.slice(1), 'h1').render()
                 : arrayOfWords[0].substring(0, 3) === '---'
-                  // ? this.setInfoAboutPost(line)
                   ? this.InfoAboutPost.render(line)
                   : arrayOfWords[0] === '-'
                     ? new List(line.slice(1)).render()

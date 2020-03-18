@@ -2,17 +2,37 @@
 import { View } from './parser/View.js'
 import Language from './parser/Language.js'
 
-// import markable text to parse
-import text from '../../content/posts/instruction-to-write-text.md'
+// import markable text to parse example
+import article from '../../content/posts/instruction-to-write-text.md'
 
 // Import PrismJS package
 import Prism from 'prismjs'
 
-const markableToHtml = new View(text)
-markableToHtml.render()
+/**
+ * @param text which we will put to html view
+ * @return html view for putted text
+ * @method init() uses default and call from ES5: new App().init()
+ * @method render(article) puts your's article to the script new App().render(your's article in the text format)
+ */
 
-// Highlight all matching syntax
-Prism.highlightAll()
+window.App = class App {
+  constructor () {
+    this.article = article
+    this.Prism = Prism
+    this.Language = Language
+  }
 
-// set languages
-Language.setLanguage()
+  init () {
+    this.View = new View(this.article)
+    this.View.render()
+    this.Prism.highlightAll()
+    this.Language.setLanguage()
+  }
+
+  render (article) {
+    this.View = new View(article)
+    this.View.render()
+    this.Prism.highlightAll()
+    this.Language.setLanguage()
+  }
+}
