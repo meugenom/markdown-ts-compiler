@@ -19,11 +19,11 @@ This script was written as a part of my website and blog, for that I write my re
 
 ## How to use with ES5:
 
-Open please the directory `lib/`. 
-File `markdown.js` is our library's file, which you can use in your projects.   
-Create object App with the method init() if you can see the demo. 
+1. Open please the directory `lib/`. 
+2. File `markdown.js` is our library's file, which you can use in your projects.   
+3. Create object App with the method init() if you can see the demo.
 `new App().init()`
-Create object App with the method render(article: string) to use own markable text file. 
+4.Create object App with the method render(article: string) to use own markable text file. 
 Value article is some text.md file. 
 `new App().render(article)`
 
