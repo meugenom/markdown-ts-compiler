@@ -1,13 +1,18 @@
 'use strict'
 import Config from './Config.js'
-import { Line } from './Line.js'
+import { LineRouter } from './LineRouter'
 import Language from './Language.js'
+import { LocalStorage } from './blocks/LocalStorage'
 
-export class View extends Line {
+export class View extends LineRouter {
   constructor (post) {
     super()
     this.Config = Config
     this.post = post
+    this.LocalStorage = new LocalStorage()
+    // triggers
+    this.LocalStorage.set('isCodeBlock', false)
+    this.LocalStorage.set('isInfoAboutPost', false)
   }
 
   render () {

@@ -8,11 +8,11 @@ categories:
 tags: instruction texter writer 
 ---
 
-Этот текст как памятка для написания статей в любом редакторе для [markable parser](https://github/markable-to-html), который помогает преобразовать markable text в удобный вид html. @ru
+Этот текст как памятка для написания статей в любом редакторе для [markable parser](https://github.com/eugenemdev/markable-to-html), который помогает преобразовать markable text в удобный вид html. @ru
 
-This text was prepared as instruction to write texts in any editor for [markable parser](https://github/markable-to-html), that helps to convert markable text to more relevant html document. @en
+This text was prepared as instruction to write texts in any editor for [markable parser](https://github.com/eugenemdev/markable-to-html), that helps to convert markable text to more relevant html document. @en
 
-Der Text wurde speziel als Instruktion vorbereitet, den auf jedem Editor möglich schreiben zu können. Und mit Hilfe des Parsers [markable parser](https://github/markable-to-html) kann man den Text zu nutzfreundliches HTML umwandeln. @de
+Der Text wurde speziel als Instruktion vorbereitet, den auf jedem Editor möglich schreiben zu können. Und mit Hilfe des Parsers [markable parser](https://github.com/eugenemdev/markable-to-html) kann man den Text zu nutzfreundliches HTML umwandeln. @de
 
 ## Formatting Syntax
 

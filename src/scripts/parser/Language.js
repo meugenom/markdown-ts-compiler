@@ -23,6 +23,8 @@ const Language = {
 
     const string = node.outerHTML
 
+    // console.log(node.outerHTML)
+
     const en = string.lastIndexOf(LanguageConf.english)
     const de = string.lastIndexOf(LanguageConf.german)
     const ru = string.lastIndexOf(LanguageConf.russian)

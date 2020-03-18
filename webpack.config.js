@@ -8,14 +8,22 @@ const isDevelopment = process.env.NODE_ENV === 'development'
 // copy files from /src to /dist
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
+// declare values
+const libraryName = 'markdown'
+const outputFile = libraryName + '.js'
+
 module.exports = {
   entry: ['babel-polyfill',
     './src/scripts/index.js',
     './src/scss/style.scss'
   ],
+  devtool: 'source-map',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    path: path.resolve(__dirname, 'lib'),
+    filename: outputFile,
+    library: libraryName,
+    libraryTarget: 'umd',
+    umdNamedDefine: true
   },
   module: {
     rules: [
@@ -31,8 +39,8 @@ module.exports = {
         use: [{
           loader: 'html-loader',
           options: {
-            interpolate: true,
-            minimize: true
+            interpolate: true //,
+            // minimize: true
           }
         }]
       },
@@ -98,11 +106,11 @@ module.exports = {
       {
         title: 'webpack html to dist',
         template: './src/index.html',
-        inject: true,
-        minify: {
-          removeComments: true,
-          collapseWhitespace: false
-        }
+        inject: true // ,
+        // minify: {
+        //   removeComments: true,
+        //  collapseWhitespace: false
+        // }
       }
     ),
     new MiniCssExtractPlugin({
