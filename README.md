@@ -4,6 +4,7 @@
 
 You can see the example : <https://eugenemdev.github.io/markable-to-html/>
 use bilded `markdown.js` in directory `/lib`.
+use content from `content/posts/instruction-to-write-text.md`
 
 ## Motivation:
 
