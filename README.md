@@ -23,7 +23,7 @@ This script was written as a part of my website and blog, for that I write my re
 2. File `markdown.js` is our library's file, which you can use in your projects.   
 3. Create object App with the method init() if you can see the demo.
 `new App().init()`
-4.Create object App with the method render(article: string) to use own markable text file. 
+4. Create object App with the method render(article: string) to use own markable text file. 
 Value article is some text.md file. 
 `new App().render(article)`
 
