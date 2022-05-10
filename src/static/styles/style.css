@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.flexContainer
+{
+  display: flex;
+  width: 95%;
+  height: 400px;
+}
+.half
+{
+  flex-grow: 1;
+  width: 47%;
+  padding-left: 20px;
+}

@@ -1,131 +1,74 @@
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
-const path = require('path')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const isDevelopment = process.env.NODE_ENV === 'development'
-
-// copy files from /src to /dist
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-
-// declare values
-const libraryName = 'markdown'
-const outputFile = libraryName + '.js'
 
 module.exports = {
-  entry: ['babel-polyfill',
-    './src/scripts/index.js',
-    './src/scss/style.scss'
-  ],
-  devtool: 'source-map',
+  entry: './src/index.ts',
   output: {
-    path: path.resolve(__dirname, 'lib'),
-    filename: outputFile,
-    library: libraryName,
-    libraryTarget: 'umd',
-    umdNamedDefine: true
+    filename: 'index.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
+  mode: 'development',
+  devtool: 'inline-source-map',
+  devServer: {
+    contentBase: './dist',
   },
   module: {
     rules: [
+		{
+			test: /\.txt$/i,
+			use: 'raw-loader',
+		},
       {
-        test: /\.js$/,
+        test: /\.html$/i,
+        exclude: /node_modules/,
+        loader: 'html-loader',
+      },
+      {
+        test: /\.[jt]sx?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader'
-        }
-      },
-      {
-        test: /\.html$/,
-        use: [{
-          loader: 'html-loader',
+          loader: 'babel-loader',
           options: {
-            interpolate: true //,
-            // minimize: true
-          }
-        }]
-      },
-      {
-        test: /\.md$/i,
-        use: 'raw-loader'
-      },
-      {
-        test: /\.module\.s(a|c)ss$/,
-        loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              localIdentName: '[name]__[local]___[hash:base64:5]',
-              camelCase: true,
-              sourceMap: isDevelopment
-            }
+            presets: ['@babel/preset-env', '@babel/preset-typescript'],
           },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDevelopment
-            }
-          }
-        ]
+        },
       },
       {
-        test: /\.s(a|c)ss$/,
-        exclude: /\.module.(s(a|c)ss)$/,
-        loader: [
-          isDevelopment ? 'style-loader' : MiniCssExtractPlugin.loader,
-          'css-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDevelopment
-            }
-          }
-        ]
-      },
-      {
-        test: /\.(gif|png|jpe?g|svg)$/i,
-        use: [
-          'file-loader',
-          {
-            loader: 'image-webpack-loader',
-            options: {
-              bypassOnDebug: true, // webpack@1.x
-              disable: true // webpack@2.x and newer
-            }
-          }
-        ]
-      }
-    ]
+		test:/\.css$/,
+		use:[
+		MiniCssExtractPlugin.loader,
+		"css-loader", "postcss-loader"]}
+    ],
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.scss']
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },
   plugins: [
-    new HtmlWebpackPlugin(
-      {
-        title: 'webpack html to dist',
-        template: './src/index.html',
-        inject: true // ,
-        // minify: {
-        //   removeComments: true,
-        //  collapseWhitespace: false
-        // }
-      }
-    ),
-    new MiniCssExtractPlugin({
-      filename: isDevelopment ? '[name].css' : '[name].css',
-      chunkFilename: isDevelopment ? '[id].css' : '[id].css'
+	  new HtmlWebpackPlugin({
+		template: "./src/static/index.html",
+    	filename: "./index.html"
+	  }),
+	  
+	  new MiniCssExtractPlugin({
+        filename:"style.css",
+		chunkFilename: "style.css"
     }),
-    new CopyWebpackPlugin([
-      {
-        from: './content/posts/images',
-        to: './images'
-      },
-      {
-        from: './content/posts/thumbnails',
-        to: './thumbnails'
-      }
-    ])
-  ]
-}
+	new CopyPlugin({
+		patterns: [
+		  { from: "content/images", to: "images" },
+		  { from: "content/thumbnails", to: "thumbnails" },
+		],
+	  }),
+
+],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, 'dist'),
+    },
+    compress: true,
+    port: 8080,
+  }
+};
