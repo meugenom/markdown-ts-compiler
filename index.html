@@ -1,41 +1,51 @@
-<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Parse markable text to html</title>        
-<link href="main.css" rel="stylesheet"><link href="main.css" rel="stylesheet"></head>
-<body>    
-  <div id="page" class="container">
-    <input type='file' accept='*.txt' onchange='openFile(event)'><br><hr>
-    <article>              
-    </article>            
-  </div>              
-<script type="text/javascript" src="markdown.js"></script></body>
-<script>
+  <head>
+    <title>Markdown-TS-Compiler</title>
+  <script defer src="index.js"></script><link href="style.css" rel="stylesheet"></head>
+  <body>
 
-  // by default script uses own default article from path: '../content/post/instruction-to-write-text.md'
-  /**
-   * use new App() to create new object
-   * @method init() by default
-   *    @return default article in html view 
-   * @method render(your's article: string) need to put some markable text 
-   *    @return html view for your's article
-   * */
-  
-let fileInput = document.querySelector('input[type="file"]');
-  let openFile = function(event) {
-    let input = event.target;
-    let reader = new FileReader();
-    reader.onload = function(){
-      let text  = reader.result
-      new App().render(text)
-    };
-    reader.readAsText(input.files[0])
-  };
+	<div class="flexContainer"">
+    	
+		<div class="half">
+			<div class="md:container mx-10 font-sans text-base antialiased leading-7 z-0">
+		  	<label for="exampleFormControlTextarea1" class="form-label inline-block mb-2 text-red-900">Markdown -> HTML: </label>
+			<button id="btn-convert">Convert</button>
+			<button id="btn-default">Default</button>
+			<hr/>
+		  	<textarea
+				class="
+						form-control
+						block
+						w-full
+						px-1
+						py-1.5
+						text-base
+						font-normal
+						text-gray-700
+						bg-white bg-clip-padding
+						border border-solid border-gray-300
+						rounded
+						transition
+						ease-in-out
+						m-2
+						focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+				id="textarea"
+				rows="3"
+				placeholder="Your message"
+				style="width:100%; height:100vw">
+			Test
+			</textarea>
+		</div>
+	  </div>
 
-  // by default
-  new App().init();
-  
-</script>
+	  <div class="half">
+		<div class="md:container mx-10 font-sans text-base antialiased leading-7 z-0" id="app">
+
+		</div>
+	</div>
+
+	</div>
+
+
+  </body>
 </html>
