@@ -10,6 +10,8 @@ export class Grammar{
 		
 		SPACE : / /,
 		LINE : /\n/,
+
+		LIST : /(\-|\[\]|\[\x\])\s((.*))/,
 		
 		CODE : /```(bash|javascript)(.*?\s)```/s,
 		CODE_BLOCK : /```(bash|javascript)((\s.*)```)\s*```\s/s,

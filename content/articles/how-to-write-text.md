@@ -79,14 +79,16 @@ in out:
 ### Lists
 
 ```bash
-    * select point 1
-    - select point 2
+	- select point 1
+	[] select point 2
+	[x] select point 3
 ```
 
 in out:
 
 - select point 1
-- select point 2
+[] select point 2
+[x] select point 3
 
 ### Quoting text
 
