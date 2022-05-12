@@ -3,6 +3,7 @@ export enum TokensType {
 	CAPTION = "Caption",
 	CODE = "Code",
 	CODE_BLOCK = "CodeBlock",
+	COLOR = "Color",
 	DOCUMENT = "Document",
 	IMAGE = "Image",
 	HEADING_FIRST = "HeadingFirst",

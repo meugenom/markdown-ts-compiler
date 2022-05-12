@@ -231,6 +231,19 @@ export class Parser {
 				this.ast.children.push(el)
 			}
 
+			// Color
+			if (token.type == "Color" && isParagraph == true) {
+				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
+				this.ast.children[(this.ast.children).length - 1].children.push(el)
+				this.ast.children[(this.ast.children).length - 1].row =
+					this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.name 
+			}
+
+			if (token.type == "Color" && isParagraph == false) {
+				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
+				this.ast.children.push(el)
+			}
+
 			// InlineCode
 			if (token.type == "InlineCode" && isParagraph == true) {
 				let el: element = { type: "InlineCode", value: token.value, row: token.value }

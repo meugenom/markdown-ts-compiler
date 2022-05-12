@@ -60,9 +60,36 @@ export class ParagraphHTML {
 				`
 			}
 
+			if (child.type == "Color") {
+
+				let colorText: string;
+
+				if(child.name == "blue"){
+					colorText = '<a class="underline decoration-blue-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "gray"){
+					colorText = '<a class="underline decoration-gray-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "red"){
+					colorText = '<a class="underline decoration-red-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "green"){
+					colorText = '<a class="underline decoration-green-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "yellow"){
+					colorText = '<a class="underline decoration-yellow-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "purple"){
+					colorText = '<a class="underline decoration-purple-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "pink"){
+					colorText = '<a class="underline decoration-pink-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "indigo"){
+					colorText = '<a class="underline decoration-indigo-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}
+				
+				text = text + " " + colorText;
+			}
+
 			if (child.type == "UnderDash") {
 				text = text + " " + `
-				<span class="underline decoration-sky-500 text-slate-500">${child.value}</span>
+				<span class="underline decoration-sky-500 text-slate-500">
+					${child.value}
+				</span>
 				`
 			}
 

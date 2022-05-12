@@ -79,16 +79,16 @@ in out:
 ### Lists
 
 ```bash
-	- select point 1
-	[] select point 2
-	[x] select point 3
+	- list disc
+	[] list unchecked disable
+	[x] list checked disable
 ```
 
 in out:
 
-- select point 1
-[] select point 2
-[x] select point 3
+ - list disc
+[] list unchecked disable
+[x] list checked disable
 
 ### Quoting text
 
@@ -112,7 +112,7 @@ You can create an inline link by wrapping link text in brackets, and then wrappi
 in out:
 This site was built using [Javascript ES6](https://en.wikipedia.org/wiki/ECMAScript#ES2015) and it's an example.
 
-### Underdash word
+### Simple Underline decoration
 
 ```bash
     _underdash_
@@ -121,6 +121,52 @@ This site was built using [Javascript ES6](https://en.wikipedia.org/wiki/ECMAScr
 in out:
 
 _underdash_
+
+### Color Underline decoration
+
+```bash
+	Blue.blue color
+	Gray.gray color
+	Red.red color
+	Green.green color
+	Yellow.yellow color
+	Indigo.indigo color 
+	Purple.purple color
+	Pink.pink color
+```
+in out:
+
+Blue.blue color
+Gray.gray color
+Red.red color
+Green.green color
+Yellow.yellow color
+Indigo.indigo color 
+Purple.purple color
+Pink.pink color
+
+### Color Badges
+
+```bash
+	Blue..blue color
+	Gray..gray color
+	Red..red color
+	Green..green color
+	Yellow..yellow color
+	Indigo..indigo color 
+	Purple..purple color
+	Pink..pink color
+```
+in out:
+
+Blue..blue color
+Gray..gray color
+Red..red color
+Green..green color
+Yellow..yellow color
+Indigo..indigo color 
+Purple..purple color
+Pink..pink color
 
 ### Ignoring Markdown formatting
 
