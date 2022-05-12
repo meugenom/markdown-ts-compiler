@@ -15,9 +15,10 @@ type element = {
 	alt?: string,
 	children?: any[],
 	row: string,
-	language?: string
+	language?: string,
 	quote?: string,
-	author?: string
+	author?: string,
+	name? : string
 }
 
 export class Parser {
@@ -141,6 +142,12 @@ export class Parser {
 					author: token.author,
 					row: ">" + token.quote + "\n> <cite> - " + token.author + "</cite>"
 				}
+				this.ast.children.push(el)
+			}
+
+			//List
+			if (token.type == "List") {
+				let el: element = { type: "List", value: token.value, name: token.name, row: token.name + " " + token.value + "\n" }
 				this.ast.children.push(el)
 			}
 

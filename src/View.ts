@@ -4,6 +4,7 @@ import { HeaderHTML } from "./htmlblocks/HeaderHTML";
 import {ParagraphHTML} from "./htmlblocks/ParagraphHTML"
 import { CodeBlockHTML } from "./htmlblocks/CodeBlockHTML";
 import {QuoteHTML} from "./htmlblocks/QuoteHTML";
+import {ListHTML} from "./htmlblocks/ListHTML";
 
 
 type AST = {
@@ -21,12 +22,13 @@ export class View {
 		this.init();
 	}
 
-	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 	init() {
 
 		//console.log(ast);
 
-		this.ast.children.forEach((token: IToken) => {
+		const children  = this.ast.children;
+
+		children.forEach((token: IToken) => {
 
 			
 			if (token.type == "Caption") {
@@ -48,6 +50,11 @@ export class View {
 			if (token.type == "Quote") {
 				const quote = new QuoteHTML(token);
 				quote.render();
+			}
+
+			if (token.type == "List") {
+				const list = new ListHTML(token);
+				list.render();
 			}
 
 			if (token.type == "Paragraph") {

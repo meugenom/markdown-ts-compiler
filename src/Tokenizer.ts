@@ -144,6 +144,7 @@ export class Tokenizer {
 
 			}
 
+
 			this.word_number++;
 
 		}
@@ -178,7 +179,6 @@ export class Tokenizer {
 						 * - Heading
 						 * - Underdash
 						 */
-
 
 
 						if (stroke.match(Grammar.BLOCKS.IMAGE) != null) {
@@ -331,7 +331,7 @@ export class Tokenizer {
 
 						}
 
-
+						// Unmarkable text
 						if (stroke.match(Grammar.BLOCKS.UNMARKABLE) != null) {
 
 							itokens.push({
@@ -361,6 +361,33 @@ export class Tokenizer {
 							return;
 
 						}
+
+						// LIST						
+						if (stroke.match(Grammar.BLOCKS.LIST) != null) {
+
+							itokens.push({
+								type: TokensType.PARAGRAPH_START,
+								value: ""
+							});
+
+							console.log(stroke.match(Grammar.BLOCKS.LIST))
+
+							itokens.push({
+								type: TokensType.LIST,
+								name: stroke.match(Grammar.BLOCKS.LIST)[1],
+								value: stroke.match(Grammar.BLOCKS.LIST)[2]
+							})
+
+							itokens.push({
+								type: TokensType.PARAGRAPH_END,
+								value: ""
+							});
+
+							return;
+
+						}
+
+
 
 						if (stroke.match(Grammar.BLOCKS.HEADING) != null) {
 
