@@ -1,5 +1,5 @@
 export enum TokensType {
-
+	BADGE = "Badge",
 	CAPTION = "Caption",
 	CODE = "Code",
 	CODE_BLOCK = "CodeBlock",

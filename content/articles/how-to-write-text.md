@@ -148,25 +148,25 @@ Pink.pink color
 ### Color Badges
 
 ```bash
-	Blue..blue color
-	Gray..gray color
-	Red..red color
-	Green..green color
-	Yellow..yellow color
-	Indigo..indigo color 
-	Purple..purple color
-	Pink..pink color
+	Blue@blue color
+	Gray@gray color
+	Red@red color
+	Green@green color
+	Yellow@yellow color
+	Indigo@indigo color 
+	Purple@purple color
+	Pink@pink color
 ```
 in out:
 
-Blue..blue color
-Gray..gray color
-Red..red color
-Green..green color
-Yellow..yellow color
-Indigo..indigo color 
-Purple..purple color
-Pink..pink color
+Blue@blue color
+Gray@gray color
+Red@red color
+Green@green color
+Yellow@yellow color
+Indigo@indigo color 
+Purple@purple color
+Pink@pink color
 
 ### Ignoring Markdown formatting
 

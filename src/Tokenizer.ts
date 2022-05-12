@@ -337,8 +337,7 @@ export class Tokenizer {
 						// Color text
 						if (stroke.match(Grammar.BLOCKS.COLOR) != null) {
 
-							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");
-							console.log(rest);
+							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");							
 
 							const arr = rest.split("&color&")
 							
@@ -372,6 +371,45 @@ export class Tokenizer {
 							return;
 
 						}
+
+						// Color badges
+						if (stroke.match(Grammar.BLOCKS.BADGE) != null) {
+
+							const rest: string = stroke.replace(Grammar.BLOCKS.BADGE, "&badge&");
+
+							const arr = rest.split("&badge&")
+							
+							itokens.push({
+								type: TokensType.PARAGRAPH_START,
+								value: ""
+							});
+
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[0]
+							})
+
+							
+							itokens.push({
+								type: TokensType.BADGE,
+								value: stroke.match(Grammar.BLOCKS.BADGE)[1],
+								name:  stroke.match(Grammar.BLOCKS.BADGE)[3]
+							})
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[1]
+							})
+
+							itokens.push({
+								type: TokensType.PARAGRAPH_END,
+								value: ""
+							});
+							
+
+							return;
+
+						}
+
 
 
 						// Unmarkable text

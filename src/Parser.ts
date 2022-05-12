@@ -231,7 +231,7 @@ export class Parser {
 				this.ast.children.push(el)
 			}
 
-			// Color
+			// Color text
 			if (token.type == "Color" && isParagraph == true) {
 				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
 				this.ast.children[(this.ast.children).length - 1].children.push(el)
@@ -241,6 +241,19 @@ export class Parser {
 
 			if (token.type == "Color" && isParagraph == false) {
 				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
+				this.ast.children.push(el)
+			}
+
+			// Color badge
+			if (token.type == "Badge" && isParagraph == true) {
+				let el: element = { type: "Badge", value: token.value, name: token.name, row: token.value +"." + token.name}
+				this.ast.children[(this.ast.children).length - 1].children.push(el)
+				this.ast.children[(this.ast.children).length - 1].row =
+					this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.name 
+			}
+
+			if (token.type == "Badge" && isParagraph == false) {
+				let el: element = { type: "Badge", value: token.value, name: token.name, row: token.value +"." + token.name}
 				this.ast.children.push(el)
 			}
 
