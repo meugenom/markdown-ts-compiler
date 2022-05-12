@@ -54,7 +54,9 @@ export class ParagraphHTML {
 
 			if (child.type == "InlineCode") {
 				text = text + " " + `
-				<code>${child.value}</code>
+				<code class="inline-block py-1 px-2 bg-gray-300 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400">
+					${child.value}
+				</code>
 				`
 			}
 
