@@ -145,4 +145,4 @@ About \*this >Quote\*
 
 in out:
 
-![Github image](../images/github.png)
+![Github image](./images/github.png)
