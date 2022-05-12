@@ -302,6 +302,7 @@ export class Tokenizer {
 
 						}
 
+						// Strong text
 						if (stroke.match(Grammar.BLOCKS.STRONG) != null) {
 
 							itokens.push({
@@ -330,6 +331,86 @@ export class Tokenizer {
 							return;
 
 						}
+
+						
+
+						// Color text
+						if (stroke.match(Grammar.BLOCKS.COLOR) != null) {
+
+							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");							
+
+							const arr = rest.split("&color&")
+							
+							itokens.push({
+								type: TokensType.PARAGRAPH_START,
+								value: ""
+							});
+
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[0]
+							})
+
+							
+							itokens.push({
+								type: TokensType.COLOR,
+								value: stroke.match(Grammar.BLOCKS.COLOR)[1],
+								name:  stroke.match(Grammar.BLOCKS.COLOR)[3]
+							})
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[1]
+							})
+
+							itokens.push({
+								type: TokensType.PARAGRAPH_END,
+								value: ""
+							});
+							
+
+							return;
+
+						}
+
+						// Color badges
+						if (stroke.match(Grammar.BLOCKS.BADGE) != null) {
+
+							const rest: string = stroke.replace(Grammar.BLOCKS.BADGE, "&badge&");
+
+							const arr = rest.split("&badge&")
+							
+							itokens.push({
+								type: TokensType.PARAGRAPH_START,
+								value: ""
+							});
+
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[0]
+							})
+
+							
+							itokens.push({
+								type: TokensType.BADGE,
+								value: stroke.match(Grammar.BLOCKS.BADGE)[1],
+								name:  stroke.match(Grammar.BLOCKS.BADGE)[3]
+							})
+							itokens.push({
+								type: TokensType.TEXT,
+								value: arr[1]
+							})
+
+							itokens.push({
+								type: TokensType.PARAGRAPH_END,
+								value: ""
+							});
+							
+
+							return;
+
+						}
+
+
 
 						// Unmarkable text
 						if (stroke.match(Grammar.BLOCKS.UNMARKABLE) != null) {
@@ -369,8 +450,6 @@ export class Tokenizer {
 								type: TokensType.PARAGRAPH_START,
 								value: ""
 							});
-
-							console.log(stroke.match(Grammar.BLOCKS.LIST))
 
 							itokens.push({
 								type: TokensType.LIST,

@@ -54,13 +54,68 @@ export class ParagraphHTML {
 
 			if (child.type == "InlineCode") {
 				text = text + " " + `
-				<code>${child.value}</code>
+				<code class="inline-block py-1 px-2 bg-gray-300 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400">
+					${child.value}
+				</code>
 				`
+			}
+
+			if (child.type == "Color") {
+
+				let colorText: string;
+
+				if(child.name == "blue"){
+					colorText = '<a class="underline decoration-blue-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "gray"){
+					colorText = '<a class="underline decoration-gray-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "red"){
+					colorText = '<a class="underline decoration-red-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "green"){
+					colorText = '<a class="underline decoration-green-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "yellow"){
+					colorText = '<a class="underline decoration-yellow-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "purple"){
+					colorText = '<a class="underline decoration-purple-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "pink"){
+					colorText = '<a class="underline decoration-pink-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}else if(child.name == "indigo"){
+					colorText = '<a class="underline decoration-indigo-500 md:decoration-solid decoration-4">' + child.value + '</a>'
+				}
+				
+				text = text + " " + colorText;
+			}
+
+
+			if (child.type == "Badge") {
+
+				let colorBadge: string;
+
+				if(child.name == "blue"){
+					colorBadge = '<span class="bg-blue-100 text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">' + child.value + '</span>'
+				}else if(child.name == "gray"){
+					colorBadge = '<span class="bg-gray-100 text-gray-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">' + child.value+ '</span>'
+				}else if(child.name == "red"){
+					colorBadge = '<span class="bg-red-100 text-red-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-red-200 dark:text-red-900">' + child.value + '</span>'
+				}else if(child.name == "green"){
+					colorBadge = '<span class="bg-green-100 text-green-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">' + child.value + '</span>'
+				}else if(child.name == "yellow"){
+					colorBadge = '<span class="bg-yellow-100 text-yellow-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-yellow-200 dark:text-yellow-900">' + child.value + '</span>'
+				}else if(child.name == "purple"){
+					colorBadge = '<span class="bg-purple-100 text-purple-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-purple-200 dark:text-purple-900">' + child.value + '</span>'
+				}else if(child.name == "pink"){
+					colorBadge = '<span class="bg-pink-100 text-pink-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-pink-200 dark:text-pink-900">'+ child.value + '</span>'
+				}else if(child.name == "indigo"){
+					colorBadge = '<span class="bg-indigo-100 text-indigo-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-200 dark:text-indigo-900">' + child.value + '</span>'
+				}
+				
+				text = text + " " + colorBadge;
 			}
 
 			if (child.type == "UnderDash") {
 				text = text + " " + `
-				<span class="underline decoration-sky-500 text-slate-500">${child.value}</span>
+				<span class="underline decoration-sky-500 text-slate-500">
+					${child.value}
+				</span>
 				`
 			}
 

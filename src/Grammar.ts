@@ -11,6 +11,9 @@ export class Grammar{
 		SPACE : / /,
 		LINE : /\n/,
 
+		COLOR: /((.?)[^\s]+)\.(blue|gray|red|green|yellow|indigo|purple|pink)/,
+		BADGE: /((.?)[^\s]+)\@(blue|gray|red|green|yellow|indigo|purple|pink)/,
+
 		LIST : /(\-|\[\]|\[\x\])\s((.*))/,
 		
 		CODE : /```(bash|javascript)(.*?\s)```/s,
