@@ -10,16 +10,16 @@ export class DomUtilites {
     return lastChild.lastChild
   }
 
-  getLastNodeName () {
+  getLastNodeName () : string {
     const lastChild = this.getRoot()
     return lastChild.lastChild.nodeName
   }
 
-  getRoot () {
-    return document.querySelector('app')
+  getRoot () : HTMLElement {
+    return document.querySelector('article')
   }
 
-  createElement (element : string) {
+  createElement (element : string) : HTMLElement {
     return document.createElement(element)
   }
 }

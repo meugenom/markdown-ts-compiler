@@ -1,19 +1,14 @@
 'use strict'
-import { IToken } from '../IToken';
+import * as Token from "../Token";
 import {DomUtilites} from './DomUtilites'
 
-/**
- * Returns an html block for head of chapter
- * @param line as block of the text
- * @return dom element for info about article
- */
 
 export class CaptionHTML {
 
-	private DomUtilites;
-	private token: IToken;
+	private DomUtilites : any;
+	private token: Token.captionToken;
 
-	constructor(token: IToken) {
+	constructor(token: Token.captionToken) {
 		this.token = token;
 		this.DomUtilites = new DomUtilites();
 	}
@@ -39,7 +34,7 @@ export class CaptionHTML {
 			}
 
 		const CaptionBlock =
-			`	<div>
+			`	
 				  <img src= ${this.token.children[0].thumbnail} class="float-left p-8"/>
                         <h3 class="text-3xl font-normal leading-normal mt-0 mb-2 text-gray-600">
 							${this.token.children[0].title.slice(2, this.token.children[0].title.length-1)}</h3>
@@ -53,7 +48,7 @@ export class CaptionHTML {
 							${categoriesBlock}
 						</div>
 						<br/>
-					</div>`;
+					`;
 
 		const captionNode = this.DomUtilites.createElement('p')
 		captionNode.innerHTML = CaptionBlock;

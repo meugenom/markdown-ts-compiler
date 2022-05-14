@@ -1,32 +1,23 @@
-import { IToken } from "./IToken";
-
+import * as Token from "./Token";
+import { TokenType } from "./Types";
 
 type AST = {
 	type: string,
 	children?: any[]
 }
 
-type element = {
-	type: string,
-	depth?: number,
-	value?: string,
-	body?: string,
-	url?: string,
-	alt?: string,
-	children?: any[],
-	row: string,
-	language?: string,
-	quote?: string,
-	author?: string,
-	name? : string
-}
-
 export class Parser {
 
-	public tokens: IToken[];
+	public tokens =  [] as (Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
+		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
+		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
+		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
+		Token.unknownTextToken | Token.codeInCodeToken)[];
+	
 	public ast: AST;
 
-	constructor(tokens: IToken[]) {
+	constructor(tokens : any) {
+		
 		this.tokens = tokens;
 		this.ast = {
 			type: "Document",
@@ -42,245 +33,316 @@ export class Parser {
 
 		while (token_number < this.tokens.length) {
 
-			let token = this.tokens[token_number];
+			const token : any = this.tokens[token_number];
+
+			// Caption
+			if (token.type === TokenType.CAPTION) {
+				const captionElement =  {} as Token.captionToken;
+				captionElement.type = TokenType.CAPTION; 
+				captionElement.row = token.row;
+				captionElement.children = [
+					{
+						type: "Caption",
+						date: token.date,
+						title: token.title,
+						template: token.template,
+						thumbnail: token.thumbnail,
+						slug: token.slug,
+						categories: token.categories,
+						tags: token.tags
+					}
+				];
+				
+				this.ast.children.push(captionElement);
+			}
+
+			// # dept=1
+			if (token.type === TokenType.HEADING_FIRST) {
+				const headElement =  {} as Token.headToken;
+				headElement.type = TokenType.HEADING;
+				headElement.dept = 1;
+				headElement.row = "#" + token.value;
+				headElement.children = [
+						{
+							type: TokenType.TEXT,
+							value: token.value,
+						}]
+				
+				this.ast.children.push(headElement);
+			}
+
+			// ## dept = 2
+			if (token.type === TokenType.HEADING_SECOND) {
+				const headElement =  {} as Token.headToken;
+				headElement.type = TokenType.HEADING;
+				headElement.dept = 2;
+				headElement.row = "##" + token.value;
+				headElement.children = [
+						{
+							type: TokenType.TEXT,
+							value: token.value,
+						}]
+				
+				this.ast.children.push(headElement);
+			}
+
+			// ### dept = 3
+			if (token.type === TokenType.HEADING_THIRD) {
+				
+				const headElement =  {} as Token.headToken;
+				headElement.type = TokenType.HEADING;
+				headElement.dept = 3;
+				headElement.row = "###" + token.value;
+				headElement.children = [
+						{
+							type: TokenType.TEXT,
+							value: token.value,
+						}]
+				
+				this.ast.children.push(headElement);
+			}
+
+			// #### dept = 4
+			if (token.type === TokenType.HEADING_FORTH) {
+				const headElement =  {} as Token.headToken;
+				headElement.type = TokenType.HEADING;
+				headElement.dept = 4;
+				headElement.row = "####" + token.value;
+				headElement.children = [
+						{
+							type: TokenType.TEXT,
+							value: token.value,
+						}]
+				
+				this.ast.children.push(headElement);
+			}
+
+			// ##### dept = 5
+			if (token.type === TokenType.HEADING_FIFTH) {
+				const headElement =  {} as Token.headToken;
+				headElement.type = TokenType.HEADING;
+				headElement.dept = 5;
+				headElement.row = "#####" + token.value;
+				headElement.children = [
+						{
+							type: TokenType.TEXT,
+							value: token.value,
+						}]
+				
+				this.ast.children.push(headElement);
+			}
+
 			
-			if (token.type === "Caption") {
-				let el: element = {
-					type: "Caption", depth: 1, children: [
-						{
-							value: token.value,
-							type: "Caption",
-							date: token.date,
-							title: token.title,
-							template: token.template,
-							thumbnail: token.thumbnail,
-							slug: token.slug,
-							categories: token.categories,
-							tags: token.tags
-						}
-					], row: "# " + token.value
-				}
-				this.ast.children.push(el);
-			}
 
+			//CodeInCode
+			if (token.type == TokenType.CODE_IN_CODE) {
 
-			if (token.type === "HeadingFirst") {
-				let el: element = {
-					type: "Header", depth: 1, children: [
-						{
-							type: "Text",
-							value: token.value,
-						}
-					], row: "# " + token.value
-				}
-				this.ast.children.push(el);
-			}
-
-
-			if (token.type === "HeadingSecond") {
-				let el: element = {
-					type: "Header", depth: 2, children: [
-						{
-							type: "Text",
-							value: token.value,
-						}
-					], row: "# " + token.value
-				}
-				this.ast.children.push(el);
-			}
-			if (token.type === "HeadingThird") {
-				let el: element = {
-					type: "Header", depth: 3, children: [
-						{
-							type: "Text",
-							value: token.value,
-						}
-					], row: "### " + token.value
-				}
-				this.ast.children.push(el);
-			}
-			if (token.type === "HeadingForth") {
-				let el: element = {
-					type: "Header", depth: 4, children: [
-						{
-							type: "Text",
-							value: token.value,
-						}
-					], row: "#### " + token.value
-				}
-				this.ast.children.push(el);
-			}
-			if (token.type === "HeadingFifth") {
-				let el: element = {
-					type: "Header", depth: 5, children: [
-						{
-							type: "Text",
-							value: token.value,
-						}
-					], row: "##### " + token.value
-				}
-				this.ast.children.push(el);
+				const codeInCodeElement =  {} as Token.codeInCodeToken;
+				codeInCodeElement.type = TokenType.CODE_IN_CODE;
+				codeInCodeElement.row = "```"+token.language + "\n" + token.code + "\n```";
+				codeInCodeElement.code = token.code;
+				codeInCodeElement.language = token.language
+				
+				this.ast.children.push(codeInCodeElement);
 			}
 
 			//CodeBlock
-			if (token.type == "CodeBlock") {
-				let el: element = { type: "CodeBlock", value: token.value, language: token.language, row: "```" + token.language + "\n" + token.value + "\n```" }
-				this.ast.children.push(el)
-			}
+			if (token.type == TokenType.CODE_BLOCK) {
 
-			//Code
-			if (token.type == "Code") {
-				let el: element = { type: "Code", value: token.value, language: token.language, row: "```" + token.language + "\n" + token.value + "\n```" }
-				this.ast.children.push(el)
-			}
-
-			//Code
-			if (token.type == "Quote") {
-				let el: element = {
-					type: "Quote", value: token.value,
-					quote: token.quote,
-					author: token.author,
-					row: ">" + token.quote + "\n> <cite> - " + token.author + "</cite>"
+				const codeBlockElement =  {} as Token.codeBlockToken;
+				codeBlockElement.type = TokenType.CODE_BLOCK;
+				codeBlockElement.row = "```"+token.language + "\n" + token.code + "\n```";
+				codeBlockElement.code = token.code;
+				codeBlockElement.language = token.language
+				
+				this.ast.children.push(codeBlockElement);
 				}
-				this.ast.children.push(el)
+			
+
+			//Quote
+			if (token.type == TokenType.QUOTE) {
+
+				const quoteElement =  {} as Token.quoteToken;
+				quoteElement.type = TokenType.QUOTE;
+				quoteElement.row = ">" + token.quote + "\n> <cite> - " + token.author + "</cite>";
+				quoteElement.quote = token.quote;
+				quoteElement.author = token.author;
+				
+				this.ast.children.push(quoteElement);
 			}
 
 			//List
-			if (token.type == "List") {
-				let el: element = { type: "List", value: token.value, name: token.name, row: token.name + " " + token.value + "\n" }
-				this.ast.children.push(el)
+			if (token.type == TokenType.LIST) {
+				let listElement =  {} as Token.listToken;
+				listElement.type = TokenType.LIST;
+				listElement.attribute = token.attribute;
+				listElement.row = token.attribute + " "+token.value;
+				listElement.value = token.value; 
+				
+				this.ast.children.push(listElement)
 			}
 
 
 			//Start all that in the paragraph can use
-
-			if (token.type == "ParagraphStart") {
-				let el: element = { type: "Paragraph", children: [], row: "" }
-				this.ast.children.push(el);
+			if (token.type == TokenType.PARAGRAPH_START) {
+				const paragraphStartElement = {} as Token.paragraphStartToken;
+				paragraphStartElement.type = TokenType.PARAGRAPH;
+				paragraphStartElement.children = [];
+				paragraphStartElement.row = "";
+				
+				this.ast.children.push(paragraphStartElement);
 				isParagraph = true;
 			}
 
-			if (token.type == "ParagraphEnd") {
+			if (token.type == TokenType.PARAGRAPH_END) {
 				isParagraph = false;
 			}
 
 			//Link
-			if (token.type == "Link" && isParagraph == true) {
-				let el: element = { type: "Link", alt: token.value, url: token.body, row: "[" + token.value + "](" + token.body + ")" }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + "[" + token.value + "](" + token.body + ")"
-			}
-
-			if (token.type == "Link" && isParagraph == false) {
-				let el: element = { type: "Link", alt: token.value, url: token.body, row: "[" + token.value + "](" + token.body + ")" }
-				this.ast.children.push(el)
+			if (token.type == TokenType.LINK) {
+				const linkElement = {} as Token.linkToken;
+				linkElement.type = TokenType.LINK;
+				linkElement.name = token.name;
+				linkElement.url = token.url;
+				linkElement.row = "[" + token.name + "](" + token.url + ")"
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(linkElement)
+				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + "[" + token.name + "](" + token.url + ")"
+				} else {
+					this.ast.children.push(linkElement)
+				}	
 			}
 
 			//Image
 			if (token.type == "Image" && isParagraph == true) {
-				let el: element = { type: "Image", alt: token.value, url: token.body, row: "[" + token.value + "](" + token.body + ")" }
-				this.ast.children[this.ast.children.length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + "[" + token.value + "](" + token.body + ")"
+				const imageToken = {} as Token.imageToken;
+				imageToken.type = TokenType.IMAGE;
+				imageToken.alt = token.alt;
+				imageToken.url = token.url;
+				imageToken.row = "![" + token.alt + "](" + token.url + ")"
 				
-			}
-
-			if (token.type == "Image" && isParagraph == false) {
-				let el: element = { type: "Image", alt: token.value, url: token.body, row: "[" + token.value + "](" + token.body + ")" }
-				this.ast.children.push(el)
-				
+				if(isParagraph == true) {
+					this.ast.children[this.ast.children.length - 1].children.push(imageToken)
+					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + "[" + token.alt + "](" + token.url + ")"
+				} else {
+					this.ast.children.push(imageToken)
+				}
 			}
 
 			// Text
-			if (token.type == "Text" && isParagraph == true) {
-				let el: element = { type: "Text", value: token.value, row: token.value }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value
-			}
+			if (token.type == TokenType.TEXT) {
+				const textToken = {} as Token.textToken;
+				textToken.type = TokenType.TEXT;
+				textToken.value = token.value;
+				textToken.row = token.value
 
-			if (token.type == "Text" && isParagraph == false) {
-				let el: element = { type: "Text", value: token.value, row: token.value }
-				this.ast.children.push(el)
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(textToken)
+				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+				}else {
+					this.ast.children.push(textToken)
+				}
+				
 			}
 
 			// Unmarkable
-			if (token.type == "Unmarkable" && isParagraph == true) {
-				let el: element = { type: "Unmarkable", value: token.value, row: token.value }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value
+			if (token.type == TokenType.UNMARKABLE) {
+				const unmarkableTextToken = {} as Token.unmarkableToken;
+				unmarkableTextToken.type = TokenType.UNMARKABLE;
+				unmarkableTextToken.value = token.value;
+				unmarkableTextToken.row = "\\" + token.value + "\\";
+				
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(unmarkableTextToken)
+					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+				} else {
+					this.ast.children.push(unmarkableTextToken)
+				}
+				
 			}
 
-			if (token.type == "Unmarkable" && isParagraph == false) {
-				let el: element = { type: "Unmarkable", value: token.value, row: token.value }
-				this.ast.children.push(el)
-			}
+	
+	
 
 			// Strong
-			if (token.type == "Strong" && isParagraph == true) {
-				let el: element = { type: "Strong", value: token.value, row: token.value }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value
-			}
-
-			if (token.type == "Strong" && isParagraph == false) {
-				let el: element = { type: "Strong", value: token.value, row: token.value }
-				this.ast.children.push(el)
-			}
+			if (token.type == TokenType.STRONG) {
+				const strongTextToken = {} as Token.strongTextToken
+				strongTextToken.type = TokenType.STRONG;
+				strongTextToken.value = token.value;
+				strongTextToken.row = "**" + token.value + "*+"
+				
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(strongTextToken)
+					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+				} else {
+					this.ast.children.push(strongTextToken)
+				}
+			}	
 
 			// Color text
-			if (token.type == "Color" && isParagraph == true) {
-				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.name 
-			}
+			if (token.type == "Color") {
 
-			if (token.type == "Color" && isParagraph == false) {
-				let el: element = { type: "Color", value: token.value, name: token.name, row: token.value +"." + token.name}
-				this.ast.children.push(el)
+				const colorTextToken = {} as Token.colorTextToken;
+				colorTextToken.type = TokenType.COLOR;
+				colorTextToken.color = token.color;
+				colorTextToken.value = token.value;
+				colorTextToken.row = token.value + "." + token.color;
+				
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(colorTextToken)
+				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.color 
+				} else {
+					this.ast.children.push(colorTextToken)
+				}
+				
+
 			}
 
 			// Color badge
-			if (token.type == "Badge" && isParagraph == true) {
-				let el: element = { type: "Badge", value: token.value, name: token.name, row: token.value +"." + token.name}
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.name 
-			}
+			if (token.type == "Badge") {
 
-			if (token.type == "Badge" && isParagraph == false) {
-				let el: element = { type: "Badge", value: token.value, name: token.name, row: token.value +"." + token.name}
-				this.ast.children.push(el)
+				const badgeToken = {} as Token.bagdeToken;
+				badgeToken.type = TokenType.BADGE;
+				badgeToken.color = token.color;
+				badgeToken.value = token.value;
+				badgeToken.row = token.value + "@" + token.color;
+				
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(badgeToken)
+				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value +"@"+token.color 
+				} else {
+					this.ast.children.push(badgeToken)
+				}
+				
 			}
 
 			// InlineCode
-			if (token.type == "InlineCode" && isParagraph == true) {
-				let el: element = { type: "InlineCode", value: token.value, row: token.value }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value
+			if (token.type == TokenType.CODE_INLINE) {
+				
+				const inlineCodeElement = {} as Token.codeInlineToken;
+				inlineCodeElement.type = TokenType.CODE_INLINE;
+				inlineCodeElement.value = token.value;
+				inlineCodeElement.row = token.value;
+				
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(inlineCodeElement)
+					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+				}else {
+					this.ast.children.push(inlineCodeElement);
+				}
 			}
 
-			if (token.type == "InlineCode" && isParagraph == false) {
-				let el: element = { type: "InlineCode", value: token.value, row: token.value }
-				this.ast.children.push(el)
-			}
-
-			// UnderDash
-			if (token.type == "UnderDash" && isParagraph == true) {
-				let el: element = { type: "UnderDash", value: token.value, row: token.value }
-				this.ast.children[(this.ast.children).length - 1].children.push(el)
-				this.ast.children[(this.ast.children).length - 1].row =
-					this.ast.children[(this.ast.children).length - 1].row + token.value
-			}
-
-			if (token.type == "UnderDash" && isParagraph == false) {
-				let el: element = { type: "UnderDash", value: token.value, row: token.value }
-				this.ast.children.push(el)
+			// UnderLine
+			if (token.type == TokenType.UNDER_LINE) {
+				const underLineElement = {} as Token.underLineToken;
+				underLineElement.type =  TokenType.UNDER_LINE;
+				underLineElement.value =  token.value;
+				if(isParagraph == true){
+					this.ast.children[(this.ast.children).length - 1].children.push(underLineElement)
+				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+				}else{
+					this.ast.children.push(underLineElement)
+				}	
 			}
 
 

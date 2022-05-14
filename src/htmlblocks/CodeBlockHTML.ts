@@ -6,7 +6,7 @@
  */
 
 
-import { IToken } from "../IToken";
+import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 import "../static/styles/prism.css"
 
@@ -17,10 +17,10 @@ import * as Prism from 'prismjs';
 
 export class CodeBlockHTML {
   
-	private DomUtilites;
-	private token: IToken;
+	private DomUtilites : any;
+	private token: Token.codeBlockToken;
 	
-	constructor(token: IToken) {
+	constructor(token: Token.codeBlockToken) {
 		this.token = token;
 		this.DomUtilites = new DomUtilites();
 	}
@@ -29,7 +29,7 @@ export class CodeBlockHTML {
 
 	const codeBlock : any = `
 			<code class="language-${this.token.language}">
-		 		${this.token.value}
+		 		${this.token.code}
 			</code>`
 		
 		const CodeBlockNode = this.DomUtilites.createElement("pre");
@@ -39,12 +39,12 @@ export class CodeBlockHTML {
 
 		CodeBlockNode.innerHTML = codeBlock;
 
-		let container:HTMLElement;
+		let container:ChildNode;
 		
 		if(document.getElementById("app")?.children.length > 0){
-			 container = document.getElementById("app")?.lastChild;
+			container = document.getElementById("app")?.lastChild;
 		}else{
-			 container = document.getElementById("app");
+			container = document.getElementById("app");
 		}
 		
 		container?.appendChild(CodeBlockNode);

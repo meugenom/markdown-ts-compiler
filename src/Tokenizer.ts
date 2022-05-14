@@ -1,20 +1,26 @@
 'use strict'
-
 import { Grammar } from "./Grammar"
-import { TokensType } from "./Types";
-import { IToken } from "./IToken";
 import { Caption } from "./Caption"
+import * as Token from "./Token";
+import { TokenType } from "./Types";
 
+/**
+ * 
+ */
 
 export class Tokenizer {
 
-	public tokens: IToken[];
+	public tokens =  [] as (Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
+		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
+		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
+		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
+		Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken)[];
+	
 	public text: string;
 	public words: Array<string>;
-
 	private word_number: number;
 
-	constructor(text : string) {
+	constructor(text: string) {
 
 		this.text = text;
 		this.tokens = [];
@@ -27,13 +33,16 @@ export class Tokenizer {
 	private init = (): void => {
 
 		//add caption
-		if(this.text.match(Grammar.BLOCKS.CAPTION)!=null){
+		if (this.text.match(Grammar.BLOCKS.CAPTION) != null) {
+
 			const caption = new Caption(this.text);
-			const token: IToken = caption.get();
-			this.text = caption.text;	//remove caption from article
+			let token = {} as Token.captionToken;
+			token = caption.get();
+			this.text = caption.text;//remove caption from article
 			this.tokens.push(token);
+
 		}
-		
+
 
 		//split by space
 		this.words = this.text.split(Grammar.BLOCKS.SPACE);
@@ -56,35 +65,36 @@ export class Tokenizer {
 			//in the end of article
 			if (this.word_number == this.words.length - 1) {
 
-				this.tokens.push({
-					type: TokensType.UNKNOWN_TEXT,
-					value: out
-				})
+				const token =  {} as Token.unknownTextToken;
+				token.type = TokenType.UNKNOWN_TEXT;
+				token.value = out;
+				this.tokens.push(token);
+
 				this.word_number++;
 				continue loop_word;
 			}
 
-			//CODE_BLOCK
 
-			if (out.match(Grammar.BLOCKS.CODE_BLOCK) != null) {
+			//CODE_IN_CODE block
+			if (out.match(Grammar.BLOCKS.CODE_IN_CODE) != null) {
 
-				const rest: string = out.replace(Grammar.BLOCKS.CODE_BLOCK, "&codeblock&");
-				const arr = rest.split("&codeblock&")
+				const rest: string = out.replace(Grammar.BLOCKS.CODE_IN_CODE, "&codeInCode&");
+				const arr = rest.split("&codeInCode&")
 
+				//block before
+				const unknownToken = {} as Token.unknownTextToken;
+				unknownToken.type = TokenType.UNKNOWN_TEXT;
+				unknownToken.value = arr[0];
+				this.tokens.push(unknownToken);
 
-				this.tokens.push({
-					type: TokensType.UNKNOWN_TEXT,
-					value: arr[0],
+				//founded block
+				const codeToken = {} as  Token.codeInCodeToken;
+				codeToken.type = TokenType.CODE_IN_CODE;
+				codeToken.code = out.match(Grammar.BLOCKS.CODE_IN_CODE)[2];
+				codeToken.language = out.match(Grammar.BLOCKS.CODE_IN_CODE)[1];
+				this.tokens.push(codeToken);
 
-				})
-
-				this.tokens.push({
-					type: TokensType.CODE_BLOCK,
-					value: out.match(Grammar.BLOCKS.CODE_BLOCK)[2],
-					language: out.match(Grammar.BLOCKS.CODE_BLOCK)[1],
-
-				})
-
+				//block after 
 				out = arr[1];
 				this.word_number++;
 				continue loop_word;
@@ -92,26 +102,28 @@ export class Tokenizer {
 
 
 			//CODE
-			if (out.match(Grammar.BLOCKS.CODE) != null &&
-				out.match(Grammar.BLOCKS.CODE)[2].length > 5 //because value is not less then 5 symbols...its CODEBLOCK
+			if (out.match(Grammar.BLOCKS.CODE_BLOCK) != null &&
+				out.match(Grammar.BLOCKS.CODE_BLOCK)[2].length > 5 //because value is not less then 5 symbols...its CODEBLOCK
 			) {
 
-				const rest: string = out.replace(Grammar.BLOCKS.CODE, "&code&");
-				const arr = rest.split("&code&")
+				const rest: string = out.replace(Grammar.BLOCKS.CODE_BLOCK, "&codeblock&");
+				const arr = rest.split("&codeblock&")
 
 
-				this.tokens.push({
-					type: TokensType.UNKNOWN_TEXT,
-					value: arr[0],
+				//block before
+				const unknownTextToken = {} as  Token.unknownTextToken;
+				unknownTextToken.type = TokenType.UNKNOWN_TEXT;
+				unknownTextToken.value = arr[0];
+				this.tokens.push(unknownTextToken);
 
-				})
+				//founded block
+				const codeToken = {} as  Token.codeBlockToken;
+				codeToken.type = TokenType.CODE_BLOCK;
+				codeToken.code = out.match(Grammar.BLOCKS.CODE_BLOCK)[2];
+				codeToken.language = out.match(Grammar.BLOCKS.CODE_BLOCK)[1];
+				this.tokens.push(codeToken);
 
-				this.tokens.push({
-					type: TokensType.CODE,
-					value: out.match(Grammar.BLOCKS.CODE)[2],
-					language: out.match(Grammar.BLOCKS.CODE)[1],
-				})
-
+				//block after
 				out = arr[1];
 				this.word_number++;
 				continue loop_word;
@@ -124,26 +136,26 @@ export class Tokenizer {
 				const arr = rest.split("&quote&")
 
 
-				this.tokens.push({
-					type: TokensType.UNKNOWN_TEXT,
-					value: arr[0],
+				//block before
+				const unknownToken = {} as  Token.unknownTextToken;
+				unknownToken.type = TokenType.UNKNOWN_TEXT;
+				unknownToken.value = arr[0];
+				this.tokens.push(unknownToken);
 
-				})
+				//founded block
+				const quoteToken = {} as  Token.quoteToken;
+				quoteToken.type = TokenType.QUOTE;
+				quoteToken.row = out.match(Grammar.BLOCKS.QUOTE)[0];
+				quoteToken.quote = out.match(Grammar.BLOCKS.QUOTE)[1];
+				quoteToken.author = out.match(Grammar.BLOCKS.QUOTE)[2];
+				this.tokens.push(quoteToken);
 
-				this.tokens.push({
-					type: TokensType.QUOTE,
-					value: out.match(Grammar.BLOCKS.QUOTE)[0],
-					quote: out.match(Grammar.BLOCKS.QUOTE)[1],
-					author: out.match(Grammar.BLOCKS.QUOTE)[2],
-
-				})
-
+				//after block
 				out = arr[1];
 				this.word_number++;
 				continue loop_word;
 
 			}
-
 
 			this.word_number++;
 
@@ -152,21 +164,22 @@ export class Tokenizer {
 
 		// LOOPS UNKNOWN_TEXT TO DEFINE OTHER TOKENS:
 
-		let itokens: Array<IToken> = [];
+		const itokens = [] as  Array<Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
+			Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
+			Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
+			Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
+			Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken >;
 
-		this.tokens.forEach(token => {
 
-			if (token.type == TokensType.UNKNOWN_TEXT) {
+		this.tokens.forEach((token: any) => {
+
+			if (token.type == TokenType.UNKNOWN_TEXT) {
 
 				const text = token.value.split("\n")
 
-
-				text.forEach(stroke => {
-
+				text.forEach((stroke: string) => {
 
 					if (stroke != '' && stroke != ' ') {
-
-
 
 						/**
 						 * Search other tokens:
@@ -183,29 +196,36 @@ export class Tokenizer {
 
 						if (stroke.match(Grammar.BLOCKS.IMAGE) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> Text before -> Image -> Text after -> Paragraph End
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.IMAGE)[1]
-							})
-							itokens.push({
-								type: TokensType.IMAGE,
-								value: stroke.match(Grammar.BLOCKS.IMAGE)[2],
-								body: stroke.match(Grammar.BLOCKS.IMAGE)[3]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.IMAGE)[4]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as  Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//text before 
+							const textBeforeToken = {} as  Token.textToken;
+							textBeforeToken.type = TokenType.TEXT;
+							textBeforeToken.value = stroke.match(Grammar.BLOCKS.IMAGE)[1];
+							itokens.push(textBeforeToken)
+
+							//image
+							const imageToken = {} as  Token.imageToken;
+							imageToken.type = TokenType.IMAGE;
+							imageToken.alt = stroke.match(Grammar.BLOCKS.IMAGE)[2];
+							imageToken.url = stroke.match(Grammar.BLOCKS.IMAGE)[3];
+							itokens.push(imageToken);
+
+							//text after
+							const textAfterToken = {} as  Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.IMAGE)[4];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken)
 
 							return;
 
@@ -213,90 +233,109 @@ export class Tokenizer {
 
 						if (stroke.match(Grammar.BLOCKS.LINK) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> Text before -> Link -> Text after -> Paragraph End
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.LINK)[1]
-							})
-							itokens.push({
-								type: TokensType.LINK,
-								value: stroke.match(Grammar.BLOCKS.LINK)[2],
-								body: stroke.match(Grammar.BLOCKS.LINK)[3]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.LINK)[4]
-							})
+							//paragraph start
+							const paragraphStartToken= {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//text before 
+							const textBeforeToken= {} as Token.textToken;
+							textBeforeToken.type = TokenType.TEXT;
+							textBeforeToken.value = stroke.match(Grammar.BLOCKS.LINK)[1];
+							itokens.push(textBeforeToken);
 
-							return;
+							//link
+							const linkToken= {} as Token.linkToken;
+							linkToken.type = TokenType.LINK;
+							linkToken.name = stroke.match(Grammar.BLOCKS.LINK)[2];
+							linkToken.url = stroke.match(Grammar.BLOCKS.LINK)[3];
+							itokens.push(linkToken);
 
-						}
+							//text after
+							const textAfterToken= {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.LINK)[4];
+							itokens.push(textAfterToken);
 
-						if (stroke.match(Grammar.BLOCKS.UNDER_DASH) != null) {
-
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
-
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.UNDER_DASH)[1]
-							})
-							itokens.push({
-								type: TokensType.UNDER_DASH,
-								value: stroke.match(Grammar.BLOCKS.UNDER_DASH)[2]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.UNDER_DASH)[3]
-							})
-
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
-
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken)
 
 							return;
 
 						}
 
+						if (stroke.match(Grammar.BLOCKS.UNDER_LINE) != null) {
+
+							//Paragrah Start -> Text before -> underLine -> Text after -> Paragraph End
+
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
+
+							//text before 
+							const textBeforeToken = {} as Token.textToken;
+							textBeforeToken.type = TokenType.TEXT;
+							textBeforeToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[1];
+							itokens.push(textBeforeToken)
+
+							//underLine
+							const underLineToken = {} as Token.underLineToken;
+							underLineToken.type = TokenType.UNDER_LINE;
+							underLineToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[2];
+							itokens.push(underLineToken);
+
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[3];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END
+							itokens.push(paragraphEndToken)
+
+							return;
+
+						}
+
+						//inline code
 						if (stroke.match(Grammar.BLOCKS.INLINE_CODE) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> Text before -> inline code -> Text after -> Paragraph End
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.INLINE_CODE)[1]
-							})
-							itokens.push({
-								type: TokensType.INLINE_CODE,
-								value: stroke.match(Grammar.BLOCKS.INLINE_CODE)[2]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.INLINE_CODE)[3]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//text before 
+							const textBeforeToken = {} as Token.textToken;
+							textBeforeToken.type = TokenType.TEXT;
+							textBeforeToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[1];
+							itokens.push(textBeforeToken)
 
+							//inline code
+							const codeInlineToken = {} as Token.codeInlineToken;
+							codeInlineToken.type = TokenType.CODE_INLINE;
+							codeInlineToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[2];
+							itokens.push(codeInlineToken);
 
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[3];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken)
 
 							return;
 
@@ -305,68 +344,77 @@ export class Tokenizer {
 						// Strong text
 						if (stroke.match(Grammar.BLOCKS.STRONG) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> Text before -> Strong Text -> Text after -> Paragraph End
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.STRONG)[1]
-							})
-							itokens.push({
-								type: TokensType.STRONG,
-								value: stroke.match(Grammar.BLOCKS.STRONG)[2]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.STRONG)[3]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//text before 
+							const textToken = {} as Token.textToken;
+							textToken.type = TokenType.TEXT;
+							textToken.value = stroke.match(Grammar.BLOCKS.STRONG)[1];
+							itokens.push(textToken)
+
+							//strong text
+							const strongTextToken = {} as Token.strongTextToken;
+							strongTextToken.type = TokenType.STRONG;
+							strongTextToken.value = stroke.match(Grammar.BLOCKS.STRONG)[2];
+							itokens.push(strongTextToken);
+
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.STRONG)[3];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken)
 
 							return;
-
 						}
 
-						
+
 
 						// Color text
 						if (stroke.match(Grammar.BLOCKS.COLOR) != null) {
 
-							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");							
+							//Paragrah Start -> Text before -> Color Text -> Text after -> Paragraph End
 
+							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");
 							const arr = rest.split("&color&")
-							
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: arr[0]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							
-							itokens.push({
-								type: TokensType.COLOR,
-								value: stroke.match(Grammar.BLOCKS.COLOR)[1],
-								name:  stroke.match(Grammar.BLOCKS.COLOR)[3]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: arr[1]
-							})
+							//text before 
+							const textToken = {} as Token.textToken;
+							textToken.type = TokenType.TEXT;
+							textToken.value = arr[0];
+							itokens.push(textToken)
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
-							
+							//Color Text
+							const colorTextToken = {} as Token.colorTextToken;
+							colorTextToken.type = TokenType.COLOR;
+							colorTextToken.value = stroke.match(Grammar.BLOCKS.COLOR)[1];
+							colorTextToken.color = stroke.match(Grammar.BLOCKS.COLOR)[3];
+							itokens.push(colorTextToken);
+
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = arr[1];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken)
 
 							return;
 
@@ -375,69 +423,76 @@ export class Tokenizer {
 						// Color badges
 						if (stroke.match(Grammar.BLOCKS.BADGE) != null) {
 
+							//Paragrah Start -> Text before -> Color Badge -> Text after -> Paragraph End
+
 							const rest: string = stroke.replace(Grammar.BLOCKS.BADGE, "&badge&");
-
 							const arr = rest.split("&badge&")
-							
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: arr[0]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							
-							itokens.push({
-								type: TokensType.BADGE,
-								value: stroke.match(Grammar.BLOCKS.BADGE)[1],
-								name:  stroke.match(Grammar.BLOCKS.BADGE)[3]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: arr[1]
-							})
+							//text before 
+							const textToken = {} as Token.textToken;
+							textToken.type = TokenType.TEXT;
+							textToken.value = arr[0];
+							itokens.push(textToken)
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
-							
+							//Color Badge
+							const badgeToken = {} as Token.bagdeToken;
+							badgeToken.type = TokenType.BADGE;
+							badgeToken.value = stroke.match(Grammar.BLOCKS.BADGE)[1];
+							badgeToken.color = stroke.match(Grammar.BLOCKS.BADGE)[3];
+							itokens.push(badgeToken);
+
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = arr[1];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken);
 
 							return;
 
 						}
 
-
-
 						// Unmarkable text
 						if (stroke.match(Grammar.BLOCKS.UNMARKABLE) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> Text before -> Unmarkable Text -> Text after -> Paragraph End
 
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.UNMARKABLE)[1]
-							})
-							itokens.push({
-								type: TokensType.UNMARKABLE,
-								value: stroke.match(Grammar.BLOCKS.UNMARKABLE)[2]
-							})
-							itokens.push({
-								type: TokensType.TEXT,
-								value: stroke.match(Grammar.BLOCKS.UNMARKABLE)[3]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//text before 
+							const textToken = {} as Token.textToken;
+							textToken.type = TokenType.TEXT;
+							textToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[1];
+							itokens.push(textToken)
 
+							//unmarkable text
+							const unmarkableToken = {} as Token.unmarkableToken;
+							unmarkableToken.type = TokenType.UNMARKABLE;
+							unmarkableToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[2];
+							itokens.push(unmarkableToken);
+
+							// text after
+							const textAfterToken = {} as Token.textToken;
+							textAfterToken.type = TokenType.TEXT;
+							textAfterToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[3];
+							itokens.push(textAfterToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken);
 
 							return;
 
@@ -446,64 +501,68 @@ export class Tokenizer {
 						// LIST						
 						if (stroke.match(Grammar.BLOCKS.LIST) != null) {
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_START,
-								value: ""
-							});
+							//Paragrah Start -> List -> Paragraph End
 
-							itokens.push({
-								type: TokensType.LIST,
-								name: stroke.match(Grammar.BLOCKS.LIST)[1],
-								value: stroke.match(Grammar.BLOCKS.LIST)[2]
-							})
+							//paragraph start
+							const paragraphStartToken = {} as Token.paragraphStartToken;
+							paragraphStartToken.type = TokenType.PARAGRAPH_START;
+							itokens.push(paragraphStartToken);
 
-							itokens.push({
-								type: TokensType.PARAGRAPH_END,
-								value: ""
-							});
+							//List
+							const listToken = {} as Token.listToken;
+							listToken.type = TokenType.LIST;
+							listToken.attribute = stroke.match(Grammar.BLOCKS.LIST)[1];
+							listToken.value = stroke.match(Grammar.BLOCKS.LIST)[2];
+							itokens.push(listToken);
+
+							//end paragraph
+							const paragraphEndToken = {} as Token.paragraphEndToken;
+							paragraphEndToken.type = TokenType.PARAGRAPH_END;
+							itokens.push(paragraphEndToken);
 
 							return;
 
 						}
 
 
-
+						// Heading
 						if (stroke.match(Grammar.BLOCKS.HEADING) != null) {
 
 							const types = [
-								TokensType.HEADING_FIRST,
-								TokensType.HEADING_SECOND,
-								TokensType.HEADING_THIRD,
-								TokensType.HEADING_FORTH,
-								TokensType.HEADING_FIFTH
+								TokenType.HEADING_FIRST,
+								TokenType.HEADING_SECOND,
+								TokenType.HEADING_THIRD,
+								TokenType.HEADING_FORTH,
+								TokenType.HEADING_FIFTH
 							]
 
 							const itype: number = stroke.match(Grammar.BLOCKS.HEADING)[1].length - 1;
 
-							itokens.push({
-								type: types[itype],
-								value: stroke.match(Grammar.BLOCKS.HEADING)[2]
-							})
+							const headToken = {} as Token.headToken;
+							headToken.type = types[itype];
+							headToken.value = stroke.match(Grammar.BLOCKS.HEADING)[2];
+							itokens.push(headToken);
 
 							return;
 						}
 
-						// for other unknown text						
-						itokens.push({
-							type: TokensType.PARAGRAPH_START,
-							value: ""
-						});
+						// for other unidentified text
+						// Paragraph -> Other Text -> Paragraph
 
-						itokens.push({
-							type: TokensType.TEXT,
-							value: stroke
-						})
+						//paragraph start
+						const paragraphStartToken = {} as Token.paragraphStartToken;
+						itokens.push(paragraphStartToken);
 
-						itokens.push({
-							type: TokensType.PARAGRAPH_END,
-							value: ""
-						})
+						//Other Text 
+						const textToken = {} as Token.textToken;
+						textToken.type = TokenType.TEXT;
+						textToken.value = stroke;
+						itokens.push(textToken)
 
+
+						//end paragraph
+						const paragraphEndToken = {} as Token.paragraphEndToken;
+						itokens.push(paragraphEndToken);
 
 					}
 				})
@@ -515,6 +574,7 @@ export class Tokenizer {
 		})
 
 		this.tokens = itokens;
-		
+
+
 	}
 }
