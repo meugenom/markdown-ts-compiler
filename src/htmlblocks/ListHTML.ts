@@ -6,15 +6,15 @@
  */
 
 
-import { IToken } from "../IToken";
+ import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 
 export class ListHTML {
   
-	private DomUtilites;
-	private token: IToken;
+	private DomUtilites:any;
+	private token: Token.listToken;
 	
-	constructor(token: IToken) {
+	constructor(token: Token.listToken) {
 		this.token = token;
 		this.DomUtilites = new DomUtilites();
 	}
@@ -27,7 +27,7 @@ export class ListHTML {
 
 	//console.log(this.token)
 
-	if(this.token.name == "[]"){
+	if(this.token.attribute == "[]"){
 		listBlockNode = this.DomUtilites.createElement("div");	
 		listBlock = `
 			<div class="form-check">
@@ -39,7 +39,7 @@ export class ListHTML {
 		`
 	}
 
-	if(this.token.name == "[x]"){
+	if(this.token.attribute == "[x]"){
 		listBlockNode = this.DomUtilites.createElement("div");	
 		listBlock = `
 			<div class="form-check">
@@ -51,7 +51,7 @@ export class ListHTML {
 		`
 		}
 
-		if(this.token.name == "-"){
+		if(this.token.attribute == "-"){
 			listBlock = `
 				<li class="text-sky-700">
 					${this.token.value}
@@ -63,7 +63,7 @@ export class ListHTML {
 		
 		listBlockNode.innerHTML = listBlock;
 
-		let container:HTMLElement;
+		let container: ChildNode;
 		if(document.getElementById("app")?.children.length > 0){
 			 container = document.getElementById("app")?.lastChild;
 		}else{

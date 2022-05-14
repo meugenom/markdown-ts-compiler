@@ -16,17 +16,18 @@ export class Grammar{
 
 		LIST : /(\-|\[\]|\[\x\])\s((.*))/,
 		
-		CODE : /```(bash|javascript)(.*?\s)```/s,
-		CODE_BLOCK : /```(bash|javascript)((\s.*)```)\s*```\s/s,
+		CODE_BLOCK : /```(bash|javascript)(.*?\s)```/s,
+		CODE_IN_CODE : /```(bash|javascript)((\s.*)```)\s*```\s/s,
+		INLINE_CODE : /(.*)\`(.*)\`(.*)/,
 
 		QUOTE: />(.*)\s>.<cite>(.*)<\/cite>/,
 		
 		LINK : /(.*)[^!]\[(.*?)\]\((.*)\)(.*)/,
 		IMAGE : /(.*)!\[(.*?)\]\((.*)\)(.*)/,
 
-		UNDER_DASH : /(.*)\_(.*)\_(.*)/,
+		UNDER_LINE : /(.*)\_(.*)\_(.*)/,
 		UNMARKABLE : /(.*)\\\*(.*)\\\*(.*)/,
-		STRONG : /(.*)\*\*(.*)\*\*(.*)/,
-		INLINE_CODE : /(.*)\`(.*)\`(.*)/
+		STRONG : /(.*)\*\*(.*)\*\*(.*)/
+		
 	}
 }

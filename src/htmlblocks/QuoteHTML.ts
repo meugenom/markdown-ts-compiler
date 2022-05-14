@@ -6,17 +6,17 @@
  */
 
 
-import { IToken } from "../IToken";
+ import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 import "../static/styles/quote.css";
 
 
 export class QuoteHTML {
   
-	private DomUtilites;
-	private token: IToken;
+	private DomUtilites : any;
+	private token: Token.quoteToken;
 	
-	constructor(token: IToken) {
+	constructor(token: Token.quoteToken) {
 		this.token = token;
 		this.DomUtilites = new DomUtilites();
 	}
@@ -34,11 +34,10 @@ export class QuoteHTML {
 	`
 		
 		const quoteBlockNode = this.DomUtilites.createElement("blockquote");
-		//quoteBlockNode.className = `p-4 italic border-l-8 bg-neutral-200 text-neutral-600 border-orange-500 quote`;
 		quoteBlockNode.innerHTML = quoteBlock;
 
 
-		let container:HTMLElement;
+		let container:ChildNode;
 		if(document.getElementById("app")?.children.length > 0){
 			 container = document.getElementById("app")?.lastChild;
 		}else{

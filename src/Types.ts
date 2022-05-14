@@ -1,8 +1,9 @@
-export enum TokensType {
+export enum TokenType {
 	BADGE = "Badge",
 	CAPTION = "Caption",
-	CODE = "Code",
+	CODE_INLINE = "CodeInline",
 	CODE_BLOCK = "CodeBlock",
+	CODE_IN_CODE = "CodeInCode",
 	COLOR = "Color",
 	DOCUMENT = "Document",
 	IMAGE = "Image",
@@ -12,15 +13,15 @@ export enum TokensType {
 	HEADING_FORTH = "HeadingForth",
 	HEADING_FIFTH = "HeadingFifth",
 	HEADING = "Heading",
-	INLINE_CODE = "InlineCode",
 	LINK = "Link",
 	LIST = "List",
 	PARAGRAPH_START = "ParagraphStart",
 	PARAGRAPH_END = "ParagraphEnd",
+	PARAGRAPH = "Paragraph",
 	QUOTE = "Quote",
 	STRONG = "Strong",
 	TEXT = "Text",
-	UNDER_DASH = "UnderDash",
+	UNDER_LINE = "UnderLine",
 	UNKNOWN_TEXT = "UnknownText",
 	UNMARKABLE = "Unmarkable"
 	

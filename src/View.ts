@@ -1,10 +1,10 @@
 import { CaptionHTML } from "./htmlblocks/CaptionHTML"
-import { IToken } from "./IToken";
 import { HeaderHTML } from "./htmlblocks/HeaderHTML";
 import {ParagraphHTML} from "./htmlblocks/ParagraphHTML"
 import { CodeBlockHTML } from "./htmlblocks/CodeBlockHTML";
 import {QuoteHTML} from "./htmlblocks/QuoteHTML";
 import {ListHTML} from "./htmlblocks/ListHTML";
+import { TokenType } from "./Types";
 
 
 type AST = {
@@ -24,44 +24,42 @@ export class View {
 
 	init() {
 
-		//console.log(ast);
-
 		const children  = this.ast.children;
 
-		children.forEach((token: IToken) => {
+		children.forEach((token) => {
 
-			
-			if (token.type == "Caption") {
+			if (token.type == TokenType.CAPTION) {
 
 				const caption = new CaptionHTML(token);
 				caption.render();
 			}
 
-			if (token.type == "Header") {
+			
+			if (token.type == TokenType.HEADING) {
 				const header = new HeaderHTML(token);
 				header.render();
 			}
 
-			if (token.type == "CodeBlock" || token.type == "Code") {
+			if (token.type == TokenType.CODE_BLOCK || token.type == TokenType.CODE_IN_CODE) {
 				const codeblock = new CodeBlockHTML(token);
 				codeblock.render();
 			}
 
-			if (token.type == "Quote") {
+			if (token.type == TokenType.QUOTE) {
 				const quote = new QuoteHTML(token);
 				quote.render();
 			}
 
-			if (token.type == "List") {
+			if (token.type == TokenType.LIST) {
 				const list = new ListHTML(token);
 				list.render();
 			}
 
-			if (token.type == "Paragraph") {
+			if (token.type == TokenType.PARAGRAPH) {
 				const paragraph = new ParagraphHTML(token);
 				paragraph.render();
 			}
-
+			
 		})
 	}
 }
