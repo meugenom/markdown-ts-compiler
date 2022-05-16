@@ -14,7 +14,7 @@ export class Tokenizer {
 		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
 		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
 		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-		Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken)[];
+		Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken | Token.tableToken)[];
 	
 	public text: string;
 	public words: Array<string>;
@@ -54,6 +54,7 @@ export class Tokenizer {
 		 *  - CODEBLOCK
 		 *  - CODE
 		 *  - QUOTE
+		 *  - TABLE
 		 */
 
 		this.word_number = 0;
@@ -154,7 +155,6 @@ export class Tokenizer {
 				out = arr[1];
 				this.word_number++;
 				continue loop_word;
-
 			}
 
 			this.word_number++;
@@ -168,7 +168,7 @@ export class Tokenizer {
 			Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
 			Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
 			Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-			Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken >;
+			Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken | Token.tableToken >;
 
 
 		this.tokens.forEach((token: any) => {
@@ -190,7 +190,10 @@ export class Tokenizer {
 						 *  - Strong
 						 * - Unmarkable
 						 * - Heading
-						 * - Underdash
+						 * - Underline
+						 * - Color
+						 * - Badge
+						 * - Table
 						 */
 
 
@@ -524,6 +527,42 @@ export class Tokenizer {
 
 						}
 
+						// TABLE
+						if (stroke.match(Grammar.BLOCKS.TABLE) != null) {
+
+							// if second row in the table, when add this row to the previous table element
+							if (itokens[itokens.length - 1].type == TokenType.TABLE){
+								
+								const tableRowToken = {} as Token.tableRowToken;
+								tableRowToken.type = TokenType.TABLE_ROW;
+								tableRowToken.value = stroke.match(Grammar.BLOCKS.TABLE)[1];
+								tableRowToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
+								
+								itokens[itokens.length - 1].children?.push(tableRowToken);
+								itokens[itokens.length - 1].row = itokens[itokens.length - 1].row + "\n" + tableRowToken.row;
+
+							}else {
+
+								//added first row of the Table
+								const tableRowToken = {} as Token.tableRowToken;
+								tableRowToken.type = TokenType.TABLE_ROW;
+								tableRowToken.value = stroke.match(Grammar.BLOCKS.TABLE)[1];
+								tableRowToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
+
+								const tableToken = {} as Token.tableToken
+								tableToken.type = TokenType.TABLE;
+								tableToken.children = [tableRowToken];
+								tableToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
+
+								itokens.push(tableToken);
+							}
+
+							
+
+							return;
+
+						}
+
 
 						// Heading
 						if (stroke.match(Grammar.BLOCKS.HEADING) != null) {
@@ -551,6 +590,7 @@ export class Tokenizer {
 
 						//paragraph start
 						const paragraphStartToken = {} as Token.paragraphStartToken;
+						paragraphStartToken.type = TokenType.PARAGRAPH_START;
 						itokens.push(paragraphStartToken);
 
 						//Other Text 
@@ -562,6 +602,7 @@ export class Tokenizer {
 
 						//end paragraph
 						const paragraphEndToken = {} as Token.paragraphEndToken;
+						paragraphEndToken.type = TokenType.PARAGRAPH_END;
 						itokens.push(paragraphEndToken);
 
 					}
@@ -574,7 +615,6 @@ export class Tokenizer {
 		})
 
 		this.tokens = itokens;
-
 
 	}
 }

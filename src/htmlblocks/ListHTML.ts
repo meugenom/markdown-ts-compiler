@@ -24,6 +24,7 @@ export class ListHTML {
 	let listBlock : string ;
 	let listBlockNode : Element;
 	listBlockNode = this.DomUtilites.createElement("ul");
+	listBlockNode.className = "mb-5"
 
 	//console.log(this.token)
 

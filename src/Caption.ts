@@ -15,7 +15,7 @@ export class Caption {
 
 		const caption = this.text.match(Grammar.BLOCKS.CAPTION);
 
-			let token = {} as captionToken;
+			const token = {} as captionToken;
 
 			token.type = TokenType.CAPTION
 			token.row = caption[0];
