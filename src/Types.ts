@@ -20,6 +20,8 @@ export enum TokenType {
 	PARAGRAPH = "Paragraph",
 	QUOTE = "Quote",
 	STRONG = "Strong",
+	TABLE = "Table",
+	TABLE_ROW = "TableRow",
 	TEXT = "Text",
 	UNDER_LINE = "UnderLine",
 	UNKNOWN_TEXT = "UnknownText",

@@ -43,6 +43,7 @@ import "./static/styles/style.css";
 
 import Text from 'raw-loader!../content/articles/how-to-write-text.md';
 
+
 //put text into the textarea
 const textarea: HTMLElement = document.getElementById("textarea");
 
@@ -81,7 +82,9 @@ convertBtn.addEventListener('click', function handleClick() {
 });
 
 const tokenizer = new Tokenizer(Text);
+//console.log(tokenizer.tokens)
 const parser = new Parser(tokenizer.tokens);
+//console.log(parser.ast)
 new View(parser.ast);
 
 

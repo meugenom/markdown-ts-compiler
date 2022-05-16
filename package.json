@@ -6,8 +6,8 @@
   "author": "meugenom.com",
   "license": "ISC",
   "scripts": {
-    "build:lint": "run-s lint type test build:clean webpack",
-    "build": "run-s build:clean webpack",
+    "build": "run-s lint type test build:clean webpack",
+    "build:ignore:lint": "run-s build:clean webpack",
     "build:clean": "rimraf ./dist",
     "jest": "jest --watch",
     "lint": "eslint ./src",

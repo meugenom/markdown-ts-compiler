@@ -19,6 +19,7 @@
  * codeInlineToken
  * headToken
  * listToken
+ * tableToken
  */
 
 
@@ -33,6 +34,14 @@ export interface unknownTextToken extends basisToken {
 }
 
 export interface textToken extends basisToken {
+	type: string,
+}
+
+export interface tableToken extends basisToken {
+	type: string,
+}
+
+export interface tableRowToken extends basisToken {
 	type: string,
 }
 
@@ -80,9 +89,8 @@ export interface captionToken extends basisToken {
 
 
 
-
 export interface quoteToken extends basisToken {
-	 type: string,
+	type: string,
 	quote: string,
 	author: string
 }

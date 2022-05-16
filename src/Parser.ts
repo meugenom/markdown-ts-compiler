@@ -12,11 +12,11 @@ export class Parser {
 		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
 		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
 		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-		Token.unknownTextToken | Token.codeInCodeToken)[];
+		Token.unknownTextToken | Token.codeInCodeToken | Token.tableToken)[];
 	
 	public ast: AST;
 
-	constructor(tokens : any) {
+	constructor(tokens) {
 		
 		this.tokens = tokens;
 		this.ast = {
@@ -26,10 +26,14 @@ export class Parser {
 		this.init();
 	}
 
-	init = () => {
+	init():void {
 
-		let token_number: number = 0;
-		let isParagraph: boolean = false;
+		let token_number: number;
+		token_number = 0;
+		let isParagraph: boolean;
+		isParagraph = false;
+		
+		const children : any = this.ast.children;
 
 		while (token_number < this.tokens.length) {
 
@@ -53,7 +57,7 @@ export class Parser {
 					}
 				];
 				
-				this.ast.children.push(captionElement);
+				children.push(captionElement);
 			}
 
 			// # dept=1
@@ -68,7 +72,7 @@ export class Parser {
 							value: token.value,
 						}]
 				
-				this.ast.children.push(headElement);
+				children.push(headElement);
 			}
 
 			// ## dept = 2
@@ -83,7 +87,7 @@ export class Parser {
 							value: token.value,
 						}]
 				
-				this.ast.children.push(headElement);
+				children.push(headElement);
 			}
 
 			// ### dept = 3
@@ -99,7 +103,7 @@ export class Parser {
 							value: token.value,
 						}]
 				
-				this.ast.children.push(headElement);
+				children.push(headElement);
 			}
 
 			// #### dept = 4
@@ -114,7 +118,7 @@ export class Parser {
 							value: token.value,
 						}]
 				
-				this.ast.children.push(headElement);
+				children.push(headElement);
 			}
 
 			// ##### dept = 5
@@ -129,7 +133,7 @@ export class Parser {
 							value: token.value,
 						}]
 				
-				this.ast.children.push(headElement);
+				children.push(headElement);
 			}
 
 			
@@ -143,7 +147,7 @@ export class Parser {
 				codeInCodeElement.code = token.code;
 				codeInCodeElement.language = token.language
 				
-				this.ast.children.push(codeInCodeElement);
+				children.push(codeInCodeElement);
 			}
 
 			//CodeBlock
@@ -155,7 +159,7 @@ export class Parser {
 				codeBlockElement.code = token.code;
 				codeBlockElement.language = token.language
 				
-				this.ast.children.push(codeBlockElement);
+				children.push(codeBlockElement);
 				}
 			
 
@@ -168,18 +172,28 @@ export class Parser {
 				quoteElement.quote = token.quote;
 				quoteElement.author = token.author;
 				
-				this.ast.children.push(quoteElement);
+				children.push(quoteElement);
 			}
 
 			//List
 			if (token.type == TokenType.LIST) {
-				let listElement =  {} as Token.listToken;
+				const listElement =  {} as Token.listToken;
 				listElement.type = TokenType.LIST;
 				listElement.attribute = token.attribute;
 				listElement.row = token.attribute + " "+token.value;
 				listElement.value = token.value; 
 				
-				this.ast.children.push(listElement)
+				children.push(listElement)
+			}
+
+			//Table
+			if (token.type == TokenType.TABLE) {
+				const tableElement =  {} as Token.tableToken;
+				tableElement.type = TokenType.TABLE;
+				tableElement.row = token.row;
+				tableElement.children = token.children;
+
+				children.push(tableElement)
 			}
 
 
@@ -190,7 +204,7 @@ export class Parser {
 				paragraphStartElement.children = [];
 				paragraphStartElement.row = "";
 				
-				this.ast.children.push(paragraphStartElement);
+				children.push(paragraphStartElement);
 				isParagraph = true;
 			}
 
@@ -206,10 +220,10 @@ export class Parser {
 				linkElement.url = token.url;
 				linkElement.row = "[" + token.name + "](" + token.url + ")"
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(linkElement)
-				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + "[" + token.name + "](" + token.url + ")"
+					children[(children).length - 1].children.push(linkElement)
+				children[(children).length - 1].row = children[(children).length - 1].row + "[" + token.name + "](" + token.url + ")"
 				} else {
-					this.ast.children.push(linkElement)
+					children.push(linkElement)
 				}	
 			}
 
@@ -222,10 +236,10 @@ export class Parser {
 				imageToken.row = "![" + token.alt + "](" + token.url + ")"
 				
 				if(isParagraph == true) {
-					this.ast.children[this.ast.children.length - 1].children.push(imageToken)
-					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + "[" + token.alt + "](" + token.url + ")"
+					children[children.length - 1].children.push(imageToken)
+					children[(children).length - 1].row = children[(children).length - 1].row + "[" + token.alt + "](" + token.url + ")"
 				} else {
-					this.ast.children.push(imageToken)
+					children.push(imageToken)
 				}
 			}
 
@@ -237,10 +251,10 @@ export class Parser {
 				textToken.row = token.value
 
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(textToken)
-				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+					children[(children).length - 1].children.push(textToken)
+				children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				}else {
-					this.ast.children.push(textToken)
+					children.push(textToken)
 				}
 				
 			}
@@ -253,10 +267,10 @@ export class Parser {
 				unmarkableTextToken.row = "\\" + token.value + "\\";
 				
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(unmarkableTextToken)
-					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+					children[(children).length - 1].children.push(unmarkableTextToken)
+					children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				} else {
-					this.ast.children.push(unmarkableTextToken)
+					children.push(unmarkableTextToken)
 				}
 				
 			}
@@ -272,10 +286,10 @@ export class Parser {
 				strongTextToken.row = "**" + token.value + "*+"
 				
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(strongTextToken)
-					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+					children[(children).length - 1].children.push(strongTextToken)
+					children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				} else {
-					this.ast.children.push(strongTextToken)
+					children.push(strongTextToken)
 				}
 			}	
 
@@ -289,10 +303,10 @@ export class Parser {
 				colorTextToken.row = token.value + "." + token.color;
 				
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(colorTextToken)
-				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value +"."+token.color 
+					children[(children).length - 1].children.push(colorTextToken)
+				children[(children).length - 1].row = children[(children).length - 1].row + token.value +"."+token.color 
 				} else {
-					this.ast.children.push(colorTextToken)
+					children.push(colorTextToken)
 				}
 				
 
@@ -308,10 +322,10 @@ export class Parser {
 				badgeToken.row = token.value + "@" + token.color;
 				
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(badgeToken)
-				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value +"@"+token.color 
+					children[(children).length - 1].children.push(badgeToken)
+				children[(children).length - 1].row = children[(children).length - 1].row + token.value +"@"+token.color 
 				} else {
-					this.ast.children.push(badgeToken)
+					children.push(badgeToken)
 				}
 				
 			}
@@ -325,10 +339,10 @@ export class Parser {
 				inlineCodeElement.row = token.value;
 				
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(inlineCodeElement)
-					this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+					children[(children).length - 1].children.push(inlineCodeElement)
+					children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				}else {
-					this.ast.children.push(inlineCodeElement);
+					children.push(inlineCodeElement);
 				}
 			}
 
@@ -338,10 +352,10 @@ export class Parser {
 				underLineElement.type =  TokenType.UNDER_LINE;
 				underLineElement.value =  token.value;
 				if(isParagraph == true){
-					this.ast.children[(this.ast.children).length - 1].children.push(underLineElement)
-				this.ast.children[(this.ast.children).length - 1].row = this.ast.children[(this.ast.children).length - 1].row + token.value
+					children[(children).length - 1].children.push(underLineElement)
+				children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				}else{
-					this.ast.children.push(underLineElement)
+					children.push(underLineElement)
 				}	
 			}
 
@@ -349,5 +363,7 @@ export class Parser {
 			token_number++;
 
 		}
+
+
 	}
 }

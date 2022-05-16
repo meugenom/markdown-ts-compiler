@@ -4,6 +4,7 @@ import {ParagraphHTML} from "./htmlblocks/ParagraphHTML"
 import { CodeBlockHTML } from "./htmlblocks/CodeBlockHTML";
 import {QuoteHTML} from "./htmlblocks/QuoteHTML";
 import {ListHTML} from "./htmlblocks/ListHTML";
+import { TableHTML } from "./htmlblocks/TableHTML";
 import { TokenType } from "./Types";
 
 
@@ -53,6 +54,11 @@ export class View {
 			if (token.type == TokenType.LIST) {
 				const list = new ListHTML(token);
 				list.render();
+			}
+
+			if (token.type == TokenType.TABLE) {
+				const table = new TableHTML(token);
+				table.render();
 			}
 
 			if (token.type == TokenType.PARAGRAPH) {
