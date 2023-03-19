@@ -1,51 +1,70 @@
 <html lang="en">
   <head>
     <title>Markdown-TS-Compiler</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+		font-size: 0.8em;
+      }
+
+      .half {
+		height: calc(75vh);
+        overflow-y: scroll;
+      }
+	  #editor {
+		caret-color: darkblue;
+	  	}
+	  #monitor {
+		position: absolute;
+		height: calc(25vh);
+		bottom: 0;
+		left: 0;
+		right: 0;
+		border-color: rgb(217, 211, 248);
+		border-style: solid;
+		border-width: 1px;
+		font-size: smaller;
+		background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgb(97, 136, 213) 10%, rgba(48, 21, 21, 0) 40%);
+
+		}
+	  
+
+    </style>
   </head>
   <body>
+    <div class="flexContainer">
+      <div class="half" id="left_side">
+        <div
+          class="md:container font-sans text-base antialiased leading-7 z-0">
+          <label
+            	class="form-label inline-block mb-2 text-red-900"
+            	>Markdown:
+          </label>
+          <hr />
+          <div id="editor" contenteditable="true"></div>
+        </div>
+      </div>
 
-	<div class="flexContainer"">
-    	
-		<div class="half">
-			<div class="md:container mx-10 font-sans text-base antialiased leading-7 z-0">
-		  	<label for="exampleFormControlTextarea1" class="form-label inline-block mb-2 text-red-900">Markdown -> HTML: </label>
-			<button id="btn-convert">Convert</button>
-			<button id="btn-default">Default</button>
-			<hr/>
-		  	<textarea
-				class="
-						form-control
-						block
-						w-full
-						px-1
-						py-1.5
-						text-base
-						font-normal
-						text-gray-700
-						bg-white bg-clip-padding
-						border border-solid border-gray-300
-						rounded
-						transition
-						ease-in-out
-						m-2
-						focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-				id="textarea"
-				rows="3"
-				placeholder="Your message"
-				style="width:100%; height:100vw">
-			Test
-			</textarea>
+      <div class="half" id="right_side">
+        <div
+          class="md:container font-sans text-base antialiased leading-7 z-0">		  	
+		  <label
+            	class="form-label inline-block mb-2 text-red-900"
+            	>HTML:
+          </label>
+          <hr />
+		  <div id="app"></div>
 		</div>
-	  </div>
-
-	  <div class="half">
-		<div class="md:container mx-10 font-sans text-base antialiased leading-7 z-0" id="app">
-
+      </div>
+    </div>
+	<div id="monitor">
+		<div class="mx-10 my-2">
+			<div>Caption<span id="captions"></span></div>
+			<div>Heading<span id="captions"></span></div>
+			<div>Paragraph<span id="captions"></span></div>
+			<div>CodeBlock<span id="captions"></span></div>
+			<div>CodeInline<span id="captions"></span></div>
 		</div>
 	</div>
-
-	</div>
-
-
   </body>
 </html>

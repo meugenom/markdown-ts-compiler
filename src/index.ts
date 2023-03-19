@@ -1,93 +1,102 @@
-/**                        _       _
-	  _ __ ___   __ _ _ __| | ____| | _____      ___ __
-	 | '_ ` _ \ / _` | '__| |/ / _` |/ _ \ \ /\ / / '_ \
-	 | | | | | | (_| | |  |   < (_| | (_) \ V  V /| | | |
-	 |_| |_| |_|\__,_|_|  |_|\_\__,_|\___/ \_/\_/ |_| |_|
-
-									 _ _
-			___ ___  _ __ ___  _ __ (_) | ___ _ __
-		   / __/ _ \| '_ ` _ \| '_ \| | |/ _ \ '__|
-		  | (_| (_) | | | | | | |_) | | |  __/ |
-		   \___\___/|_| |_| |_| .__/|_|_|\___|_|
-							  |_|
- */
-
 /**
- * We're going to write a small markdown compiler together and
- * have some strings to convert in HTML tags. 
- * We want to share it with our friends or other people.
- * So, our task looks like this:
+ * Author: meugenom.com
+ * Date: 19.03.2023
+ * Refactored: 19.03.2023
  *
- *   MARKDOWN      HTML
+ * ASCII art:
+ *                          	_       _
+ *         _ __ ___   __ _ _ __| | ____| | _____      ___ __
+ *        | '_ ` _ \ / _` | '__| |/ / _` |/ _ \ \ /\ / / '_ \
+ *        | | | | | | (_| | |  |   < (_| | (_) \ V  V /| | | |
+ *        |_| |_| |_|\__,_|_|  |_|\_\__,_|\___/ \_/\_/ |_| |_|
  *
- *   **** ABCD     <h4>ABCD</h4>
- *   *text*        <strong>text</strong>
- *
- * And etc. Looks it easy? Yea! 
- * Sounds good! Let's go...
-
-  /**
- * 
- *   1. input  => tokenizer   => tokens
- *   2. tokens => parser      => ast
- *   2.1 visualization ast to DOM elements
- *   3. ast    => transformer => newAstnode
- *   4. newAst => generator   => output
+ *                                          _ _
+ *                 ___ ___  _ __ ___  _ __ (_) | ___ _ __
+ *                / __/ _ \| '_ ` _ \| '_ \| | |/ _ \ '__|
+ *               | (_| (_) | | | | | | |_) | | |  __/ |
+ *                \___\___/|_| |_| |_| .__/|_|_|\___|_|
+ *                                   |_|
  */
-
 
 import { Tokenizer } from "./Tokenizer";
 import { Parser } from "./Parser";
 import { View } from "./View";
 import "./static/styles/style.css";
-
-import Text from 'raw-loader!../content/articles/how-to-write-text.md';
-
-
-//put text into the textarea
-const textarea: HTMLElement = document.getElementById("textarea");
-
-//console.log(textarea)
-textarea.innerHTML = Text;
+import Article from 'raw-loader!../content/articles/how-to-write-text.md';
 
 
-const convertBtn = document.getElementById('btn-convert');
-const defaultBtn = document.getElementById('btn-default');
+const editor = document.getElementById("editor");
+const leftSide = document.getElementById('left_side');
+const rightSide = document.getElementById('right_side');
 
-convertBtn.classList = "bg-transparent hover:bg-red-500 text-red-700 font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded";
-defaultBtn.classList = "bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border hover:border-transparent rounded";
+const articleLines = Article.split('\n');
 
-defaultBtn.addEventListener('click', function handleClick() {
+articleLines.forEach((line, index) => {
+	setTimeout(() => {
+		editor.innerHTML += line + '<br>';
+		handleEditorInput();
 
-	textarea.value = "";
-	app.innerHTML = "";
-	textarea.value = Text;
+		//set cursor to end of editor
+		let range = document.createRange()
+		let sel = window.getSelection()
 
-	const tokenizer = new Tokenizer(Text);
-	const parser = new Parser(tokenizer.tokens);
-	new View(parser.ast);
+		let numberOfNodes = editor?.childNodes.length
+		range.setStart(editor.childNodes[numberOfNodes - 2], 0)
 
+		range.collapse(true)
+		sel.removeAllRanges()
+		sel.addRange(range)
+
+		//scroll to bottom of editor
+		leftSide.scrollTop = editor.scrollHeight;
+
+	}, 1000 * index);
 });
 
-convertBtn.addEventListener('click', function handleClick() {
+// add event listener for input changes in the editor
+editor?.addEventListener('input', handleEditorInput);
 
-	//clear old 
-	let app = document.getElementById("app");
-	app.innerHTML = "";
+function handleEditorInput() {
+	// clear the app div
+	const app = document.getElementById('app');
+	app.innerHTML = '';
 
-	const tokenizer = new Tokenizer(textarea.value);
+	// get the text from the editor
+	const text = editor?.innerHTML;
+	//console.log(text)
+
+	// clean the text to remove HTML tags and newlines
+	const cleanedText = cleanText(text);
+
+	// tokenize the cleaned text
+	const tokenizer = new Tokenizer(cleanedText);
+
+	// parse the tokens into an abstract syntax tree
 	const parser = new Parser(tokenizer.tokens);
+
+	// render the AST as HTML
 	new View(parser.ast);
 
-});
+	console.log(parser.ast)
 
-const tokenizer = new Tokenizer(Text);
-//console.log(tokenizer.tokens)
-const parser = new Parser(tokenizer.tokens);
-//console.log(parser.ast)
-new View(parser.ast);
+	//scroll to bottom of app part
+	rightSide.scrollTop = app?.scrollHeight;
 
 
-	//let newAst = transformer(ast);
-	//let output = codeGenerator(newAst);
+}
+
+// function to clean the text by removing HTML tags and newlines
+function cleanText(text: string | null) {
+	return text?.replace(/<\/?[a-z][^>]*>|[\n\r]/gi, function (match) {
+		if (match === '\n' || match === '</div>') {
+			return '\n';
+		} else if (match === '<br>') {
+			return '\n';
+		} else {
+			return '';
+		}
+	});
+}
+
+
 
