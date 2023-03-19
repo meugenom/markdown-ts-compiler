@@ -1,11 +1,16 @@
-"string"
+/**
+ * Author: meugenom.com
+ * Date: 19.03.2023
+ * Refactored: 19.03.2023 
+ */
+
 import { Grammar } from "./Grammar"
-import {captionToken} from "./Token";
+import { captionToken } from "./Token";
 import { TokenType } from "./Types";
 
 export class Caption {
 
-	public text: string;
+	private text: string;
 
 	constructor(text: string) {
 		this.text = text;
@@ -13,25 +18,45 @@ export class Caption {
 
 	public get(): captionToken {
 
-		const caption = this.text.match(Grammar.BLOCKS.CAPTION);
+		const match = this.text.match(Grammar.BLOCKS.CAPTION);
+		if (!match) {
+			throw new Error("Invalid caption format");
+		}
 
-			const token = {} as captionToken;
+		const [
+			, // Ignore the first element
+			row,
+			date,
+			title,
+			,
+			template,
+			,
+			thumbnail,
+			,
+			slug,
+			,
+			categories,
+			,
+			tags,
+		] = match;
 
-			token.type = TokenType.CAPTION
-			token.row = caption[0];
-			token.date = caption[1];
-			token.title =  caption[3];
-			token.template =  caption[5];
-			token.thumbnail =  caption[7];
-			token.slug =  caption[9];
-			token.categories = caption[11];
-			token.tags =  caption[13];
+		const token: captionToken = {
+			type: TokenType.CAPTION,
+			row,
+			date,
+			title,
+			template,
+			thumbnail,
+			slug,
+			categories,
+			tags,
+		};
 
-			//remove caption from the text
-			this.text = this.text.replace(Grammar.BLOCKS.CAPTION, "");
+		//remove caption from the text
+		this.text = this.text.replace(Grammar.BLOCKS.CAPTION, "");
 
-			return token;
-		
+		return token;
+
 	}
 
 }
