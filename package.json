@@ -1,6 +1,6 @@
 {
   "name": "markdown-tailwind-css-compiler",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "markdown compiler ts tailwind css",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
