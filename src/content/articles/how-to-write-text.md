@@ -2,7 +2,7 @@
 date: 2019-08-30
 title: 'How to Write Text'
 template: post
-thumbnail: '../thumbnails/writing.png'
+thumbnail: './thumbnails/writing.png'
 slug: how-to-write-text
 categories: helping to write text
 tags: instruction texter writer
@@ -21,7 +21,7 @@ How to use: write caption block like the example below:
 date: 2019-08-30
 title: 'Instruction to Write Text'
 template: post
-thumbnail: '../thumbnails/writing.png'
+thumbnail: './thumbnails/writing.png'
 slug: instruction-to-write-text
 categories: 
 tags: instruction texter writer 
@@ -249,8 +249,8 @@ About \* this >Quote \*
 
 ## Images
 
-\* ![Github_image](../images/github.png) \*
+\* ![Github_image](./images/github.png) \*
 
 in out:
 
-This is an ![Github image](../images/github.png)
+This is an ![Github image](./images/github.png)
