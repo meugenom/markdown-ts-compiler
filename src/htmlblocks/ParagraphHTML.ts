@@ -37,8 +37,8 @@ export class ParagraphHTML {
 			if (child.type == TokenType.IMAGE) {
 				text = text + `
 				<div class="flex flex-wrap justify-center">
-					<div class="w-6/12 sm:w-4/12 px-4 pb-20">
-						<img src="${child.url}" alt="${child.alt}" class="shadow rounded max-w-full h-auto allign-middle border-none">
+					<div class="w-6/12 sm:w-4/12 px-4 pb-20">						
+						<img data-src="${child.url}" alt="${child.alt}" class="lazy shadow rounded max-w-full h-auto allign-middle border-none">
 					</div>
 				</div>
 				`
