@@ -11,13 +11,15 @@
             \___\___/|_| |_| |_| .__/|_|_|\___|_|
                                |_|               
 
-## Typescript Markdown Compiler
+## Markdown Typescript Compiler
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 ## Purpose:
 
 I created this parser to serve as a compiler for my personal website, specifically for parsing Markdown text into HTML. I utilized TypeScript and Webpack in the development process, and the styling is enhanced with Tailwind CSS. You can view the **result** on my website: [Markdown TS Compiler](https://meugenom.github.io/markdown-ts-compiler/), where there's a parsed example page.
+
+**Important**: To display the result, the script constructs the DOM model in the browser; a virtual DOM model is not utilized. This functionality might be considered in the next version.
 
 ## Technologies Used:
 
@@ -44,6 +46,14 @@ I created this parser to serve as a compiler for my personal website, specifical
     ```bash
     npm run test
     ```
+
+## API Reference:
+ Please see entrypoint `./src/index.ts` for the API reference.
+ 
+ **API** functions:
+- _convertMDtoHTML(txt: string)_ - converts markdown text into HTML, return HTML string
+- _convertMDtoTokens(txt: string)_ - converts markdown text into tokens, return array of tokens
+- _convertMDtoAST(txt: string)_ - converts markdown text into AST, return Abstract Syntax Tree
 
 ## How to use it in your project:
 
