@@ -22,6 +22,7 @@ import { Tokenizer } from "./Tokenizer";
 import { Parser } from "./Parser";
 import { View } from "./View";
 import "./static/styles/style.css";
+import Utils from "./Utils";
 
 import example from 'raw-loader!./content/articles/how-to-write-text.md';
 
@@ -70,3 +71,10 @@ function showExample(){
 
 //run the example
 showExample();
+
+
+// lazy load images
+const images = document.querySelectorAll('.lazy');
+images.forEach((img) => {
+    Utils.lazyLoadImage(img as HTMLImageElement);
+});
