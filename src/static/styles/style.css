@@ -2,16 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-
-.flexContainer
-{
-  display: flex;
-  width: 95%;
-  height: 400px;
+.no-inherit-font-size {
+  font-size: revert;
 }
-.half
-{
-  flex-grow: 1;
-  width: 47%;
+
+
+#content {  
   padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
 }

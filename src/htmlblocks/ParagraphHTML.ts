@@ -13,16 +13,18 @@ export class ParagraphHTML {
 
 	private DomUtilites : any;
 	private token: any;
+	private htmlOutput: HTMLElement;
 
-	constructor(token: any) {
+	constructor(token: any, htmlOutput: HTMLElement) {
 		this.token = token;
+		this.htmlOutput = htmlOutput;
 		this.DomUtilites = new DomUtilites();
 	}
 
-	render(): void {
+	render(): any {
 
 		const ParagraphNode = this.DomUtilites.createElement("p")
-		ParagraphNode.className = "block leading-7 font-mono";
+		ParagraphNode.className = "block leading-7 font-mono mt-2";
 
 		let text = "";
 		
@@ -57,14 +59,14 @@ export class ParagraphHTML {
 			if (child.type == TokenType.CODE_INLINE) {
 				text = text + " " + `
 				<code class="inline-block py-1 px-2 bg-gray-300 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400">
-					${child.value}
+					${child.value.substring(1, child.value.length - 1)}
 				</code>
 				`
 			}
 
 			if (child.type == TokenType.COLOR) {
 
-				let colorText: string;
+				let colorText: string|undefined;
 
 				if(child.color == "blue"){
 					colorText = '<a class="underline decoration-blue-500 md:decoration-solid decoration-4">' + child.value + '</a>'
@@ -83,14 +85,16 @@ export class ParagraphHTML {
 				}else if(child.color == "indigo"){
 					colorText = '<a class="underline decoration-indigo-500 md:decoration-solid decoration-4">' + child.value + '</a>'
 				}
+				if(colorText){
+					text = text + " " + colorText;
+				}
 				
-				text = text + " " + colorText;
 			}
 
 
 			if (child.type == "Badge") {
 
-				let colorBadge: string;
+				let colorBadge: string | undefined;
 
 				if(child.color == "blue"){
 					colorBadge = '<span class="bg-blue-100 text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">' + child.value + '</span>'
@@ -109,8 +113,9 @@ export class ParagraphHTML {
 				}else if(child.color == "indigo"){
 					colorBadge = '<span class="bg-indigo-100 text-indigo-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-indigo-200 dark:text-indigo-900">' + child.value + '</span>'
 				}
-				
-				text = text + " " + colorBadge;
+				if(colorBadge != undefined){
+					text = text + " " + colorBadge;
+				}
 			}
 
 			if (child.type == TokenType.UNDER_LINE) {
@@ -122,24 +127,29 @@ export class ParagraphHTML {
 			}
 
 			if (child.type == TokenType.UNMARKABLE) {
-				//JSON.stringify(String(str)) for unmarkable text usage
-				text = text + " " + `
-				<span class="text-orange-900">${JSON.stringify(String(child.value))}</span>
-				`
+												
+				const unmarkable = child.value;
+				const unmarkableText = unmarkable.substring(1, unmarkable.length - 1);								
+
+				text = text + " " + `				
+				<div class="text-orange-900">
+					${unmarkableText.replace(/\n/g, '<br/>')}
+				</div>
+				`				
+
 			}
 		})
 
 		ParagraphNode.innerHTML = text;
 
-		let container:ChildNode;
-		if(document.getElementById("app")?.children.length != 0){
-
-			 container = document.getElementById("app")?.lastChild;
-
+		//let container : any;
+		const app = this.htmlOutput;		
+		if(app?.children.length != 0){
+			 app?.lastChild?.appendChild(ParagraphNode);
 		}else{
-			 container = document.getElementById("app");
+			 app.appendChild(ParagraphNode);
 		}
-		
-		container?.appendChild(ParagraphNode);
+
+		return this.htmlOutput;
 	}
 }

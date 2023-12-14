@@ -3,6 +3,7 @@ import { Grammar } from "./Grammar"
 import { Caption } from "./Caption"
 import * as Token from "./Token";
 import { TokenType } from "./Types";
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * 
@@ -10,611 +11,528 @@ import { TokenType } from "./Types";
 
 export class Tokenizer {
 
-	public tokens =  [] as (Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
-		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
-		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
-		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-		Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken | Token.tableToken)[];
-	
-	public text: string;
-	public words: Array<string>;
-	private word_number: number;
+	public tokens = [] as (Token.bagdeToken
+		| Token.captionToken
+		| Token.codeBlockToken
+		| Token.codeInlineToken
+		| Token.colorTextToken
+		| Token.headToken
+		| Token.imageToken
+		| Token.linkToken
+		| Token.listToken
+		| Token.paragraphEndToken
+		| Token.paragraphStartToken
+		| Token.quoteToken
+		| Token.strongTextToken
+		| Token.textToken
+		| Token.underLineToken
+		| Token.unknownTextToken
+		| Token.codeInCodeToken
+		| Token.unmarkableToken
+		| Token.tableToken
+	)[];
+
+	public text: string;	
+	private tokensMap: Map<string, any>;
 
 	constructor(text: string) {
 
 		this.text = text;
-		this.tokens = [];
-		this.word_number = 0;
-		this.words = [];
-		this.init();
+
+		this.tokens = [];		
+		this.tokensMap = new Map();
+		this.tokenize();
 	}
 
+	tokenize() {
 
-	private init = (): void => {
+		this.findCaption();
+		this.findUnmarkable();
+		this.findCodeInCode();
+		this.findCodeBlock();
+		this.findHeadings();
+		this.findQuotes();
+		this.findStrong();
+		this.findLinks();
+		this.findImages();
+		this.findUnderlines();
+		this.findColors();
+		this.findBadges();
+		this.findLists();
+		this.findTables();
+		this.init();
 
-		//add caption
+	}
+
+	private findCaption() {
 		if (this.text.match(Grammar.BLOCKS.CAPTION) != null) {
-
 			const caption = new Caption(this.text);
 			let token = {} as Token.captionToken;
 			token = caption.get();
-			this.text = caption.text;//remove caption from article
-			this.tokens.push(token);
-
+			const uuid = uuidv4();
+			this.text = "$token." + uuid + "\n" + caption.text;
+			this.tokensMap.set("$token." + uuid, token);
 		}
+	}
 
+	//unmarkable
+	private findUnmarkable(): void {
+		//if (this.text.match(Grammar.BLOCKS.UNMARKABLE)?.length != null) {			
 
-		//split by space
-		this.words = this.text.split(Grammar.BLOCKS.SPACE);
+		const unmarkables = this.text.match(Grammar.BLOCKS.UNMARKABLE);
 
-		let out = "";
+		unmarkables?.forEach((unmarkable: string) => {
 
-		/**
-		 * LOOPS for multiple line blocks:
-		 *  - CODEBLOCK
-		 *  - CODE
-		 *  - QUOTE
-		 *  - TABLE
-		 */
+			const matchResult = unmarkable.match(Grammar.BLOCKS.UNMARKABLE);
 
-		this.word_number = 0;
+			if (matchResult) {
+				const body = matchResult[0]?.substring(2, matchResult[0].length - 2);
+				const uuid = uuidv4();
 
-		loop_word: while (this.word_number < this.words.length) {
+				const unmarkableToken = {} as Token.unmarkableToken;
+				unmarkableToken.type = TokenType.UNMARKABLE;
+				unmarkableToken.value = body;
 
-			out = out + " " + (this.words[this.word_number]);
-
-			//in the end of article
-			if (this.word_number == this.words.length - 1) {
-
-				const token =  {} as Token.unknownTextToken;
-				token.type = TokenType.UNKNOWN_TEXT;
-				token.value = out;
-				this.tokens.push(token);
-
-				this.word_number++;
-				continue loop_word;
+				this.text = this.text.replace(unmarkable, ` $token.${uuid} `);
+				this.tokensMap.set("$token." + uuid, unmarkableToken);
 			}
+		});
+		//}
 
+		return;
+	}
 
-			//CODE_IN_CODE block
-			if (out.match(Grammar.BLOCKS.CODE_IN_CODE) != null) {
+	//find code in code blocks
+	private findCodeInCode(): void {
 
-				const rest: string = out.replace(Grammar.BLOCKS.CODE_IN_CODE, "&codeInCode&");
-				const arr = rest.split("&codeInCode&")
+		const codeInCodes = this.text.match(Grammar.BLOCKS.CODE_IN_CODE);
 
-				//block before
-				const unknownToken = {} as Token.unknownTextToken;
-				unknownToken.type = TokenType.UNKNOWN_TEXT;
-				unknownToken.value = arr[0];
-				this.tokens.push(unknownToken);
+		codeInCodes?.forEach((codeInCode: string) => {
 
-				//founded block
-				const codeToken = {} as  Token.codeInCodeToken;
+			const languageMatchResult = codeInCode.match(Grammar.BLOCKS.INLINE_CODE);
+			const bodyMatchResult = codeInCode.match(Grammar.BLOCKS.INLINE_CODE);
+
+			if (languageMatchResult && bodyMatchResult) {
+
+				const language = languageMatchResult[0];
+				const body = bodyMatchResult[1] ?? ''; // Add nullish coalescing operator to assign a non-null value to 'body'
+
+				const uuid = uuidv4();
+				const codeToken = {} as Token.codeInCodeToken;
 				codeToken.type = TokenType.CODE_IN_CODE;
-				codeToken.code = out.match(Grammar.BLOCKS.CODE_IN_CODE)[2];
-				codeToken.language = out.match(Grammar.BLOCKS.CODE_IN_CODE)[1];
-				this.tokens.push(codeToken);
+				codeToken.code = body;
+				codeToken.language = language as string;
+				this.tokensMap.set("$token." + uuid, codeToken);
 
-				//block after 
-				out = arr[1];
-				this.word_number++;
-				continue loop_word;
+				this.text = this.text.replace(codeInCode, ` $token.${uuid}`);
 			}
+		});
+		return;
+	}
+
+	//find simple code blocks
+	private findCodeBlock(): void {
+
+		if (this.text.match(Grammar.BLOCKS.CODE_BLOCK) != null) {
+
+			const blocks = this.text.match(Grammar.BLOCKS.CODE_BLOCK);
+			blocks?.forEach((block: string) => {
 
 
-			//CODE
-			if (out.match(Grammar.BLOCKS.CODE_BLOCK) != null &&
-				out.match(Grammar.BLOCKS.CODE_BLOCK)[2].length > 5 //because value is not less then 5 symbols...its CODEBLOCK
-			) {
+				const languageMatchResult = block.match(Grammar.BLOCKS.CODE_BLOCK_LANG);
+				const bodyMatchResult = block.match(Grammar.BLOCKS.CODE_BLOCK_BODY);
 
-				const rest: string = out.replace(Grammar.BLOCKS.CODE_BLOCK, "&codeblock&");
-				const arr = rest.split("&codeblock&")
+				if (languageMatchResult && bodyMatchResult) {
+					const language = languageMatchResult[0];
+					const body = bodyMatchResult[0];
+					const codeToken = {} as Token.codeBlockToken;
+					codeToken.type = TokenType.CODE_BLOCK;
+					codeToken.code = body as string;
+					codeToken.language = language as string;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, codeToken);
+
+					this.text = this.text.replace(block,
+						` $token.${uuid}`);
+				}
+			});
+		}
+		return;
+	}
+
+	//find headings
+	findHeadings(): void {
+
+		if (this.text.match(Grammar.BLOCKS.HEADING) != null) {
+			const headings = this.text.match(Grammar.BLOCKS.HEADING);
+			headings?.forEach((heading: string) => {
+
+				const levelMatchResult = heading.match(Grammar.BLOCKS.HEADING_LEVEL);
+
+				if (levelMatchResult) {
+					const level = levelMatchResult[0];
+					//find body from heading where satrt is level + 1 and end is \n
+					//private case
+					if(!level || level.length > heading.length){
+						return;
+					}
+					const body = heading.slice(level.length + 1, heading.length);
+
+					const types : any = [
+						TokenType.HEADING_FIRST,
+						TokenType.HEADING_SECOND,
+						TokenType.HEADING_THIRD,
+						TokenType.HEADING_FORTH,
+						TokenType.HEADING_FIFTH
+					]
+					
+					//private case
+					if (!level || level.length > types.length) {
+						return;
+					}
+					
+					const itype: number = level.length - 1;
+
+					const headToken = {} as Token.headToken;
+					headToken.type = types[itype];
+					headToken.value = body;
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, headToken);
+
+					this.text = this.text.replace(heading,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
+
+	//find quotes
+	findQuotes(): void {
+
+		if (this.text.match(Grammar.BLOCKS.QUOTE) != null) {
+
+			const quotes = this.text.match(Grammar.BLOCKS.QUOTE);
+
+			quotes?.forEach((quote: string) => {
+
+				const matchResult = quote.match(Grammar.BLOCKS.QUOTE_PARAMS);
+				if(matchResult){
+					const author : any = matchResult[3];
+					const text = matchResult[0];
+
+					const quoteToken = {} as Token.quoteToken;
+					quoteToken.type = TokenType.QUOTE;
+					quoteToken.quote = text as string;
+					quoteToken.author = author;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, quoteToken);
+
+					this.text = this.text.replace(quote,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
+
+	//find bold text
+	findStrong(): void {
+
+		if (this.text.match(Grammar.BLOCKS.STRONG) != null) {
+
+			const strongs = this.text.match(Grammar.BLOCKS.STRONG);
+
+			strongs?.forEach((strong: string) => {
+
+				const bodyMatchResult = strong.match(Grammar.BLOCKS.STRONG_TEXT);
+
+				if(bodyMatchResult) {
+					const body = bodyMatchResult[0];
+					const strongToken = {} as Token.strongTextToken;
+					strongToken.type = TokenType.STRONG;
+					strongToken.value = body;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, strongToken);
+
+					this.text = this.text.replace(strong,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
+
+	//find links
+	findLinks(): void {
+
+		if (this.text.match(Grammar.BLOCKS.LINK) != null) {
+
+			const links = this.text.match(Grammar.BLOCKS.LINK);
+
+			links?.forEach((link: string) => {
+				const nameMatchResult = link.match(Grammar.BLOCKS.LINK_NAME);
+				const urlMatchResult = link.match(Grammar.BLOCKS.LINK_URL);
+				if(nameMatchResult && urlMatchResult && nameMatchResult[0] && urlMatchResult[0]){
+					const name = nameMatchResult[0].substring(1, nameMatchResult[0].length - 1);
+					const url = urlMatchResult[0].substring(1, urlMatchResult[0].length - 1);
+
+					const linkToken = {} as Token.linkToken;
+					linkToken.type = TokenType.LINK;
+					linkToken.name = name;
+					linkToken.url = url;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, linkToken);
+
+					this.text = this.text.replace(link,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
+
+	//find images
+	findImages(): void {
+
+		if (this.text.match(Grammar.BLOCKS.IMAGE) != null) {
+
+			const images = this.text.match(Grammar.BLOCKS.IMAGE);
+
+			images?.forEach((image: string) => {
+
+				const altMatchResult = image.match(Grammar.BLOCKS.IMAGE_NAME);
+				const urlMatchResult = image.match(Grammar.BLOCKS.IMAGE_URL);
+
+				if(altMatchResult && urlMatchResult && altMatchResult[0] && urlMatchResult[0]){
+					const alt = altMatchResult[0].substring(2, altMatchResult[0].length - 1);
+					const url = urlMatchResult[0].substring(1, urlMatchResult[0].length - 1);	
+
+					const imageToken = {} as Token.imageToken;
+					imageToken.type = TokenType.IMAGE;
+					imageToken.alt = alt;
+					imageToken.url = url;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, imageToken);
 
 
-				//block before
-				const unknownTextToken = {} as  Token.unknownTextToken;
-				unknownTextToken.type = TokenType.UNKNOWN_TEXT;
-				unknownTextToken.value = arr[0];
-				this.tokens.push(unknownTextToken);
+					this.text = this.text.replace(image,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
 
-				//founded block
-				const codeToken = {} as  Token.codeBlockToken;
-				codeToken.type = TokenType.CODE_BLOCK;
-				codeToken.code = out.match(Grammar.BLOCKS.CODE_BLOCK)[2];
-				codeToken.language = out.match(Grammar.BLOCKS.CODE_BLOCK)[1];
-				this.tokens.push(codeToken);
+	//find underlines
+	findUnderlines(): void {
 
-				//block after
-				out = arr[1];
-				this.word_number++;
-				continue loop_word;
-			}
+		if (this.text.match(Grammar.BLOCKS.UNDER_LINE) != null) {
 
-			//QUOTE
-			if (out.match(Grammar.BLOCKS.QUOTE) != null) {
+			const underlines = this.text.match(Grammar.BLOCKS.UNDER_LINE);
 
-				const rest: string = out.replace(Grammar.BLOCKS.QUOTE, "&quote&");
-				const arr = rest.split("&quote&")
+			underlines?.forEach((underline: string) => {				
+
+				const bodyMatchResult = underline.match(Grammar.BLOCKS.UNDER_LINE);
+
+				if(bodyMatchResult && bodyMatchResult[0]){
+					const body = bodyMatchResult[0].substring(1, bodyMatchResult[0].length - 1);
+					const underlineToken = {} as Token.underLineToken;
+					underlineToken.type = TokenType.UNDER_LINE;
+					underlineToken.value = body;
+
+					const uuid = uuidv4();
+					this.tokensMap.set("$token." + uuid, underlineToken);
+
+					this.text = this.text.replace(underline,
+						` $token.${uuid} `);
+				}
+			});
+		}
+		return;
+	}
+
+	//find colors
+	findColors(): void {
+
+		if (this.text.match(Grammar.BLOCKS.COLOR) != null) {
+
+			const colors = this.text.match(Grammar.BLOCKS.COLOR);
+
+			colors?.forEach((color: string) => {
+
+				const body = color.split(".")[0];
+				const colorName : any = color.split(".")[1];
 
 
-				//block before
-				const unknownToken = {} as  Token.unknownTextToken;
-				unknownToken.type = TokenType.UNKNOWN_TEXT;
-				unknownToken.value = arr[0];
-				this.tokens.push(unknownToken);
+				const colorToken = {} as Token.colorTextToken;
+				colorToken.type = TokenType.COLOR;
+				colorToken.value = body;
+				colorToken.color = colorName;
 
-				//founded block
-				const quoteToken = {} as  Token.quoteToken;
-				quoteToken.type = TokenType.QUOTE;
-				quoteToken.row = out.match(Grammar.BLOCKS.QUOTE)[0];
-				quoteToken.quote = out.match(Grammar.BLOCKS.QUOTE)[1];
-				quoteToken.author = out.match(Grammar.BLOCKS.QUOTE)[2];
-				this.tokens.push(quoteToken);
+				const uuid = uuidv4();
+				this.tokensMap.set("$token." + uuid, colorToken);
 
-				//after block
-				out = arr[1];
-				this.word_number++;
-				continue loop_word;
-			}
+				this.text = this.text.replace(color,
+					` $token.${uuid}`);
 
-			this.word_number++;
-
+			});
 		}
 
+	}
 
-		// LOOPS UNKNOWN_TEXT TO DEFINE OTHER TOKENS:
+	//find bages
+	findBadges(): void {
 
-		const itokens = [] as  Array<Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
-			Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
-			Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
-			Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-			Token.unknownTextToken | Token.codeInCodeToken | Token.unmarkableToken | Token.tableToken >;
+		if (this.text.match(Grammar.BLOCKS.BADGE) != null) {
+
+			const badges = this.text.match(Grammar.BLOCKS.BADGE);
+
+			badges?.forEach((badge: string) => {
+
+				const body = badge.split("@")[0];
+				const colorName: any = badge.split("@")[1];
+
+				const badgeToken = {} as Token.bagdeToken;
+				badgeToken.type = TokenType.BADGE;
+				badgeToken.value = body;
+				badgeToken.color = colorName;
+
+				const uuid = uuidv4();
+				this.tokensMap.set("$token." + uuid, badgeToken);
+
+				this.text = this.text.replace(badge,
+					` $token.${uuid} `);
+
+			});
+		}
+
+	}
+
+	//find lists
+	findLists(): void {
+
+		if (this.text.match(Grammar.BLOCKS.LIST) != null) {
+
+			const lists = this.text.match(Grammar.BLOCKS.LIST);
+
+			lists?.forEach((list: string) => {
+
+				const body = list;
+
+				const listToken = {} as Token.listToken;
+				listToken.type = TokenType.LIST;				
+				listToken.value = body;
+
+				const uuid = uuidv4();
+				this.tokensMap.set("$token." + uuid, listToken);
+
+				this.text = this.text.replace(list, ` $token.${uuid}`);
+			});
+		}
+
+	}
+
+	//find tables
+	findTables(): void {
+
+		if (this.text.match(Grammar.BLOCKS.TABLE) != null) {
+
+			const tables = this.text.match(Grammar.BLOCKS.TABLE);
+
+			tables?.forEach((table: string) => {
+
+				const tableToken = {} as Token.tableToken;
+				tableToken.type = TokenType.TABLE;
+				tableToken.row = table;
+				tableToken.children = [] as Token.tableRowToken[];
+
+				//add children
+				const rows = table.split("\n");
+				rows.forEach((row: string) => {
+					const rowToken = {} as Token.tableRowToken;
+					rowToken.type = TokenType.TABLE_ROW;
+					rowToken.value = row;
+					tableToken.children.push(rowToken);
+				});
+
+				const uuid = uuidv4();
+				this.tokensMap.set("$token." + uuid, tableToken);
+
+				this.text = this.text.replace(table, ` $token.${uuid}`);
+
+			});
+		}
+
+		//inline code
+		if (this.text.match(Grammar.BLOCKS.INLINE_CODE_BLOCK) != null) {
+
+			const inlineCodes = this.text.match(Grammar.BLOCKS.INLINE_CODE_BLOCK);
+
+			inlineCodes?.forEach((inlineCode: string) => {
+
+				const inlineCodeToken = {} as Token.codeInlineToken;
+				inlineCodeToken.type = TokenType.CODE_INLINE;
+				inlineCodeToken.value = inlineCode;
+
+				const uuid = uuidv4();
+				this.tokensMap.set("$token." + uuid, inlineCodeToken);
+
+				this.text = this.text.replace(inlineCode, ` $token.${uuid}`);
+
+			});
+		}
+	}
 
 
-		this.tokens.forEach((token: any) => {
 
-			if (token.type == TokenType.UNKNOWN_TEXT) {
+	init = (): void => {
 
-				const text = token.value.split("\n")
+		//need to find all paragraphs in the article and change them to tokens
+		const paragraphStartToken = {} as Token.paragraphStartToken;
+		paragraphStartToken.type = TokenType.PARAGRAPH_START;
 
-				text.forEach((stroke: string) => {
+		const paragraphEndToken = {} as Token.paragraphEndToken;
+		paragraphEndToken.type = TokenType.PARAGRAPH_END;
 
-					if (stroke != '' && stroke != ' ') {
+		//console.log(this.text);
 
-						/**
-						 * Search other tokens:
-						 * 
-						 * - Image
-						 * - Link
-						 * - InlineCode
-						 *  - Strong
-						 * - Unmarkable
-						 * - Heading
-						 * - Underline
-						 * - Color
-						 * - Badge
-						 * - Table
-						 */
+		//console.log(this.tokensMap);
 
-
-						if (stroke.match(Grammar.BLOCKS.IMAGE) != null) {
-
-							//Paragrah Start -> Text before -> Image -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as  Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textBeforeToken = {} as  Token.textToken;
-							textBeforeToken.type = TokenType.TEXT;
-							textBeforeToken.value = stroke.match(Grammar.BLOCKS.IMAGE)[1];
-							itokens.push(textBeforeToken)
-
-							//image
-							const imageToken = {} as  Token.imageToken;
-							imageToken.type = TokenType.IMAGE;
-							imageToken.alt = stroke.match(Grammar.BLOCKS.IMAGE)[2];
-							imageToken.url = stroke.match(Grammar.BLOCKS.IMAGE)[3];
-							itokens.push(imageToken);
-
-							//text after
-							const textAfterToken = {} as  Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.IMAGE)[4];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken)
-
-							return;
-
-						}
-
-						if (stroke.match(Grammar.BLOCKS.LINK) != null) {
-
-							//Paragrah Start -> Text before -> Link -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken= {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textBeforeToken= {} as Token.textToken;
-							textBeforeToken.type = TokenType.TEXT;
-							textBeforeToken.value = stroke.match(Grammar.BLOCKS.LINK)[1];
-							itokens.push(textBeforeToken);
-
-							//link
-							const linkToken= {} as Token.linkToken;
-							linkToken.type = TokenType.LINK;
-							linkToken.name = stroke.match(Grammar.BLOCKS.LINK)[2];
-							linkToken.url = stroke.match(Grammar.BLOCKS.LINK)[3];
-							itokens.push(linkToken);
-
-							//text after
-							const textAfterToken= {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.LINK)[4];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken)
-
-							return;
-
-						}
-
-						if (stroke.match(Grammar.BLOCKS.UNDER_LINE) != null) {
-
-							//Paragrah Start -> Text before -> underLine -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textBeforeToken = {} as Token.textToken;
-							textBeforeToken.type = TokenType.TEXT;
-							textBeforeToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[1];
-							itokens.push(textBeforeToken)
-
-							//underLine
-							const underLineToken = {} as Token.underLineToken;
-							underLineToken.type = TokenType.UNDER_LINE;
-							underLineToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[2];
-							itokens.push(underLineToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.UNDER_LINE)[3];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END
-							itokens.push(paragraphEndToken)
-
-							return;
-
-						}
-
-						//inline code
-						if (stroke.match(Grammar.BLOCKS.INLINE_CODE) != null) {
-
-							//Paragrah Start -> Text before -> inline code -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textBeforeToken = {} as Token.textToken;
-							textBeforeToken.type = TokenType.TEXT;
-							textBeforeToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[1];
-							itokens.push(textBeforeToken)
-
-							//inline code
-							const codeInlineToken = {} as Token.codeInlineToken;
-							codeInlineToken.type = TokenType.CODE_INLINE;
-							codeInlineToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[2];
-							itokens.push(codeInlineToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.INLINE_CODE)[3];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken)
-
-							return;
-
-						}
-
-						// Strong text
-						if (stroke.match(Grammar.BLOCKS.STRONG) != null) {
-
-							//Paragrah Start -> Text before -> Strong Text -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
+		this.text.split("\n").forEach((paragraph: string) => {
+			if (paragraph.length != 0
+				&& paragraph != undefined
+				&& paragraph.trim() != " ") {
+				//console.log(paragraph);
+				this.tokens.push(paragraphStartToken);
+				paragraph.split(" ").forEach((word: string) => {
+					const wordMatchResult = word.match(Grammar.BLOCKS.TOKEN);
+					if (wordMatchResult && wordMatchResult[0]) {
+						//console.log("word: " + word + " = " + this.tokensMap.get(word.match(Grammar.BLOCKS.TOKEN)[0]));												
+						this.tokens.push(this.tokensMap.get(wordMatchResult[0]));											
+					} else {
+						//console.log(word);
+						if (word.length != 0
+							&& word != undefined) {
 							const textToken = {} as Token.textToken;
 							textToken.type = TokenType.TEXT;
-							textToken.value = stroke.match(Grammar.BLOCKS.STRONG)[1];
-							itokens.push(textToken)
-
-							//strong text
-							const strongTextToken = {} as Token.strongTextToken;
-							strongTextToken.type = TokenType.STRONG;
-							strongTextToken.value = stroke.match(Grammar.BLOCKS.STRONG)[2];
-							itokens.push(strongTextToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.STRONG)[3];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken)
-
-							return;
+							textToken.value = word;
+							//console.log(word);
+							this.tokens.push(textToken);
 						}
-
-
-
-						// Color text
-						if (stroke.match(Grammar.BLOCKS.COLOR) != null) {
-
-							//Paragrah Start -> Text before -> Color Text -> Text after -> Paragraph End
-
-							const rest: string = stroke.replace(Grammar.BLOCKS.COLOR, "&color&");
-							const arr = rest.split("&color&")
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textToken = {} as Token.textToken;
-							textToken.type = TokenType.TEXT;
-							textToken.value = arr[0];
-							itokens.push(textToken)
-
-							//Color Text
-							const colorTextToken = {} as Token.colorTextToken;
-							colorTextToken.type = TokenType.COLOR;
-							colorTextToken.value = stroke.match(Grammar.BLOCKS.COLOR)[1];
-							colorTextToken.color = stroke.match(Grammar.BLOCKS.COLOR)[3];
-							itokens.push(colorTextToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = arr[1];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken)
-
-							return;
-
-						}
-
-						// Color badges
-						if (stroke.match(Grammar.BLOCKS.BADGE) != null) {
-
-							//Paragrah Start -> Text before -> Color Badge -> Text after -> Paragraph End
-
-							const rest: string = stroke.replace(Grammar.BLOCKS.BADGE, "&badge&");
-							const arr = rest.split("&badge&")
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textToken = {} as Token.textToken;
-							textToken.type = TokenType.TEXT;
-							textToken.value = arr[0];
-							itokens.push(textToken)
-
-							//Color Badge
-							const badgeToken = {} as Token.bagdeToken;
-							badgeToken.type = TokenType.BADGE;
-							badgeToken.value = stroke.match(Grammar.BLOCKS.BADGE)[1];
-							badgeToken.color = stroke.match(Grammar.BLOCKS.BADGE)[3];
-							itokens.push(badgeToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = arr[1];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken);
-
-							return;
-
-						}
-
-						// Unmarkable text
-						if (stroke.match(Grammar.BLOCKS.UNMARKABLE) != null) {
-
-							//Paragrah Start -> Text before -> Unmarkable Text -> Text after -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//text before 
-							const textToken = {} as Token.textToken;
-							textToken.type = TokenType.TEXT;
-							textToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[1];
-							itokens.push(textToken)
-
-							//unmarkable text
-							const unmarkableToken = {} as Token.unmarkableToken;
-							unmarkableToken.type = TokenType.UNMARKABLE;
-							unmarkableToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[2];
-							itokens.push(unmarkableToken);
-
-							// text after
-							const textAfterToken = {} as Token.textToken;
-							textAfterToken.type = TokenType.TEXT;
-							textAfterToken.value = stroke.match(Grammar.BLOCKS.UNMARKABLE)[3];
-							itokens.push(textAfterToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken);
-
-							return;
-
-						}
-
-						// LIST						
-						if (stroke.match(Grammar.BLOCKS.LIST) != null) {
-
-							//Paragrah Start -> List -> Paragraph End
-
-							//paragraph start
-							const paragraphStartToken = {} as Token.paragraphStartToken;
-							paragraphStartToken.type = TokenType.PARAGRAPH_START;
-							itokens.push(paragraphStartToken);
-
-							//List
-							const listToken = {} as Token.listToken;
-							listToken.type = TokenType.LIST;
-							listToken.attribute = stroke.match(Grammar.BLOCKS.LIST)[1];
-							listToken.value = stroke.match(Grammar.BLOCKS.LIST)[2];
-							itokens.push(listToken);
-
-							//end paragraph
-							const paragraphEndToken = {} as Token.paragraphEndToken;
-							paragraphEndToken.type = TokenType.PARAGRAPH_END;
-							itokens.push(paragraphEndToken);
-
-							return;
-
-						}
-
-						// TABLE
-						if (stroke.match(Grammar.BLOCKS.TABLE) != null) {
-
-							// if second row in the table, when add this row to the previous table element
-							if (itokens[itokens.length - 1].type == TokenType.TABLE){
-								
-								const tableRowToken = {} as Token.tableRowToken;
-								tableRowToken.type = TokenType.TABLE_ROW;
-								tableRowToken.value = stroke.match(Grammar.BLOCKS.TABLE)[1];
-								tableRowToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
-								
-								itokens[itokens.length - 1].children?.push(tableRowToken);
-								itokens[itokens.length - 1].row = itokens[itokens.length - 1].row + "\n" + tableRowToken.row;
-
-							}else {
-
-								//added first row of the Table
-								const tableRowToken = {} as Token.tableRowToken;
-								tableRowToken.type = TokenType.TABLE_ROW;
-								tableRowToken.value = stroke.match(Grammar.BLOCKS.TABLE)[1];
-								tableRowToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
-
-								const tableToken = {} as Token.tableToken
-								tableToken.type = TokenType.TABLE;
-								tableToken.children = [tableRowToken];
-								tableToken.row = stroke.match(Grammar.BLOCKS.TABLE)[1];
-
-								itokens.push(tableToken);
-							}
-
-							
-
-							return;
-
-						}
-
-
-						// Heading
-						if (stroke.match(Grammar.BLOCKS.HEADING) != null) {
-
-							const types = [
-								TokenType.HEADING_FIRST,
-								TokenType.HEADING_SECOND,
-								TokenType.HEADING_THIRD,
-								TokenType.HEADING_FORTH,
-								TokenType.HEADING_FIFTH
-							]
-
-							const itype: number = stroke.match(Grammar.BLOCKS.HEADING)[1].length - 1;
-
-							const headToken = {} as Token.headToken;
-							headToken.type = types[itype];
-							headToken.value = stroke.match(Grammar.BLOCKS.HEADING)[2];
-							itokens.push(headToken);
-
-							return;
-						}
-
-						// for other unidentified text
-						// Paragraph -> Other Text -> Paragraph
-
-						//paragraph start
-						const paragraphStartToken = {} as Token.paragraphStartToken;
-						paragraphStartToken.type = TokenType.PARAGRAPH_START;
-						itokens.push(paragraphStartToken);
-
-						//Other Text 
-						const textToken = {} as Token.textToken;
-						textToken.type = TokenType.TEXT;
-						textToken.value = stroke;
-						itokens.push(textToken)
-
-
-						//end paragraph
-						const paragraphEndToken = {} as Token.paragraphEndToken;
-						paragraphEndToken.type = TokenType.PARAGRAPH_END;
-						itokens.push(paragraphEndToken);
-
 					}
-				})
-
-			} else {
-
-				itokens.push(token);
+				});
+				this.tokens.push(paragraphEndToken);
 			}
-		})
+		});
 
-		this.tokens = itokens;
+		//console.log(this.tokens);
+		this.tokens;
 
 	}
 }

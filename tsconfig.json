@@ -1,14 +1,46 @@
 {
-	"compilerOptions": {
-	  "allowJs": true,
-	  "checkJs": true,
-	  "noImplicitAny": true,
-	  "noImplicitReturns": true,
-	  "sourceMap": true,
-	  "strict": true,
-	  "target": "ES5",
-	  "types": ["node", "jest"]
-	},
-	"include": ["src/**/*"]
+  "files": ["./src/index.ts"],
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "sourceMap": true,
+    "strict": true,
+    "removeComments": true,
+    "target": "ES5" ,
+    "module": "commonjs",
+    "declaration": true,
+    "outDir": "./dist",
+    "noEmit": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noEmitOnError": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "lib": ["ES5", "DOM"],
+    "rootDir": "./src",
+    "types": ["node", "jest"]
+  },
+  "include": ["./src/**/*.ts", "./src/types/*.d.ts", "./src/content/articles/*.md", "./src/content/thumbnails/*.png", "./src/content/images/*.png"],
+  "exclude": [
+    "node_modules/**/*",
+    "jest.config.**",
+    "webpack.config.js",
+    "dist"
+  ],
+  "baseUrl": "./src",
+  "paths": {
+    "*": ["*"]
   }
-  
+}

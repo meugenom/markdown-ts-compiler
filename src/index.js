@@ -1,3 +1,4 @@
+"use strict";
 /**
  * Author: meugenom.com
  * Date: 13.12.2023
@@ -18,58 +19,47 @@
  *                \___\___/|_| |_| |_| .__/|_|_|\___|_|
  *                                   |_|
  */
-
-import { Tokenizer } from "./Tokenizer";
-import { Parser } from "./Parser";
-import { View } from "./View";
-import "./static/styles/style.css";
-
-import example from 'raw-loader!./content/articles/how-to-write-text.md';
-
-
+exports.__esModule = true;
+var Tokenizer_1 = require("./Tokenizer");
+var Parser_1 = require("./Parser");
+var View_1 = require("./View");
+require("./static/styles/style.css");
+//import example from 'raw-loader!./content/articles/how-to-write-text.md';
 //create a document with a div with id app
-const htmlOutput = document.createElement('div');
+var htmlOutput = document.createElement('div');
 htmlOutput.id = "app";
-
-
-function convertMDtoHTML(text: any){
-    let tokenizer = new Tokenizer(text);
-    const parser = new Parser(tokenizer.tokens);
-    console.log(parser.ast)
-    const output : any = new View(parser.ast, htmlOutput).init();
-    console.log(output)
+function convertMDtoHTML(text) {
+    var tokenizer = new Tokenizer_1.Tokenizer(text);
+    var parser = new Parser_1.Parser(tokenizer.tokens);
+    console.log(parser.ast);
+    var output = new View_1.View(parser.ast, htmlOutput).init();
+    console.log(output);
     return output;
 }
-
-
 //API to convert markdown to AST
-function convertMDtoAST(text: string) {
-    let tokenizer = new Tokenizer(text);
-    const parser = new Parser(tokenizer.tokens);
+function convertMDtoAST(text) {
+    var tokenizer = new Tokenizer_1.Tokenizer(text);
+    var parser = new Parser_1.Parser(tokenizer.tokens);
     return parser.ast;
 }
-
 //API to convert markdown to tokens
-function convertMDtoTokens(text: string) {
-    let tokenizer = new Tokenizer(text);
+function convertMDtoTokens(text) {
+    var tokenizer = new Tokenizer_1.Tokenizer(text);
     return tokenizer.tokens;
 }
-
-export default {
-    convertMDtoHTML,
-    convertMDtoAST,
-    convertMDtoTokens
-  };
-  
-
+exports["default"] = {
+    convertMDtoHTML: convertMDtoHTML,
+    convertMDtoAST: convertMDtoAST,
+    convertMDtoTokens: convertMDtoTokens
+};
 //show example
-function showExample(){    
+/*
+function showExample(){
     // render the html node to the DOM
-    if(document.getElementById('content') != null && example != undefined){    
+    if(document.getElementById('content') != null && example != undefined){
         document.getElementById('content')?.appendChild(convertMDtoHTML(example));
     }
 }
 
-
-//run the example
-showExample();
+//showExample();
+*/ 

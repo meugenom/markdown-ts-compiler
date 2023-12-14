@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
-
 module.exports = {
   entry: './src/index.ts',
   output: {
@@ -12,9 +11,7 @@ module.exports = {
   },
   mode: 'development',
   devtool: 'inline-source-map',
-  devServer: {
-    contentBase: './dist',
-  },
+  target: ['web', 'es5'],
   module: {
     rules: [
 		{
@@ -27,12 +24,12 @@ module.exports = {
         loader: 'html-loader',
       },
       {
-        test: /\.[jt]sx?$/,
+        test: /\.[jt]s?$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader',
+          loader: 'ts-loader',
           options: {
-            presets: ['@babel/preset-env', '@babel/preset-typescript'],
+            configFile: path.resolve(__dirname, './tsconfig.json'),
           },
         },
       },
@@ -56,19 +53,20 @@ module.exports = {
         filename:"style.css",
 		chunkFilename: "style.css"
     }),
-	new CopyPlugin({
+	
+  new CopyPlugin({
 		patterns: [
-		  { from: "content/images", to: "images" },
-		  { from: "content/thumbnails", to: "thumbnails" },
+		  { from: "./src/content/images", to: "images" },
+		  { from: "./src/content/thumbnails", to: "thumbnails" },
 		],
 	  }),
-
+    
 ],
-  devServer: {
+  devServer: {    
     static: {
       directory: path.join(__dirname, 'dist'),
     },
     compress: true,
-    port: 8080,
+    port: 8083,
   }
 };

@@ -6,25 +6,27 @@
  */
 
 
- import * as Token from "../Token";
+import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 import "../static/styles/quote.css";
 
 
 export class QuoteHTML {
-  
-	private DomUtilites : any;
+
+	private DomUtilites: any;
 	private token: Token.quoteToken;
-	
-	constructor(token: Token.quoteToken) {
+	private htmlOutput: HTMLElement;
+
+	constructor(token: Token.quoteToken, htmlOutput: HTMLElement) {
 		this.token = token;
+		this.htmlOutput = htmlOutput;
 		this.DomUtilites = new DomUtilites();
 	}
 
-  render () : void {
+	render(): void {
 
-
-	const quoteBlock = `		
+		if (this.token.quote && this.token.author) {
+			const quoteBlock = `		
 		<div>
 			<p classname="mb-2"> 
 				${this.token.quote}
@@ -32,19 +34,21 @@ export class QuoteHTML {
 			<cite> ${this.token.author} </cite>
 		</div>
 	`
-		
-		const quoteBlockNode = this.DomUtilites.createElement("blockquote");
-		quoteBlockNode.innerHTML = quoteBlock;
+
+			const quoteBlockNode = this.DomUtilites.createElement("blockquote");
+			quoteBlockNode.innerHTML = quoteBlock;
 
 
-		let container:ChildNode;
-		if(document.getElementById("app")?.children.length > 0){
-			 container = document.getElementById("app")?.lastChild;
-		}else{
-			 container = document.getElementById("app");
+			const app = this.htmlOutput;
+			const elemChildren = app?.children;
+			if (elemChildren) {
+				if (elemChildren.length > 0) {
+					app?.lastChild?.appendChild(quoteBlockNode);
+				} else {
+					app.appendChild(quoteBlockNode);
+				}
+			}
 		}
-		container?.appendChild(quoteBlockNode);
-
-  }
+	}
 
 }

@@ -17,55 +17,71 @@ type AST = {
 export class View {
 
 	private ast : AST;
+	public htmlOutput : HTMLElement | null;
 
-	constructor(ast : AST) {
+	constructor(ast : AST, htmlOutput : HTMLElement | null) {
 		this.ast = ast
-		this.init();
+		this.htmlOutput = htmlOutput;
 	}
 
 	init() {
 
 		const children  = this.ast.children;
 
-		children.forEach((token) => {
+		if(children) {
+			children.forEach((token) => {
+				if (token.type == TokenType.CAPTION) {
+					if (this.htmlOutput) {
+						const caption = new CaptionHTML(token, this.htmlOutput);
+						caption.render();				
+					}
+				}
 
-			if (token.type == TokenType.CAPTION) {
-
-				const caption = new CaptionHTML(token);
-				caption.render();
-			}
-
-			
-			if (token.type == TokenType.HEADING) {
-				const header = new HeaderHTML(token);
-				header.render();
-			}
-
-			if (token.type == TokenType.CODE_BLOCK || token.type == TokenType.CODE_IN_CODE) {
-				const codeblock = new CodeBlockHTML(token);
-				codeblock.render();
-			}
-
-			if (token.type == TokenType.QUOTE) {
-				const quote = new QuoteHTML(token);
-				quote.render();
-			}
-
-			if (token.type == TokenType.LIST) {
-				const list = new ListHTML(token);
-				list.render();
-			}
-
-			if (token.type == TokenType.TABLE) {
-				const table = new TableHTML(token);
-				table.render();
-			}
-
-			if (token.type == TokenType.PARAGRAPH) {
-				const paragraph = new ParagraphHTML(token);
-				paragraph.render();
-			}
-			
-		})
+				if (token.type == TokenType.HEADING) {
+					if (this.htmlOutput) {
+						const header = new HeaderHTML(token, this.htmlOutput);
+						header.render();
+					}				
+				}
+	
+				if (token.type == TokenType.CODE_BLOCK || token.type == TokenType.CODE_IN_CODE) {
+					if (this.htmlOutput) {
+						const codeblock = new CodeBlockHTML(token, this.htmlOutput);
+						codeblock.render();
+					}
+				}
+	
+				if (token.type == TokenType.QUOTE) {
+					if (this.htmlOutput) {
+						const quote = new QuoteHTML(token, this.htmlOutput);
+						quote.render();
+					}
+				}
+	
+				if (token.type == TokenType.LIST) {	
+					if (this.htmlOutput) {				
+						const list = new ListHTML(token, this.htmlOutput);					
+						list.render();
+					}
+				}
+	
+				if (token.type == TokenType.TABLE) {
+					if (this.htmlOutput) {	
+						const table = new TableHTML(token, this.htmlOutput);
+						table.render();
+					}
+				}
+	
+				if (token.type == TokenType.PARAGRAPH) {
+					if (this.htmlOutput){
+						const paragraph = new ParagraphHTML(token, this.htmlOutput);
+						this.htmlOutput = paragraph.render();
+					}
+				}
+				
+			})
+		}	
+		
+		return this.htmlOutput;
 	}
 }
