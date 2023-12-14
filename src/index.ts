@@ -1,7 +1,6 @@
 /**
  * Author: meugenom.com
- * Date: 13.12.2023
- * Refactored: 19.03.2023
+ * Refactored: 14.12.2023
  * Entry point of the application
  *
  * markdown compiler ASCII art:
@@ -27,17 +26,15 @@ import "./static/styles/style.css";
 import example from 'raw-loader!./content/articles/how-to-write-text.md';
 
 
-//create a document with a div with id app
+//create a DOM with a div with id = app
 const htmlOutput = document.createElement('div');
 htmlOutput.id = "app";
 
-
+// API to convert markdown to HTML
 function convertMDtoHTML(text: any){
     let tokenizer = new Tokenizer(text);
     const parser = new Parser(tokenizer.tokens);
-    console.log(parser.ast)
-    const output : any = new View(parser.ast, htmlOutput).init();
-    console.log(output)
+    const output : any = new View(parser.ast, htmlOutput).init();    
     return output;
 }
 
@@ -63,8 +60,8 @@ export default {
   
 
 //show example
-function showExample(){    
-    // render the html node to the DOM
+function showExample(){
+    // render the html node to the DOM from existed index.html
     if(document.getElementById('content') != null && example != undefined){    
         document.getElementById('content')?.appendChild(convertMDtoHTML(example));
     }
