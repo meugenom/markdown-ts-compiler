@@ -10,7 +10,7 @@ import { TokenType } from "./Types";
 
 export class Caption {
 
-	private text: string;
+	public text: string;
 
 	constructor(text: string) {
 		this.text = text;
@@ -43,16 +43,16 @@ export class Caption {
 		const token: captionToken = {
 			type: TokenType.CAPTION,
 			row,
-			date,
-			title,
-			template,
-			thumbnail,
-			slug,
-			categories,
-			tags,
+			date: date as string,
+			title: title as string,
+			template: template as string,
+			thumbnail: thumbnail as string,
+			slug: slug as string,
+			categories: categories as string,
+			tags: tags as string,
 		};
-
-		//remove caption from the text
+		
+		//remove caption from text
 		this.text = this.text.replace(Grammar.BLOCKS.CAPTION, "");
 
 		return token;

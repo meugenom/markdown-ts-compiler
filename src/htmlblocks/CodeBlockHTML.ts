@@ -19,13 +19,16 @@ export class CodeBlockHTML {
   
 	private DomUtilites : any;
 	private token: Token.codeBlockToken;
+	private htmlOutput: HTMLElement;
 	
-	constructor(token: Token.codeBlockToken) {
+	constructor(token: Token.codeBlockToken, htmlOutput: HTMLElement) {
 		this.token = token;
+		this.htmlOutput = htmlOutput;
 		this.DomUtilites = new DomUtilites();
 	}
 
   render () : void {
+
 
 	const codeBlock : any = `
 			<code class="language-${this.token.language}">
@@ -38,18 +41,15 @@ export class CodeBlockHTML {
 		Prism.highlightAll(codeBlock);
 
 		CodeBlockNode.innerHTML = codeBlock;
-
-		let container:ChildNode;
 		
-		if(document.getElementById("app")?.children.length > 0){
-			container = document.getElementById("app")?.lastChild;
-		}else{
-			container = document.getElementById("app");
+		const app = this.htmlOutput;
+		const elemChildren = app?.children;
+		if (elemChildren) {
+			if(elemChildren.length > 0){
+				app?.lastChild?.appendChild(CodeBlockNode);
+			}else{
+				app.appendChild(CodeBlockNode);
+			}
 		}
-		
-		container?.appendChild(CodeBlockNode);
-
-		
   }
-
 }

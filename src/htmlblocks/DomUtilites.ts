@@ -15,11 +15,11 @@ export class DomUtilites {
     return lastChild.lastChild.nodeName
   }
 
-  getRoot () : HTMLElement {
+  getRoot () : any {
     return document.querySelector('article')
   }
 
-  createElement (element : string) : HTMLElement {
+  createElement (element : string) : HTMLElement {    
     return document.createElement(element)
   }
 }

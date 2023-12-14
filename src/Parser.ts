@@ -8,16 +8,30 @@ type AST = {
 
 export class Parser {
 
-	public tokens =  [] as (Token.bagdeToken | Token.captionToken | Token.codeBlockToken |
-		Token.codeInlineToken | Token.colorTextToken | Token.headToken | Token.imageToken |
-		Token.linkToken | Token.listToken | Token.paragraphEndToken | Token.paragraphStartToken |
-		Token.quoteToken | Token.strongTextToken | Token.textToken | Token.underLineToken |
-		Token.unknownTextToken | Token.codeInCodeToken | Token.tableToken)[];
+	public tokens =  [] as (Token.bagdeToken | 
+					Token.captionToken | 
+					Token.codeBlockToken |
+					Token.codeInlineToken | 
+					Token.colorTextToken | 
+					Token.headToken | 
+					Token.imageToken |
+					Token.linkToken | 
+					Token.listToken | 
+					Token.paragraphEndToken | 
+					Token.paragraphStartToken |
+					Token.quoteToken | 
+					Token.strongTextToken | 
+					Token.textToken | 
+					Token.underLineToken |
+					Token.unknownTextToken | 
+					Token.codeInCodeToken | 
+					Token.tableToken
+				)[];
 	
 	public ast: AST;
 
-	constructor(tokens) {
-		
+	constructor(tokens : any) {
+
 		this.tokens = tokens;
 		this.ast = {
 			type: "Document",
@@ -38,9 +52,10 @@ export class Parser {
 		while (token_number < this.tokens.length) {
 
 			const token : any = this.tokens[token_number];
+			//console.log(token)
 
 			// Caption
-			if (token.type === TokenType.CAPTION) {
+			if (token.type === TokenType.CAPTION) {				
 				const captionElement =  {} as Token.captionToken;
 				captionElement.type = TokenType.CAPTION; 
 				captionElement.row = token.row;
@@ -55,11 +70,10 @@ export class Parser {
 						categories: token.categories,
 						tags: token.tags
 					}
-				];
-				
+				];								
 				children.push(captionElement);
 			}
-
+			
 			// # dept=1
 			if (token.type === TokenType.HEADING_FIRST) {
 				const headElement =  {} as Token.headToken;
@@ -92,7 +106,7 @@ export class Parser {
 
 			// ### dept = 3
 			if (token.type === TokenType.HEADING_THIRD) {
-				
+
 				const headElement =  {} as Token.headToken;
 				headElement.type = TokenType.HEADING;
 				headElement.dept = 3;
@@ -101,9 +115,8 @@ export class Parser {
 						{
 							type: TokenType.TEXT,
 							value: token.value,
-						}]
-				
-				children.push(headElement);
+						}]				
+				children.push(headElement);			
 			}
 
 			// #### dept = 4
@@ -144,9 +157,9 @@ export class Parser {
 				const codeInCodeElement =  {} as Token.codeInCodeToken;
 				codeInCodeElement.type = TokenType.CODE_IN_CODE;
 				codeInCodeElement.row = "```"+token.language + "\n" + token.code + "\n```";
+
 				codeInCodeElement.code = token.code;
-				codeInCodeElement.language = token.language
-				
+				codeInCodeElement.language = token.language		
 				children.push(codeInCodeElement);
 			}
 
@@ -261,6 +274,7 @@ export class Parser {
 
 			// Unmarkable
 			if (token.type == TokenType.UNMARKABLE) {
+				//console.log(token)
 				const unmarkableTextToken = {} as Token.unmarkableToken;
 				unmarkableTextToken.type = TokenType.UNMARKABLE;
 				unmarkableTextToken.value = token.value;
@@ -276,14 +290,12 @@ export class Parser {
 			}
 
 	
-	
-
 			// Strong
 			if (token.type == TokenType.STRONG) {
 				const strongTextToken = {} as Token.strongTextToken
 				strongTextToken.type = TokenType.STRONG;
 				strongTextToken.value = token.value;
-				strongTextToken.row = "**" + token.value + "*+"
+				strongTextToken.row = "**" + token.value + "**"
 				
 				if(isParagraph == true){
 					children[(children).length - 1].children.push(strongTextToken)
@@ -332,7 +344,7 @@ export class Parser {
 
 			// InlineCode
 			if (token.type == TokenType.CODE_INLINE) {
-				
+				//console.log(token)
 				const inlineCodeElement = {} as Token.codeInlineToken;
 				inlineCodeElement.type = TokenType.CODE_INLINE;
 				inlineCodeElement.value = token.value;
@@ -353,12 +365,14 @@ export class Parser {
 				underLineElement.value =  token.value;
 				if(isParagraph == true){
 					children[(children).length - 1].children.push(underLineElement)
-				children[(children).length - 1].row = children[(children).length - 1].row + token.value
+					children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				}else{
 					children.push(underLineElement)
 				}	
 			}
 
+			//console.log("token number", token_number)
+			//console.log(children)
 
 			token_number++;
 

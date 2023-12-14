@@ -1,77 +1,53 @@
-'use strict'
-/**
- * Returns an html element if line is code block
- * @param line as block of the text
- * @return dom element as list
- */
-
-
- import * as Token from "../Token";
+import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 
 export class ListHTML {
-  
-	private DomUtilites:any;
-	private token: Token.listToken;
-	
-	constructor(token: Token.listToken) {
-		this.token = token;
-		this.DomUtilites = new DomUtilites();
-	}
+    private DomUtilites: DomUtilites;
+    private token: Token.listToken;
+    private htmlOutput: HTMLElement;
 
-  render () : void {
+    constructor(token: Token.listToken, htmlOutput: HTMLElement) {
+        this.token = token;
+        this.htmlOutput = htmlOutput;
+        this.DomUtilites = new DomUtilites();
+    }
 
-	let listBlock : string ;
-	let listBlockNode : Element;
-	listBlockNode = this.DomUtilites.createElement("ul");
-	listBlockNode.className = "mb-5"
+    private createListItem(item: string): string {
+        if (!item) return '';
+        if (item.includes("[]")) {
+            return `<li class="list-none ml-5">
+                <input class="form-check-input appearance-none h-4 w-4 border-solid border-gray-200 border-solid border-2 rounded-sm disabled:bg-white disabled:border-blue-600 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckDisabled" disabled>					
+                <label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckDisabled">${item.replace("[]", "")}</label>
+            </li>`;
+        } else if (item.includes("[x]")) {
+            return `<li class="list-none ml-5">
+                <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
+                <label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckCheckedDisabled">${item.replace("[x]", "")}</label>
+            </li>`;
+        } else if (item.includes("-")) {
+            return `<li class="list-none ml-5 text-sky-700">${item}</li>`;
+        } else {
+            return `<li class="list-none ml-5">${item}</li>`;
+        }
+    }
 
-	//console.log(this.token)
+    render(): Element | void {
+        const value = this.token.value;
+        if (!value) return;
 
-	if(this.token.attribute == "[]"){
-		listBlockNode = this.DomUtilites.createElement("div");	
-		listBlock = `
-			<div class="form-check">
-				<input class="form-check-input appearance-none h-4 w-4 border-solid border-gray-200 border-solid border-2 rounded-sm disabled:bg-white disabled:border-blue-600 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckDisabled" disabled>
-					<label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckDisabled">
-			  		${this.token.value}
-					</label>
-	  		</div>
-		`
-	}
+        let list = value.split("\n");
+        let listBlockNode = this.DomUtilites.createElement("div");
+        const title = list.shift();
 
-	if(this.token.attribute == "[x]"){
-		listBlockNode = this.DomUtilites.createElement("div");	
-		listBlock = `
-			<div class="form-check">
-				<input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
-					<label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckCheckedDisabled">
-			  			${this.token.value}
-					</label>
-	  		</div>
-		`
-		}
+        if (list && list.length > 0) {
+            let listBlock = `<div class="mt-2">
+                <p>${title}</p>
+                <div class="form-check">${list.map(this.createListItem).join("")}</div>
+            </div>`;
+            listBlockNode.innerHTML = listBlock;
+        }
 
-		if(this.token.attribute == "-"){
-			listBlock = `
-				<li class="text-sky-700">
-					${this.token.value}
-				</li>
-			`
-			listBlockNode.className = `list-disc ml-5`;
-		}
-
-		
-		listBlockNode.innerHTML = listBlock;
-
-		let container: ChildNode;
-		if(document.getElementById("app")?.children.length > 0){
-			 container = document.getElementById("app")?.lastChild;
-		}else{
-			 container = document.getElementById("app");
-		}
-		container?.appendChild(listBlockNode);
-
-  }
-
+        const app = this.htmlOutput;
+        app?.lastChild?.appendChild(listBlockNode);
+    }
 }

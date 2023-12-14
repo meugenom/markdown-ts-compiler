@@ -10,35 +10,37 @@ import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
 
 export class HeaderHTML {
-  
-	private DomUtilites : any;
-	private token: Token.headToken;
 
-	constructor(token: Token.headToken) {
+	private DomUtilites: any;
+	private token: Token.headToken;
+	private htmlOutput: HTMLElement;
+
+	constructor(token: Token.headToken, htmlOutput: HTMLElement) {
 		this.token = token;
+		this.htmlOutput = htmlOutput;
 		this.DomUtilites = new DomUtilites();
 	}
 
-	render():void{
+	render(): void {
 
-		const HeaderNode = this.DomUtilites.createElement('h'+ this.token.dept)
+		const HeaderNode = this.DomUtilites.createElement('h' + this.token.dept)
 
-		HeaderNode.className = `text-${this.token.dept}xl mt-0 mb-2 text-gray-800 pr-10 pt-10`;
-		
-		HeaderNode.innerHTML = this.token.children[0].value;
+		HeaderNode.className = "text-" + this.token.dept + "xl mt-0 mb-2 text-gray-800 pr-10 pt-10 no-inherit-font-size";
 
-		let container : ChildNode; 
-		
-		if(document.getElementById("app")?.children.length > 0){
-			
-				container = document.getElementById("app")?.lastElementChild;
-			
-		}else{
-			 
-			 container = document.getElementById("app");
+		if (this.token.children[0]) {
+
+			HeaderNode.innerHTML = this.token.children[0].value;
+
+			const app = this.htmlOutput;
+			const elemChildren = app?.children
+
+			if (elemChildren) {
+				if (elemChildren.length > 0) {
+					app?.lastElementChild?.appendChild(HeaderNode);
+				} else {
+					app.appendChild(HeaderNode);
+				}
+			}
 		}
-
-		container?.appendChild(HeaderNode);
-		
 	}
 }
