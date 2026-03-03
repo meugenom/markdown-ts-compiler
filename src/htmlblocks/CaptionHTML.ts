@@ -35,7 +35,7 @@ export class CaptionHTML {
 				"</a>"
 		}
 
-		const thumbnail = '/' + this.token.children[0].thumbnail.trim().replace(/['"]/g, '').replace(/^\.?\//, '');
+		const thumbnail = './' + this.token.children[0].thumbnail.trim().replace(/['"]/g, '').replace(/^\.?\//, '');
 		const CaptionBlock =
 		`
 		<div class = "flex flex-col md:flex-row">
