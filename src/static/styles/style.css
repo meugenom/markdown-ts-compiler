@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+@import "tailwindcss";
 
 .no-inherit-font-size {
   font-size: revert;
@@ -12,3 +11,4 @@
   padding-right: 20px;
   padding-top: 10px;
 }
+

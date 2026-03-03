@@ -25,11 +25,15 @@ export class HeaderHTML {
 
 		const HeaderNode = this.DomUtilites.createElement('h' + this.token.dept)
 
-		HeaderNode.className = "text-" + this.token.dept + "xl mt-0 mb-2 text-gray-800 pr-10 pt-10 no-inherit-font-size";
+		HeaderNode.className = "text-" + this.token.dept + "xl mt-0 mb-1 pr-10 pt-6 no-inherit-font-size";
 
 		if (this.token.children[0]) {
 
-			HeaderNode.innerHTML = this.token.children[0].value;
+			const headingText: string = this.token.children[0].value;
+			// Generate anchor id: lowercase, spaces → dashes, strip non-alphanumeric
+			const headingId = headingText.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+			HeaderNode.setAttribute('id', headingId);
+			HeaderNode.innerHTML = headingText;
 
 			const app = this.htmlOutput;
 			const elemChildren = app?.children

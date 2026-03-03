@@ -32,4 +32,6 @@ export enum TokenType {
 	UNDER_LINE = "UnderLine", // An underlined text element
 	UNKNOWN_TEXT = "UnknownText", // An unknown or unrecognized text element
 	UNMARKABLE = "Unmarkable", // An element that should not be marked up
+	FORMULA_BLOCK = "FormulaBlock", // A block-level LaTeX formula
+	FORMULA_INLINE = "FormulaInline", // An inline LaTeX formula
   }  

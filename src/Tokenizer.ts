@@ -30,6 +30,8 @@ export class Tokenizer {
 		| Token.codeInCodeToken
 		| Token.unmarkableToken
 		| Token.tableToken
+		| Token.formulaBlockToken
+		| Token.formulaInlineToken
 	)[];
 
 	public text: string;	
@@ -50,6 +52,7 @@ export class Tokenizer {
 		this.findUnmarkable();
 		this.findCodeInCode();
 		this.findCodeBlock();
+		this.findFormulaBlock();
 		this.findHeadings();
 		this.findQuotes();
 		this.findStrong();
@@ -58,6 +61,7 @@ export class Tokenizer {
 		this.findUnderlines();
 		this.findColors();
 		this.findBadges();
+		this.findFormulaInline();
 		this.findLists();
 		this.findTables();
 		this.init();
@@ -128,6 +132,34 @@ export class Tokenizer {
 			}
 		});
 		return;
+	}
+
+	//find block formulas $$...$$
+	private findFormulaBlock(): void {
+		const matches = this.text.match(Grammar.BLOCKS.FORMULA_BLOCK);
+		matches?.forEach((match: string) => {
+			const inner = match.slice(2, match.length - 2).trim();
+			const token = {} as Token.formulaBlockToken;
+			token.type = TokenType.FORMULA_BLOCK;
+			token.formula = inner;
+			const uuid = uuidv4();
+			this.tokensMap.set("$token." + uuid, token);
+			this.text = this.text.replace(match, ` $token.${uuid}`);
+		});
+	}
+
+	//find inline formulas $...$
+	private findFormulaInline(): void {
+		const matches = this.text.match(Grammar.BLOCKS.FORMULA_INLINE);
+		matches?.forEach((match: string) => {
+			const inner = match.slice(1, match.length - 1).trim();
+			const token = {} as Token.formulaInlineToken;
+			token.type = TokenType.FORMULA_INLINE;
+			token.formula = inner;
+			const uuid = uuidv4();
+			this.tokensMap.set("$token." + uuid, token);
+			this.text = this.text.replace(match, ` $token.${uuid} `);
+		});
 	}
 
 	//find simple code blocks
@@ -395,8 +427,8 @@ export class Tokenizer {
 
 			badges?.forEach((badge: string) => {
 
-				const body = badge.split("@")[0];
-				const colorName: any = badge.split("@")[1];
+				const body = badge.split("|")[0];
+				const colorName: any = badge.split("|")[1];
 
 				const badgeToken = {} as Token.bagdeToken;
 				badgeToken.type = TokenType.BADGE;
@@ -493,21 +525,20 @@ export class Tokenizer {
 
 	init = (): void => {
 
-		//need to find all paragraphs in the article and change them to tokens
-		const paragraphStartToken = {} as Token.paragraphStartToken;
-		paragraphStartToken.type = TokenType.PARAGRAPH_START;
-
-		const paragraphEndToken = {} as Token.paragraphEndToken;
-		paragraphEndToken.type = TokenType.PARAGRAPH_END;
-
 		//console.log(this.text);
-
 		//console.log(this.tokensMap);
 
 		this.text.split("\n").forEach((paragraph: string) => {
 			if (paragraph.length != 0
 				&& paragraph != undefined
 				&& paragraph.trim() != " ") {
+
+				// create new token objects per paragraph — do NOT share references
+				const paragraphStartToken = {} as Token.paragraphStartToken;
+				paragraphStartToken.type = TokenType.PARAGRAPH_START;
+				const paragraphEndToken = {} as Token.paragraphEndToken;
+				paragraphEndToken.type = TokenType.PARAGRAPH_END;
+
 				//console.log(paragraph);
 				this.tokens.push(paragraphStartToken);
 				paragraph.split(" ").forEach((word: string) => {

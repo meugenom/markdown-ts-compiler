@@ -13,38 +13,46 @@
 
 ## Markdown Typescript Compiler
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)
+
+![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+[DEMO](https://meugenom.github.io/markdown-ts-compiler/)
 
 ## Purpose:
 
-I created this parser to serve as a compiler for my personal website, specifically for parsing Markdown text into HTML. I utilized TypeScript and Webpack in the development process, and the styling is enhanced with Tailwind CSS. You can view the **result** on my website: [Markdown TS Compiler](https://meugenom.github.io/markdown-ts-compiler/), where there's a parsed example page.
+This parser was served as a compiler for my personal website, specifically for parsing Markdown text into HTML. I utilized TypeScript and Webpack in the development process, and the styling is enhanced with Tailwind CSS. 
+You can view the **result** on my website: [Markdown TS Compiler](https://meugenom.github.io/markdown-ts-compiler/), where there's a parsed example page.
 
 **Important**: To display the result, the script constructs the DOM model in the browser; a virtual DOM model is not utilized. This functionality might be considered in the next version.
 
 ## Technologies Used:
 
-- npm v9.7.2, node v16.14.2
+- npm v10.8.2, node v20.20.0
 - Typescript v5.3.2
-- Webpack v5.4.1
-- TS-Loader v9.5.1
-- Tailwind CSS from [website](https://tailwindcss.com) v3.3.5
-- Prism.js from [website](https://prismjs.com) for code highlighting v1.29.0
+- Webpack v5.105.3
+- TS-Loader v9.5.4
+- Tailwind CSS from [website](https://tailwindcss.com) v4.0.12
+- Prism.js from [website](https://prismjs.com) for code highlighting v1.30.0
+- Katex v.0.16.33
 
 ## How to use it:
 
 1. Clone the repository:
 2. Install the dependencies:
     ```bash
-    npm install
+    yarn
     ```
 3. Run the compiler:
     ```bash
-    npm run build
+    yarn build
     ```
 4. Open in your browser the address: http://localhost:8083
 5. For testing use command:
     ```bash
-    npm run test
+    yarn test
     ```
 
 ## API Reference:
@@ -75,18 +83,9 @@ I created this parser to serve as a compiler for my personal website, specifical
 - `./src/View.ts` - the compiler class to compile AST into HTML
 
 
-You can use and modify this code as you want. Just clone it and use it.
-
-1. The main compiler code is located in the directory "./src". You can copy it to your project and use it as library.
-
-2. For you project please install the required dependencies:
-    ```bash
-    npm install --save-dev @types/prismjs css-loader html-loader postcss postcss-import postcss-loader postcss-preset-env prismjs raw-loader style-loader tailwindcss ts-loader typescript uuid
-    ```
-
-3. Please copy tailwind.config.js and postcss.config.js to your project.
 
 ### Author:
 
 [meugenom](https://meugenom.com)
 
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white)

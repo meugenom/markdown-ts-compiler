@@ -6,6 +6,7 @@
  * @return dom element for headType <h?/> for example <h?> ...<h?>
  */
 
+import * as katex from 'katex';
 import { TokenType } from "../Types";
 import { DomUtilites } from "./DomUtilites";
 
@@ -35,19 +36,19 @@ export class ParagraphHTML {
 			}
 
 			if (child.type == TokenType.IMAGE) {
+				const imgSrc = ('/' + child.url.replace(/^\.?\//, ''));
 				text = text + `
-				<div class="flex flex-wrap justify-center">
-					<div class="w-6/12 sm:w-4/12 px-4 pb-20">						
-						<img data-src="${child.url}" alt="${child.alt}" class="lazy shadow rounded max-w-full h-auto allign-middle border-none">
-					</div>
-				</div>
+				<figure class="flex flex-col items-center my-5">
+					<img data-src="${imgSrc}" alt="${child.alt}" class="lazy shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
+					${child.alt ? `<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">${child.alt}</figcaption>` : ''}
+				</figure>
 				`
 			}
 
 			if (child.type == TokenType.LINK) {
 				text = text + `<a href="${child.url}" class="text-blue-500">
 					${child.name}
-					<a/>`
+					</a>`
 			}
 
 			if (child.type == TokenType.STRONG) {
@@ -58,10 +59,21 @@ export class ParagraphHTML {
 
 			if (child.type == TokenType.CODE_INLINE) {
 				text = text + " " + `
-				<code class="inline-block py-1 px-2 bg-gray-300 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-400">
+				<code class="inline-block py-1 px-2 bg-blue-400 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
 					${child.value.substring(1, child.value.length - 1)}
 				</code>
 				`
+			}
+
+			if (child.type === TokenType.FORMULA_INLINE) {
+				try {
+					text = text + ' ' + katex.renderToString(child.formula, {
+						displayMode: false,
+						throwOnError: false
+					});
+				} catch (e) {
+					text = text + ' $' + child.formula + '$';
+				}
 			}
 
 			if (child.type == TokenType.COLOR) {
@@ -120,7 +132,7 @@ export class ParagraphHTML {
 
 			if (child.type == TokenType.UNDER_LINE) {
 				text = text + " " + `
-				<span class="underline decoration-sky-500 text-slate-500">
+				<span class="underline decoration-sky-500">
 					${child.value}
 				</span>
 				`
@@ -132,7 +144,7 @@ export class ParagraphHTML {
 				const unmarkableText = unmarkable.substring(1, unmarkable.length - 1);								
 
 				text = text + " " + `				
-				<div class="text-orange-900">
+				<div class="italic text-sm">
 					${unmarkableText.replace(/\n/g, '<br/>')}
 				</div>
 				`				

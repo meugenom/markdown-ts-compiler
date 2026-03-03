@@ -50,10 +50,32 @@ How to use:
 How to use: This word is \* **strong** and **unknown for me** \*
 in out: This word is **strong** and **unknown for me**.
 
+## Formulas Inline
+
+\*
+Pythagoras Theorem $a^2 + b^2 = c^2$ in the text
+\*
+
+Pythagoras Theorem $a^2 + b^2 = c^2$ in the text
+
+
+## Formulas in the Block
+
+\*
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}\quad \text{(1.0)}
+$$
+\*
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}\quad \text{(1.0)}
+$$
+
+
 ## Code Block: 
 
 \*		
-```bash
+```javascript
   	let getMin = async (min)=> {
 		return `
     		minimal value is ${min}
@@ -62,7 +84,7 @@ in out: This word is **strong** and **unknown for me**.
 ```
 \* 
 
-```bash
+```javascript
 	let getMin = async (min)=> {
 		return `
     		minimal value is ${min}
@@ -173,14 +195,14 @@ List 4 with mixed attributes:
 ## Quoting text
 
 \*
-    > Quote
-    > <cite> - Author </cite>
+    > The day is very good to die
+    > <cite> - Warcraft </cite>
 \* 
 
 in out:
 
-> Example Quote
-> <cite> - Albert Rouge </cite>
+> The day is very good to die!
+> <cite> - Warcraft </cite>
 
 ## Links
 
@@ -225,19 +247,19 @@ Lorem.green ipsum.indigo dolor.red sit amet.purple , consectetur.pink adipisicin
 ## Color Badges
 
 \*
-	Blue@blue color
-	Gray@gray color
-	Red@red color
-	Green@green color
-	Yellow@yellow color
-	Indigo@indigo color 
-	Purple@purple color
-	Pink@pink color
+	Blue|blue color
+	Gray|gray color
+	Red|red color
+	Green|green color
+	Yellow|yellow color
+	Indigo|indigo color 
+	Purple|purple color
+	Pink|pink color
 \* 
 
 in out:
 
-Lorem@green ipsum@indigo dolor@red sit amet@purple , consectetur@pink adipisicing@yellow elit.
+Lorem|green ipsum|indigo dolor|red sit amet|purple , consectetur|pink adipisicing|yellow elit mango@y.com|blue.
 
 ## Ignoring Markdown formatting
 
