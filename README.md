@@ -49,8 +49,8 @@ You can view the **result** on my website: [Markdown TS Compiler](https://meugen
     ```bash
     yarn build
     ```
-4. Open in your browser the address: http://localhost:8083
-5. For testing use command:
+
+4. For testing use command:
     ```bash
     yarn test
     ```
