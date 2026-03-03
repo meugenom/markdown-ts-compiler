@@ -22,6 +22,7 @@ import { Tokenizer } from "./Tokenizer";
 import { Parser } from "./Parser";
 import { View } from "./View";
 import "./static/styles/style.css";
+import 'katex/dist/katex.min.css';
 import Utils from "./Utils";
 
 import example from 'raw-loader!./content/articles/how-to-write-text.md';

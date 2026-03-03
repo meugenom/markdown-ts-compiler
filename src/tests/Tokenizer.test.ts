@@ -300,7 +300,7 @@ describe('Tokenizer class tests', () => {
     test('find Badge text', () => {
             
         const text = 
-        "Text and text@blue text\n";
+        "Text and text|blue text\n";
         
         const tokenizer = new Tokenizer(text);
         tokenizer.tokenize();

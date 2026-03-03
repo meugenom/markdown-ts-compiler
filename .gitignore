@@ -19,3 +19,7 @@ npm-debug.log*
 # Misc files
 .DS_Store
 notes/
+
+#json
+package-lock.json
+yarn.lock

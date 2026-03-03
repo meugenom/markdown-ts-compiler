@@ -5,6 +5,7 @@ import { CodeBlockHTML } from "./htmlblocks/CodeBlockHTML";
 import {QuoteHTML} from "./htmlblocks/QuoteHTML";
 import {ListHTML} from "./htmlblocks/ListHTML";
 import { TableHTML } from "./htmlblocks/TableHTML";
+import { FormulaHTML } from "./htmlblocks/FormulaHTML";
 import { TokenType } from "./Types";
 
 
@@ -71,7 +72,14 @@ export class View {
 						table.render();
 					}
 				}
-	
+
+				if (token.type == TokenType.FORMULA_BLOCK) {
+					if (this.htmlOutput) {
+						const formula = new FormulaHTML(token, this.htmlOutput);
+						formula.render();
+					}
+				}
+
 				if (token.type == TokenType.PARAGRAPH) {
 					if (this.htmlOutput){
 						const paragraph = new ParagraphHTML(token, this.htmlOutput);

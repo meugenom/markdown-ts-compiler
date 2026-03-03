@@ -15,17 +15,19 @@ export class ListHTML {
     private createListItem(item: string): string {
         if (!item) return '';
         if (item.includes("[]")) {
-            return `<li class="list-none ml-5">
-                <input class="form-check-input appearance-none h-4 w-4 border-solid border-gray-200 border-solid border-2 rounded-sm disabled:bg-white disabled:border-blue-600 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckDisabled" disabled>					
-                <label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckDisabled">${item.replace("[]", "")}</label>
+            return `<li class="clearfix list-none ml-5">
+                    
+                    <input class="form-check-input appearance-none h-4 w-4 border-solid border-gray-200 border-solid border-2 rounded-sm disabled:bg-white disabled:border-blue-400 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckDisabled" disabled/>					
+                    <label class="form-check-label inline-block opacity-100" for="flexCheckDisabled">${item.replace("[]", "")}</label>
+                    
             </li>`;
         } else if (item.includes("[x]")) {
-            return `<li class="list-none ml-5">
-                <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled>
-                <label class="form-check-label inline-block text-gray-800 opacity-100" for="flexCheckCheckedDisabled">${item.replace("[x]", "")}</label>
+            return `<li class="list-none ml-5">                
+                <input class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-400 checked:border-blue-400 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain float-left mr-2" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled/>
+                <label class="form-check-label inline-block opacity-100" for="flexCheckCheckedDisabled">${item.replace("[x]", "")}</label>
             </li>`;
         } else if (item.includes("-")) {
-            return `<li class="list-none ml-5 text-sky-700">${item}</li>`;
+            return `<li class="list-none ml-5">${item}</li>`;
         } else {
             return `<li class="list-none ml-5">${item}</li>`;
         }

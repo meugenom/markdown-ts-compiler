@@ -128,6 +128,16 @@ export interface codeInlineToken extends basisToken {
 	type: string,
 }
 
+export interface formulaBlockToken extends basisToken {
+	type: string,
+	formula: string
+}
+
+export interface formulaInlineToken extends basisToken {
+	type: string,
+	formula: string
+}
+
 export interface listToken extends basisToken {
 	type: string,
 	attribute: string

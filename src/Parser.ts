@@ -25,7 +25,9 @@ export class Parser {
 					Token.underLineToken |
 					Token.unknownTextToken | 
 					Token.codeInCodeToken | 
-					Token.tableToken
+					Token.tableToken |
+					Token.formulaBlockToken |
+					Token.formulaInlineToken
 				)[];
 	
 	public ast: AST;
@@ -174,6 +176,14 @@ export class Parser {
 				
 				children.push(codeBlockElement);
 				}
+
+			// FormulaBlock
+			if (token.type === TokenType.FORMULA_BLOCK) {
+				const formulaElement = {} as Token.formulaBlockToken;
+				formulaElement.type = TokenType.FORMULA_BLOCK;
+				formulaElement.formula = (token as any).formula;
+				children.push(formulaElement);
+			}
 			
 
 			//Quote
@@ -355,6 +365,20 @@ export class Parser {
 					children[(children).length - 1].row = children[(children).length - 1].row + token.value
 				}else {
 					children.push(inlineCodeElement);
+				}
+			}
+
+			// FormulaInline
+			if (token.type === TokenType.FORMULA_INLINE) {
+				const formulaInlineElement = {} as Token.formulaInlineToken;
+				formulaInlineElement.type = TokenType.FORMULA_INLINE;
+				formulaInlineElement.formula = (token as any).formula;
+				formulaInlineElement.row = '$' + (token as any).formula + '$';
+				if (isParagraph === true) {
+					children[(children).length - 1].children.push(formulaInlineElement);
+					children[(children).length - 1].row += formulaInlineElement.row;
+				} else {
+					children.push(formulaInlineElement);
 				}
 			}
 

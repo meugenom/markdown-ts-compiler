@@ -25,13 +25,12 @@ pre[class*="language-"] {
   margin: 0.5em 0;
   overflow: visible;
   padding: 1px;
+  background-color: #fafafa !important;
 }
 pre[class*="language-"] > code {
   position: relative;
   z-index: 1;
-  border-left: 10px solid #358ccb;
-  box-shadow: -1px 0 0 0 #358ccb, 0 0 0 1px #dfdfdf;
-  background-color: #fdfdfd;
+  background-color: #fafafa;
   background-image: linear-gradient(
     transparent 50%,
     rgba(69, 142, 209, 0.04) 50%
@@ -66,6 +65,21 @@ pre[class*="language-"] {
 }
 pre[class*="language-"]:after,
 pre[class*="language-"]:before {
+  content: none;
+  display: none;
+}
+
+/* bottom shadow for code body area — same pattern as blockquote */
+.code-block-outer {
+  position: relative;
+}
+.code-body-shadow {
+  position: relative;
+  margin: 0.5em 0;
+  overflow: visible;
+  padding: 1px;
+}
+.code-body-shadow::before {
   content: "";
   display: block;
   position: absolute;
@@ -75,20 +89,24 @@ pre[class*="language-"]:before {
   height: 20%;
   max-height: 13em;
   box-shadow: 0 13px 8px #979797;
-  -webkit-transform: rotate(-2deg);
-  -moz-transform: rotate(-2deg);
-  -ms-transform: rotate(-2deg);
-  -o-transform: rotate(-2deg);
   transform: rotate(-2deg);
 }
-pre[class*="language-"]:after {
+.code-body-shadow::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: 0.75em;
   right: 0.75em;
   left: auto;
-  -webkit-transform: rotate(2deg);
-  -moz-transform: rotate(2deg);
-  -ms-transform: rotate(2deg);
-  -o-transform: rotate(2deg);
+  width: 40%;
+  height: 20%;
+  max-height: 13em;
+  box-shadow: 0 13px 8px #979797;
   transform: rotate(2deg);
+}
+.code-body-inner {
+  position: relative;
+  z-index: 1;
 }
 .token.block-comment,
 .token.cdata,
@@ -183,4 +201,85 @@ pre[data-line] code {
 }
 pre .line-highlight {
   margin-top: 0;
+}
+
+/* ============================================================
+   Dark mode overrides — applied when <html> has class="dark"
+   ============================================================ */
+.dark code[class*="language-"],
+.dark pre[class*="language-"] {
+  color: #e2e8f0;
+}
+.dark pre[class*="language-"] {
+  background-color: #1e293b !important;
+}
+.dark pre[class*="language-"] > code {
+  background-color: #1e293b;
+  background-image: linear-gradient(
+    transparent 50%,
+    rgba(255, 255, 255, 0.02) 50%
+  );
+}
+.dark :not(pre) > code[class*="language-"],
+.dark pre[class*="language-"] {
+  background-color: #1e293b;
+}
+.dark :not(pre) > code[class*="language-"] {
+  color: #f87171;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .token.block-comment,
+.dark .token.cdata,
+.dark .token.comment,
+.dark .token.doctype,
+.dark .token.prolog {
+  color: #64748b;
+}
+.dark .token.punctuation {
+  color: #94a3b8;
+}
+.dark .token.boolean,
+.dark .token.constant,
+.dark .token.deleted,
+.dark .token.function-name,
+.dark .token.number,
+.dark .token.property,
+.dark .token.symbol,
+.dark .token.tag {
+  color: #f87171;
+}
+.dark .token.attr-name,
+.dark .token.builtin,
+.dark .token.char,
+.dark .token.function,
+.dark .token.inserted,
+.dark .token.selector,
+.dark .token.string {
+  color: #86efac;
+}
+.dark .token.entity,
+.dark .token.operator,
+.dark .token.url,
+.dark .token.variable {
+  color: #fbbf24;
+  background: transparent;
+}
+.dark .token.atrule,
+.dark .token.attr-value,
+.dark .token.class-name,
+.dark .token.keyword {
+  color: #67e8f9;
+}
+.dark .token.important,
+.dark .token.regex {
+  color: #fb923c;
+}
+.dark .language-css .token.string,
+.dark .style .token.string {
+  color: #fbbf24;
+  background: transparent;
+}
+.dark .code-body-shadow::before,
+.dark .code-body-shadow::after {
+  box-shadow: 0 13px 8px #0f172a;
 }
