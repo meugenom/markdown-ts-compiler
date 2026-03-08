@@ -174,8 +174,8 @@ export class Tokenizer {
 				const languageMatchResult = block.match(Grammar.BLOCKS.CODE_BLOCK_LANG);
 				const bodyMatchResult = block.match(Grammar.BLOCKS.CODE_BLOCK_BODY);
 
-				if (languageMatchResult && bodyMatchResult) {
-					const language = languageMatchResult[0];
+				if (bodyMatchResult) {
+					const language = languageMatchResult ? languageMatchResult[0].trim() : '';
 					const body = bodyMatchResult[0];
 					const codeToken = {} as Token.codeBlockToken;
 					codeToken.type = TokenType.CODE_BLOCK;
@@ -460,6 +460,7 @@ export class Tokenizer {
 				const listToken = {} as Token.listToken;
 				listToken.type = TokenType.LIST;				
 				listToken.value = body;
+				listToken.tokensMap = this.tokensMap;
 
 				const uuid = uuidv4();
 				this.tokensMap.set("$token." + uuid, listToken);

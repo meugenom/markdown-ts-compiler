@@ -26,23 +26,23 @@ export class Grammar {
 		BADGE: /((.?)[^\s]+)\|(blue|gray|red|green|yellow|indigo|purple|pink)/g,
 
 		// list		
-		LIST: /\S.*:\n(\s*(-|\[\]|\[.\])\s*\S.*){1,20}/g,
+		LIST: /\S.*:\n(\s*(-(?!>)|\[\]|\[.\])\s*\S.*){1,20}/g,
 
 		LIST_ATTRIBUTE: /(-|\[\]|\[x\])/g,
 
 
 		// code block
-		CODE_BLOCK: /\`\`\`(python|bash|java|javascript|typescript|swift)([^(\`){3}].*\n){1,200}\`\`\`/g,
+		CODE_BLOCK: /\`\`\`(cpp|c|matlab|octave|python|bash|java|javascript|typescript|swift|text)?([^(\`){3}].*\n){1,200}\`\`\`/g,
 		CODE_BLOCK_LANG: /[^\`\`\`](\w+)\n/gs,
 		CODE_BLOCK_BODY: /\n([\s\S]+)[^\`\`\`]/gs,
 
 		// code in code block
-		CODE_IN_CODE: /\`\`\`(python|bash|java|javascript|typescript|swift)\n([^\`\`\`]+)\`\`\`(python|bash|java|javascript|typescript|swift)\n([^\`\`\`]+)\`\`\`\n\`\`\`\n/g,
+		CODE_IN_CODE: /\`\`\`(cpp|c|python|bash|java|javascript|typescript|swift|text)?\n([^\`\`\`]+)\`\`\`(python|bash|java|javascript|typescript|swift)\n([^\`\`\`]+)\`\`\`\n\`\`\`\n/g,
 		INLINE_CODE: /([^\`\`\`]+)/gs,
 		INLINE_CODE_PARAMS: /([^\n]+)/sg,
 
 		// inline code
-		INLINE_CODE_BLOCK: /\`(\S).*[^\`]\`/g,
+		INLINE_CODE_BLOCK: /\`([^\`\n]+)\`/g,
 
 		// quote
 		QUOTE: />[^\n].*\n(\s){0,10}> <cite> - [^\n]+/g,
@@ -59,12 +59,12 @@ export class Grammar {
 		IMAGE_URL: /\(\S.+\)/g,
 
 		// horizontal line
-		UNDER_LINE: /(_{1})([^_.]+)(_{1})/g,
+		UNDER_LINE: /(?<!\w)_([^_\n]+?)_(?!\w)/g,
 
 		UNMARKABLE: /\\\*\s[\s\S]+?\\\*/g,
 
 		// bold text
-		STRONG: /\*\*([\w|\s]+)\*\*/g,
+		STRONG: /\*\*([^*]+)\*\*/g,
 		STRONG_TEXT: /[^\*]+/g,
 
 
