@@ -4,6 +4,7 @@ export declare class ListHTML {
     private token;
     private htmlOutput;
     constructor(token: Token.listToken, htmlOutput: HTMLElement);
+    private resolveTokens;
     private createListItem;
     render(): Element | void;
 }

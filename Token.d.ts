@@ -91,4 +91,5 @@ export interface formulaInlineToken extends basisToken {
 export interface listToken extends basisToken {
     type: string;
     attribute: string;
+    tokensMap?: Map<string, any>;
 }
