@@ -36,7 +36,7 @@ export class ParagraphHTML {
 			}
 
 			if (child.type == TokenType.IMAGE) {
-				const imgSrc = ('./' + child.url.replace(/^\.?\//, ''));
+				const imgSrc = ('/' + child.url.replace(/^\.?\//, ''));
 				text = text + `
 				<figure class="flex flex-col items-center my-5">
 					<img data-src="${imgSrc}" alt="${child.alt}" class="lazy shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
@@ -59,7 +59,7 @@ export class ParagraphHTML {
 
 			if (child.type == TokenType.CODE_INLINE) {
 				text = text + " " + `
-				<code class="inline-block py-1 px-2 bg-blue-400 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">
+				<code class="inline-block py-1 px-2 bg-blue-200 dark:bg-blue-800 text-sm font-medium rounded">
 					${child.value.substring(1, child.value.length - 1)}
 				</code>
 				`

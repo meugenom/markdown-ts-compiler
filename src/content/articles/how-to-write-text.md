@@ -72,7 +72,7 @@ $$
 $$
 
 
-## Code Block: 
+## Code Block:
 
 \*		
 ```javascript
@@ -221,7 +221,7 @@ This site was built using [Javascript ES6](https://en.wikipedia.org/wiki/ECMAScr
 
 ## Simple Underline decoration
 
-/* _underdash_ /*
+\* _underdash_ \*
 
 in out:
 
@@ -263,11 +263,11 @@ Lorem|green ipsum|indigo dolor|red sit amet|purple , consectetur|pink adipisicin
 
 ## Ignoring Markdown formatting
 
-You can ignore (or escape) Markdown formatting:
-<br/>
-\* this **all*** text is ### unmarkable \*
-this is \* unmarkable \* text
-About \* this >Quote \*
+You can ignore (or escape) Markdown formatting by wrapping a block with a backslash-asterisk on its own line before and after the content.
+
+in out:
+
+\* this **all** text is ### unmarkable \*
 
 ## Images
 

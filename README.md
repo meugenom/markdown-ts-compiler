@@ -13,7 +13,7 @@
 
 ## Markdown Typescript Compiler
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg?style=for-the-badge)
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
