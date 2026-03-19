@@ -5,6 +5,7 @@ export declare class TableHTML {
     private token;
     private htmlOutput;
     constructor(token: Token.tableToken, htmlOutput: HTMLElement);
+    private resolveTokens;
     private createTableHead;
     private createTableBody;
     render(): void;
