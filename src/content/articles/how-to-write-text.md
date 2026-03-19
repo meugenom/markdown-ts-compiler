@@ -177,6 +177,7 @@ List 4 with mixed attributes:
 
 \*
 | Name | Age | Auto | Town | Pet |
+|---|---|---|---|---|
 | Bob | 17 | BMW | Baku | Fish |
 | John | 52 | Fiat | Berlin | Dog |
 | Lisa | 32 | Toyota | Frankfurt | Snake |
@@ -186,6 +187,7 @@ List 4 with mixed attributes:
 <br/>
 
 | Name | Age | Auto | Town | Pet |
+|---|---|---|---|---|
 | Bob | 17 | BMW | Baku | Fish |
 | John | 52 | Fiat | Berlin | Dog |
 | Lisa | 32 | Toyota | Frankfurt | Snake |

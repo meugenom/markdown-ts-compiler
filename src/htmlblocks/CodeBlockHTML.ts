@@ -33,10 +33,13 @@ export class CodeBlockHTML {
 		const rawCode = this.token.code;
 
 		// Split into lines for line numbers
-		const lines = rawCode.trim().split('\n');
-		// Remove trailing empty line if present
-		if (lines[lines.length - 1].trim() === '') lines.pop();
-
+		let lines = rawCode.trim().split('\n');
+		
+		// Remove trailing empty line if present		
+		const index = lines.length - 1
+		if (lines != undefined && lines[index] && lines[index].trim() === '') lines.pop();
+		
+		
 		// Outer wrapper
 		const OuterNode = this.DomUtilites.createElement("div");
 		OuterNode.className = "code-block-outer my-5";
