@@ -484,6 +484,7 @@ export class Tokenizer {
 				tableToken.type = TokenType.TABLE;
 				tableToken.row = table;
 				tableToken.children = [] as Token.tableRowToken[];
+				tableToken.tokensMap = this.tokensMap;
 
 				//add children
 				const rows = table.split("\n");

@@ -1,7 +1,7 @@
 import * as Token from "../Token";
 import { TokenType } from "../Types";
 import { DomUtilites } from "./DomUtilites";
-import katex from 'katex';
+import * as katex from 'katex';
 
 export class ListHTML {
     private DomUtilites: DomUtilites;
@@ -48,9 +48,10 @@ export class ListHTML {
         } else if (item.includes("[x]")) {
             return `<li class="list-none ml-5 flex items-start gap-2"><input class="form-check-input appearance-none flex-shrink-0 h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-400 checked:border-blue-400 focus:outline-none transition duration-200 mt-1 bg-no-repeat bg-center bg-contain" type="checkbox" value="" id="flexCheckCheckedDisabled" checked disabled/><label class="form-check-label opacity-100" for="flexCheckCheckedDisabled">${resolved.replace("[x]", "")}</label></li>`;
         } else if (item.includes("-")) {
-            return `<li class="list-none ml-5">${resolved}</li>`;
+            const text = resolved.replace(/^\s*-\s*/, '');
+            return `<li class="list-disc ml-5 font-mono text-sm leading-6">${text}</li>`;
         } else {
-            return `<li class="list-none ml-5">${resolved}</li>`;
+            return `<li class="list-disc ml-5 font-mono text-sm leading-6">${resolved}</li>`;
         }
     }
 
@@ -63,9 +64,9 @@ export class ListHTML {
         const title = list.shift();
 
         if (list && list.length > 0) {
-            let listBlock = `<div class="mt-2">
-                <p>${title}</p>
-                <div class="form-check">${list.map(item => this.createListItem(item)).join("")}</div>
+            let listBlock = `<div class="mt-3">
+                <p class="font-mono">${title}</p>
+                <ul class="mt-1 ml-2 space-y-1">${list.map(item => this.createListItem(item)).join("")}</ul>
             </div>`;
             listBlockNode.innerHTML = listBlock;
         }
