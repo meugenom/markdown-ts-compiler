@@ -6,6 +6,15 @@ module.exports = {
     '.html$': '<rootDir>/../jest/HtmlStub.js',
   },
   rootDir: './src/tests',
+  modulePathIgnorePatterns: [
+    "<rootDir>/../../.nvm", 
+    "<rootDir>/../../.vscode-insiders",
+    "Google Drive"
+  ],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.nvm/"
+  ],
   transform: {
     "^.+\\.ts$": "ts-jest"
   },

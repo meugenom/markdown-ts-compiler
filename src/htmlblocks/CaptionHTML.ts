@@ -37,12 +37,12 @@ export class CaptionHTML {
 
 		const rawThumbnail = this.token.children[0].thumbnail.trim().replace(/['"]/g, '').replace(/^\.?\//, '');
 		const hasThumbnail = rawThumbnail.length > 0;
-		const thumbnail = '/' + rawThumbnail;
+		const thumbnail = './' + rawThumbnail;
 
 		const thumbnailBlock = hasThumbnail
 			? `<div class="flex-none">
-				<img data-src="${thumbnail}" 
-				 class="lazy float-left object-contain h-64 w-full max-w-xs"/>
+				<img src="${thumbnail}" 
+				 class="float-left object-contain h-64 w-full max-w-xs"/>
 			</div>`
 			: '';
 
