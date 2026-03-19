@@ -8,7 +8,7 @@
 
 import * as Token from "../Token";
 import { DomUtilites } from "./DomUtilites";
-import "../static/styles/prism.css";
+import "../static/styles/prism.css"
 
 // import prismjs
 import * as Prism from 'prismjs';
@@ -34,9 +34,8 @@ export class CodeBlockHTML {
 
 		// Split into lines for line numbers
 		const lines = rawCode.trim().split('\n');
-		const lastLine = lines[lines.length - 1];
 		// Remove trailing empty line if present
-		if (lastLine && lastLine.trim() === '') lines.pop();
+		if (lines[lines.length - 1].trim() === '') lines.pop();
 
 		// Outer wrapper
 		const OuterNode = this.DomUtilites.createElement("div");

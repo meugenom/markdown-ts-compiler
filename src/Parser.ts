@@ -215,6 +215,7 @@ export class Parser {
 				tableElement.type = TokenType.TABLE;
 				tableElement.row = token.row;
 				tableElement.children = token.children;
+				tableElement.tokensMap = token.tokensMap;
 
 				children.push(tableElement)
 			}

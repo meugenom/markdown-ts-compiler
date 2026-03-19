@@ -39,6 +39,7 @@ export interface textToken extends basisToken {
 
 export interface tableToken extends basisToken {
 	type: string,
+	tokensMap?: Map<string, any>
 }
 
 export interface tableRowToken extends basisToken {

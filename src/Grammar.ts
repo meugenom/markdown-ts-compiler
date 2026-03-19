@@ -10,7 +10,7 @@ export class Grammar {
 	public static BLOCKS = {
 
 		// heading‚
-		HEADING: /[^\S](#{1,6})([^\n\)\/]+)/g,
+		HEADING: /[^\S](#{1,6})([^\n]+)/g,
 		HEADING_LEVEL: /(#{1,5})/g,
 
 		// caption
@@ -68,8 +68,10 @@ export class Grammar {
 		STRONG_TEXT: /[^\*]+/g,
 
 
-		// table
-		TABLE: /((\|[\w\d\s]+)+\|)/g,
+		// table: matches one or more rows of the form | ... | per line
+		// [^\n|] ensures at least one non-pipe non-newline char so pure
+		// pipe-only lines (e.g. stray |) are not matched
+		TABLE: /(\|[^\n|][^\n]*\|[ \t]*\n?)+/g,
 
 		FORMULA_BLOCK: /\$\$([\s\S]+?)\$\$/g,
 		FORMULA_INLINE: /\$(?!\$)(?!token\.)([^$\n]+?)\$(?!\$)/g,
