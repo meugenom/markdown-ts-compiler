@@ -19,7 +19,7 @@ export class ImageHTML {
 
     let text = "";
 
-    const imgSrc = "/" + this.token.url.replace(/^\.?\//, "");
+    const imgSrc = this.token.url.replace(/^\.?\//, "");
     text =
       text +
       `
