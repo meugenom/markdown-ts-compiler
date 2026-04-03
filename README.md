@@ -13,8 +13,8 @@
 
 ## Markdown Typescript Compiler
 
-![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange)
-![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green)
+![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
+![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-0.5.0-blue.svg?style=for-the-badge)
 
@@ -35,10 +35,11 @@ AI was strictly utilized only for architectural brainstorming and refining compl
 
 **Two-Pass parsing Strategy**
 1. Markdown Text -> AST (Abstract Syntax Tree)
-    - **First-Pass:** The engine scans document to identify high-level structural blocks (e.g., caption, headers, lists, code blocks, tables) and generates a token stream.
-    - **Second-Pass:** (Recursive Inline Parsing) Content within blocks is processed through a recursive function. The engine handles deeply nested inline elements (e.g., links, images, bold text, underline text, formulas) with high precision.
-2. AST -> HTML 
-    - The final output is generated wia recursive tree-walk of the AST, ensuring that complex hierarchies are translated into valid, semantic HTML.
+    - **First-Pass:** The engine scans document to identify high-level structural blocks (e.g., `caption block`, `heading`, `list block`, `code blocks`, `table block`, `quote`, `unmarkable block`, `image`, `formula block`) and generates a token stream.
+    - **Second-Pass:** Inline parsing runs only on terminal nodes that contains raw text content (e.g. `paragraph`, `heading`, `list_item`, `quote`, `unknown_text`).
+    - **Design Constraint:**  Inline Parsing does not decompose nodes further into atomic units. Once a `bold` or `underline` token is matched, its content is stored as-is. Breaking inline tokens down to the character level adds complexity without any practical benefit.
+2. AST -> HTML
+    - The final output is generated via recursive tree-walk of the AST, ensuring that complex hierarchies are translated into valid, semantic HTML.
 
 ## Testing
 
@@ -97,7 +98,7 @@ The Core AST generation logic is tested to parsing stability and regression prev
 - `/dist` - the compiled code and static files, need to run build command‚
 
 **Files:**
-- `./src/index.ts` - the entrypoint of the comiler
+- `./src/index.ts` - the entrypoint of the compiler
 - `./src/Grammar.ts` - the grammar with Regexp rules
 - `./src/Tokenizer.ts` - the tokenize class to make AST from MD text
 - `./src/Render.ts` - the compiler class to compile AST into HTML
