@@ -33,16 +33,27 @@ export interface unknownTextToken extends basisToken {
 	type: string,
 }
 
+export interface paragraphTextToken extends basisToken {
+	type: string,
+}
+
 export interface textToken extends basisToken {
 	type: string,
 }
 
 export interface tableToken extends basisToken {
-	type: string,
-	tokensMap?: Map<string, any>
+	type: string,	
 }
 
-export interface tableRowToken extends basisToken {
+export interface tableHeadRowToken extends basisToken {
+	type: string,
+}
+
+export interface tableBodyRowToken extends basisToken {
+	type: string,
+}
+
+export interface tableCellToken extends basisToken {
 	type: string,
 }
 
@@ -84,16 +95,15 @@ export interface captionToken extends basisToken {
 	template: string,
 	thumbnail: string,
 	slug: string,
-	categories: string,
-	tags: string
+	tags: string,
+	cluster: string,
+	order: string
 }
 
 
 
 export interface quoteToken extends basisToken {
-	type: string,
-	quote: string,
-	author: string
+	type: string
 }
 
 export interface linkToken extends basisToken {

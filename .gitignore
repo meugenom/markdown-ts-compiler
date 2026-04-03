@@ -6,6 +6,7 @@
 # Directories
 dist/
 node_modules/
+/coverage
 
 # Env files
 .env

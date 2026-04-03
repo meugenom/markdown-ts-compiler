@@ -19,8 +19,7 @@
  */
 
 import { Tokenizer } from "./Tokenizer";
-import { Parser } from "./Parser";
-import { View } from "./View";
+import { Render } from "./Render";
 import "./static/styles/style.css";
 import 'katex/dist/katex.min.css';
 
@@ -33,18 +32,17 @@ htmlOutput.id = "app";
 
 // API to convert markdown to HTML
 function convertMDtoHTML(text: any){
-    let tokenizer = new Tokenizer(text);
-    const parser = new Parser(tokenizer.tokens);
-    const output : any = new View(parser.ast, htmlOutput).init();    
-    return output;
+    let tokenizer = new Tokenizer(text);    
+    const virtualDOM = document.createElement('div');
+    new Render(tokenizer.getAST(), virtualDOM);
+    return virtualDOM;
 }
 
 
 //API to convert markdown to AST
 function convertMDtoAST(text: string) {
     let tokenizer = new Tokenizer(text);
-    const parser = new Parser(tokenizer.tokens);
-    return parser.ast;
+    return tokenizer.getAST();
 }
 
 //API to convert markdown to tokens
