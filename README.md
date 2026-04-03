@@ -16,7 +16,7 @@
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange)
 ![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green)
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.5.0-blue.svg?style=for-the-badge)
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
