@@ -44,7 +44,7 @@ AI was strictly utilized only for architectural brainstorming and refining compl
 
 The Core AST generation logic is tested to parsing stability and regression prevention:
 - **70% Code Coverage** Focus is placed on critical structural components.
-- **Core Block Testing** High priority modules (tables, headers, lists, caption)
+- **Core Block Testing** High priority modules (tables, headers, lists, caption, paragraphs)
 
 ![testing screenshot](./assets/testing_screenshot.png)
 

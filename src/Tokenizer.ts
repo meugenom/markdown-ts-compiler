@@ -76,7 +76,11 @@ export class Tokenizer {
 
 			// remove leading whitespace
 			const whitespace = this.text.match(/^\s+/);
+			let hadBlankLine = false;
     		if (whitespace) {
+
+				// any leading newline as a new paragraph
+        		hadBlankLine = /\n/.test(whitespace[0]);
         		this.text = this.text.slice(whitespace[0].length);
         		if (this.text.length === 0) break; 
     		}
@@ -539,23 +543,17 @@ export class Tokenizer {
             const end = nextNewline === -1 ? this.text.length : nextNewline + 1;
             const chunk = this.text.slice(0, end);
 
-            const lastNode = this.ast.children[this.ast.children.length - 1];
-            if (lastNode && lastNode.type === "Paragraph") {
-                lastNode.raw += chunk;
-                if (lastNode.token) lastNode.token.value += chunk;
-            } else {
-
-                //add to the astNode
-					this.ast.children.push({
-						type: TokenType.PARAGRAPH,						
-						raw: chunk,
-						token: {
-							type: TokenType.PARAGRAPH,
-							value: chunk
-						},  
-						children: []
-					});
-            }
+            //each line becomes its own paragraph
+			this.ast.children.push({
+				type: TokenType.PARAGRAPH,						
+				raw: chunk,
+				token: {
+					type: TokenType.PARAGRAPH,
+					value: chunk
+				},  
+				children: []
+			});
+            
 
             this.text = this.text.slice(end);		
 
