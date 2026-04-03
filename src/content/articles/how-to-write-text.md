@@ -5,8 +5,8 @@ template: post
 thumbnail: './thumbnails/writing.png'
 slug: how-to-write-text
 tags: instruction texter writer
-cluster: content-system-updates
-order: 1
+cluster: how-to-write-text
+order: 0
 ---
 
 ## Formatting syntax
