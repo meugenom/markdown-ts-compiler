@@ -35,7 +35,7 @@ export class CaptionHTML {
 
 		const rawThumbnail = this.token.thumbnail.trim().replace(/['"]/g, '').replace(/^\.?\//, '');
 		const hasThumbnail = rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
-		const thumbnail = '/' + rawThumbnail;
+		const thumbnail = rawThumbnail;
 
 		const thumbnailBlock = hasThumbnail
 			? `<div class="flex-none">
