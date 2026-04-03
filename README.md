@@ -13,8 +13,8 @@
 
 ## Markdown Typescript Compiler
 
-![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange)
-![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green)
+![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
+![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green?style=for-the-badge)
 
 ![Version](https://img.shields.io/badge/version-0.5.0-blue.svg?style=for-the-badge)
 
