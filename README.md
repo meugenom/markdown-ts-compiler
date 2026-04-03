@@ -13,7 +13,10 @@
 
 ## Markdown Typescript Compiler
 
-![Version](https://img.shields.io/badge/version-1.3.0-blue.svg?style=for-the-badge)
+![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange)
+![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green)
+
+![Version](https://img.shields.io/badge/version-0.4.0-blue.svg?style=for-the-badge)
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
@@ -21,12 +24,29 @@
 
 [DEMO](https://meugenom.github.io/markdown-ts-compiler/)
 
-## Purpose:
+## IMPORTANT!
 
-This parser was served as a compiler for my personal website, specifically for parsing Markdown text into HTML. I utilized TypeScript and Webpack in the development process, and the styling is enhanced with Tailwind CSS. 
-You can view the **result** on my website: [Markdown TS Compiler](https://meugenom.github.io/markdown-ts-compiler/), where there's a parsed example page.
+**The codebase for the Project is entirely hand-coded.**
+Every line of code in the project was crafted by  a human developer.
+NO AI-generated Code was used in the development of this project.
+AI was strictly utilized only for architectural brainstorming and refining complex regular expression.
 
-**Important**: To display the result, the script constructs the DOM model in the browser; a virtual DOM model is not utilized. This functionality might be considered in the next version.
+## Core Architecture
+
+**Two-Pass parsing Strategy**
+1. Markdown Text -> AST (Abstract Syntax Tree)
+    - **First-Pass:** The engine scans document to identify high-level structural blocks (e.g., caption, headers, lists, code blocks, tables) and generates a token stream.
+    - **Second-Pass:** (Recursive Inline Parsing) Content within blocks is processed through a recursive function. The engine handles deeply nested inline elements (e.g., links, images, bold text, underline text, formulas) with high precision.
+2. AST -> HTML 
+    - The final output is generated wia recursive tree-walk of the AST, ensuring that complex hierarchies are translated into valid, semantic HTML.
+
+## Testing
+
+The Core AST generation logic is tested to parsing stability and regression prevention:
+- **70% Code Coverage** Focus is placed on critical structural components.
+- **Core Block Testing** High priority modules (tables, headers, lists, caption)
+
+![testing screenshot](./assets/testing_screenshot.png)
 
 ## Technologies Used:
 
@@ -35,8 +55,9 @@ You can view the **result** on my website: [Markdown TS Compiler](https://meugen
 - Webpack v5.105.3
 - TS-Loader v9.5.4
 - Tailwind CSS from [website](https://tailwindcss.com) v4.0.12
-- Prism.js from [website](https://prismjs.com) for code highlighting v1.30.0
+- Shiki v.4.0.2
 - Katex v.0.16.33
+- Jest v.30.2.0
 
 ## How to use it:
 
@@ -78,10 +99,8 @@ You can view the **result** on my website: [Markdown TS Compiler](https://meugen
 **Files:**
 - `./src/index.ts` - the entrypoint of the comiler
 - `./src/Grammar.ts` - the grammar with Regexp rules
-- `./src/Tokenizer.ts` - the tokenize class to make tokens from a text
-- `./src/Parser.ts` - the parser class to parse tokens into AST
-- `./src/View.ts` - the compiler class to compile AST into HTML
-
+- `./src/Tokenizer.ts` - the tokenize class to make AST from MD text
+- `./src/Render.ts` - the compiler class to compile AST into HTML
 
 
 ### Author:

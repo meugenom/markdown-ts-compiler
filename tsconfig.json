@@ -1,46 +1,18 @@
 {
-  "files": ["./src/index.ts"],
-  "compilerOptions": {
+	"compilerOptions": {
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "sourceMap": true,
-    "strict": true,
-    "removeComments": true,
-    "target": "ES2018" ,
+    "allowJs": true,
     "module": "commonjs",
-    "lib": ["es2018", "dom"],
-    "declaration": true,
-    "outDir": "./dist",
-    "noEmit": false,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "noEmitOnError": true,
-    "noUncheckedIndexedAccess": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true,
-    "rootDir": "./src",
-    "types": ["node", "jest"]
+    "noImplicitAny": true,
+    "outDir": "./target/classes/static/",
+    "preserveConstEnums": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "target": "ES2018",
+    "lib": ["es2018", "dom"]
   },
-  "include": ["./src/**/*.ts", "./src/types/*.d.ts", "./src/content/articles/*.md", "./src/content/thumbnails/*.png", "./src/content/images/*.png"],
-  "exclude": [
-    "node_modules/**/*",
-    "jest.config.**",
-    "webpack.config.js",
-    "dist"
-  ],
-  "baseUrl": "./src",
-  "paths": {
-    "*": ["*"]
-  }
+  "include": [
+    "./src/js/**/*",
+    "./src/types/**/*"
+  ]
 }
