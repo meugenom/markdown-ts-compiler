@@ -11,7 +11,7 @@ export class CodeBlockHTML {
     }
 
     renderAsElement() : HTMLElement {
-        const lang = this.token.language || 'code';
+        const lang = this.token.language || 'text';
         let rawCode = this.token.code;
 
         // Remove newline at the start
