@@ -286,9 +286,13 @@ export class Render {
 						element = document.createElement('div');
 						this.renderNodes(node.children, element);
 					} else {
-						element = document.createElement('span');
-    					element.className = "underline decoration-sky-500 md:decoration-solid decoration-3";						
-    					element.textContent = node.token.value + " "; // Ensure it's a string
+						const underlined = document.createElement('span');
+						underlined.className = "underline decoration-sky-500 md:decoration-solid decoration-3";
+						underlined.textContent = node.token.value;
+						const wrapper = document.createElement('span');
+						wrapper.appendChild(underlined);
+						wrapper.appendChild(document.createTextNode(' '));
+						element = wrapper;
 					}
 					break;
 

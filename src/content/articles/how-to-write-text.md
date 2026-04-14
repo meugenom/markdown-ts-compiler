@@ -11,7 +11,7 @@ order: 0
 
 ## Formatting syntax
 
-> This is a small guide. "How to write _markdown text_ and get _HTML document_ out". See code on my GitHub: [markable parser](https://github.com/meugenom/markable-to-html)
+> This is a small guide. "How to write _markdown text_ and get _HTML document_ out". See [[code on my Github:pink]]: [markable parser](https://github.com/meugenom/markable-to-html)
 
 How to use: write caption block like the example below:
 
