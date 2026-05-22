@@ -1,18 +1,17 @@
 {
-	"compilerOptions": {
+  "compilerOptions": {
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
-    "module": "commonjs",
+    "module": "esnext",      
+    "moduleResolution": "bundler",     
     "noImplicitAny": true,
-    "outDir": "./target/classes/static/",
     "preserveConstEnums": true,
     "removeComments": true,
     "sourceMap": true,
-    "target": "ES2018",
+    "target": "ES2020",
     "lib": ["es2018", "dom"]
   },
   "include": [
-    "./src/js/**/*",
-    "./src/types/**/*"
+    "./src/**/*"
   ]
 }

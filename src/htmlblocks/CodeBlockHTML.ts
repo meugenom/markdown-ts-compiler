@@ -1,6 +1,60 @@
 'use strict'
 import * as Token from "../Token";
-import { codeToHtml } from 'shiki';
+
+// We use a cached variable to store the highlighter instance after it's created, so we only go through the async loading process once.
+let cachedHighlighter: any = null;
+async function getShikiHighlighter() {
+    if (cachedHighlighter) {
+        return cachedHighlighter;
+    }
+
+    // 1. Import Core
+    const { createHighlighterCore } = await import('shiki/core');
+    
+    // 2. Import Oniguruma Engine
+    const { createOnigurumaEngine } = await import('@shikijs/engine-oniguruma');
+    
+    // 3. Fixed paths: import strictly from @shikijs/langs and @shikijs/themes
+    const [
+        langC, langCpp, langJava, langJson, langBash, langPython,
+        langJs, langTs, langSql, langYaml, langMarkdown, langXml, langCss,
+        themeLight, themeDark
+    ] = await Promise.all([
+        import('@shikijs/langs/c'),
+        import('@shikijs/langs/cpp'),
+        import('@shikijs/langs/java'),
+        import('@shikijs/langs/json'),
+        import('@shikijs/langs/bash'),
+        import('@shikijs/langs/python'),
+        import('@shikijs/langs/javascript'),
+        import('@shikijs/langs/typescript'),
+        import('@shikijs/langs/sql'),
+        import('@shikijs/langs/yaml'),
+        import('@shikijs/langs/markdown'),
+        import('@shikijs/langs/xml'),
+        import('@shikijs/langs/css'),
+        import('@shikijs/themes/github-light'),
+        import('@shikijs/themes/github-dark')
+    ]);
+
+    // 4. Initialize the lightweight core instance
+    cachedHighlighter = await createHighlighterCore({
+        themes: [themeLight.default, themeDark.default],
+        langs: [
+            langC.default, langCpp.default, langJava.default, langJson.default,
+            langBash.default, langPython.default, langJs.default, langTs.default,
+            langSql.default, langYaml.default, langMarkdown.default, langXml.default, langCss.default
+        ],
+        // Use fetch initialization for WASM to prevent Webpack Production Mode from complaining about export conditions
+        engine: createOnigurumaEngine(async () => {
+            const { default: wasm } = await import('@shikijs/engine-oniguruma/wasm-inlined');
+            return wasm;
+        })
+    });
+
+    return cachedHighlighter;
+}
+
 
 export class CodeBlockHTML {
   
@@ -53,7 +107,7 @@ export class CodeBlockHTML {
         CodeContainer.className = "flex-1 min-w-0"; 
         
         // While Shiki is loading, show raw text to avoid layout "jump"
-        CodeContainer.innerHTML = `<pre class="leading-6 p-4 text-[13px]"><code>${rawCode}</code></pre>`;
+        CodeContainer.innerHTML = `<pre class="leading-6 p-4 bg-transparent text-[13px]"><code>${rawCode}</code></pre>`;
 
         BodyNode.appendChild(LineNumsNode);
         BodyNode.appendChild(CodeContainer);
@@ -62,40 +116,29 @@ export class CodeBlockHTML {
         WrapperNode.appendChild(BodyNode);
         OuterNode.appendChild(WrapperNode);
 
-        // 4. Shiki highlighting
-        codeToHtml(rawCode, { 
-            lang, 
-            themes: { light: 'github-light', dark: 'min-dark' },           
-        }).then(shikiHtml => {
+        // 4. Lazy Shiki highlighting
+        getShikiHighlighter().then(highlighter => {
+            // Shiki's codeToHtml returns a full <pre><code> block, so we need to extract the inner HTML to insert into our CodeContainer.            
+            const shikiHtml = highlighter.codeToHtml(rawCode, { 
+                lang: lang,
+                themes: { light: 'github-light', dark: 'github-dark' }
+            });
             
             CodeContainer.innerHTML = shikiHtml;
             
-            // Replace the entire content of the container with Shiki's result
-            const shikiPre = CodeContainer.querySelector('pre');			
-    		if (shikiPre) {
-				
-				// TODO: Hard Code
-        		// remove all inline styles from Shiki's <pre> and <code> elements to allow Tailwind classes to work properly
-        		// It kills the blue background in light theme, but we need it to be transparent for both themes
-        		//shikiPre.removeAttribute('style');				
+            const shikiPre = CodeContainer.querySelector('pre');            
+            if (shikiPre) {
                 shikiPre.style.backgroundColor = 'transparent';
+                shikiPre.className = "leading-6 p-4 text-[13px] overflow-x-auto !bg-transparent";               
 
-        		// add new classes
-        		// Add !bg-transparent, because Tailwind blocks background-color
-        		shikiPre.className = "leading-6 p-4 text-[13px] overflow-x-auto !bg-transparent";				
-
-        		// Clean nested <code>
-        		const shikiCode = shikiPre.querySelector('code');
-				
-				// TODO: Hard Code
-        		if (shikiCode) {
-            		//shikiCode.removeAttribute('style');
+                const shikiCode = shikiPre.querySelector('code');
+                if (shikiCode) {
                     shikiCode.style.backgroundColor = 'transparent';
-            		shikiCode.className ="leading-6 text-[13px] !bg-transparent";
-        		}
+                    shikiCode.className ="leading-6 text-[13px] !bg-transparent";
+                }
             }
-        }).catch(err => {
-            console.error('Shiki error:', err);
+        }).catch((err: any) => {
+            console.error('Shiki loading error:', err);
         });
 
         // 5. Copy logic
@@ -108,9 +151,7 @@ export class CodeBlockHTML {
                 });
             });
         }
-		
-		//console.log(OuterNode);
-		
+        
         return OuterNode;
     }
 }
