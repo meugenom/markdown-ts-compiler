@@ -71,7 +71,7 @@ The Core AST generation logic is tested to parsing stability and regression prev
     ```bash
     yarn build
     ```
-4. Open in your browser the address: http://localhost:8083
+4. Open in your browser the address: http://localhost:8081
 5. For testing use command:
     ```bash
     yarn test
