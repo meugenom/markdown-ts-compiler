@@ -49,13 +49,13 @@ AI was strictly utilized only for architectural brainstorming and refining compl
 Since the compiler uses Shiki for syntax highlighting, the HTML generation is asynchronous.
 
 ```typescript
-import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
-// Import KaTeX styles for formulas to render correctly in the browser
+import 'markdown-tailwind-css-compiler/src/static/styles/list.css';
+import 'markdown-tailwind-css-compiler/src/static/styles/table.css';
+import 'markdown-tailwind-css-compiler/src/static/styles/style.css';
 import 'katex/dist/katex.min.css';
-// Import Tailwind CSS styles for Markdown rendering
-import 'markdown-tailwind-css-compiler/dist/styles/style.css';
-import 'markdown-tailwind-css-compiler/dist/styles/list.css';
-import 'markdown-tailwind-css-compiler/dist/styles/table.css';
+
+import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
+
 
 const markdownText = `
 # My Article
