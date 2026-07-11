@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.6.3-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.6.4-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
