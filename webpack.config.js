@@ -6,7 +6,7 @@ const webpack = require("webpack");
 
 module.exports = {
   // Entry point
-  entry: "./src/index.ts",
+  entry: "./src/demo.ts",
   output: {
     filename: "[name].js",
     // dist-demo for html demo
