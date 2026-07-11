@@ -4,6 +4,9 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js', 'mjs'],
   moduleNameMapper: {
     '\\.html$': '<rootDir>/jest/HtmlStub.js',
+    '\\.(css|less|scss|sass)$': '<rootDir>/src/tests/styleMock.js',
+    '^raw-loader!.*$': '<rootDir>/src/tests/stringMock.js',    
+    '^@shikijs/(.*)$': '<rootDir>/src/tests/styleMock.js',
   },
   rootDir: '.',
   transform: {
