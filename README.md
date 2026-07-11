@@ -1,3 +1,4 @@
+```txt
                             _       _
        _ __ ___   __ _ _ __| | ____| | _____      ___ __  
       | '_ ` _ \ / _` | '__| |/ / _` |/ _ \ \ /\ / / '_ \ 
@@ -10,19 +11,31 @@
            | (_| (_) | | | | | | |_) | | |  __/ |
             \___\___/|_| |_| |_| .__/|_|_|\___|_|
                                |_|               
+```
 
-## Markdown Typescript Compiler
+# Markdown TypeScript Compiler
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
-![No AI Generated Code](https://img.shields.io/badge/AI--Generated-None-green?style=for-the-badge)
-
+![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
 ![Version](https://img.shields.io/badge/version-0.6.0-blue.svg?style=for-the-badge)
-
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
-![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
-![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
-[DEMO](https://meugenom.github.io/markdown-ts-compiler/)
+An isomorphic, high-performance Markdown compiler built with TypeScript and Tailwind CSS styles. It operates entirely on clean strings without any DOM dependencies, making it universally compatible with Node.js, modern browsers, and edge environments.
+
+[LIVE DEMO](https://meugenom.github.io/markdown-ts-compiler/)
+
+---
+
+## Installation
+
+Install the package into your project via Yarn or npm:
+
+```bash
+yarn add markdown-tailwind-css-compiler
+# or
+npm install markdown-tailwind-css-compiler
+```
 
 ## IMPORTANT!
 
@@ -31,83 +44,99 @@ Every line of code in the project was crafted by  a human developer.
 NO AI-generated Code was used in the development of this project.
 AI was strictly utilized only for architectural brainstorming and refining complex regular expression.
 
+
+## How to Use It in Your Project
+1. Basic HTML Compilation (Asynchronous)
+Since the compiler uses Shiki for syntax highlighting, the HTML generation is asynchronous.
+
+```typescript
+import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
+// Import KaTeX styles for formulas to render correctly in the browser
+import 'katex/dist/katex.min.css';
+
+const markdownText = `
+# My Article
+This is an inline code \`const a = 1;\` and a formula: $E = mc^2$
+
+\`\`\`typescript
+const hello = "world";
+\`\`\`
+`;
+
+async function render() {
+    try {
+        const html = await convertMDtoHTML(markdownText);
+        document.getElementById('app').innerHTML = html;
+    } catch (error) {
+        console.error("Compilation failed:", error);
+    }
+}
+
+render();
+```
+
+2. Working with AST and Tokens (Synchronous)
+If you only need to parse the structure without rendering, these methods run completely synchronously:
+
+```typescript
+import { convertMDtoAST, convertMDtoTokens } from 'markdown-tailwind-css-compiler';
+
+const markdown = "# Hello";
+
+// Get the Abstract Syntax Tree (AST)
+const ast = convertMDtoAST(markdown);
+
+// Get a flat array of processed tokens
+const tokens = convertMDtoTokens(markdown);
+```
+
+## API Reference
+- `convertMDtoHTML(text: string): Promise<string>`
+Converts raw markdown text into a clean HTML string. Includes modern Shiki token code highlighting and KaTeX formula rendering.
+- `convertMDtoAST(text: string): ASTNode`
+Parses markdown and returns the internal Abstract Syntax Tree structure.
+- `convertMDtoTokens(text: string): Token[]`
+Scans the text and returns a flat array of detected block/inline tokens.
+
 ## Core Architecture
 
-**Two-Pass parsing Strategy**
+Two-Pass Parsing Strategy
+
 1. Markdown Text -> AST (Abstract Syntax Tree)
-    - **First-Pass:** The engine scans document to identify high-level structural blocks (e.g., `caption block`, `heading`, `list block`, `code blocks`, `table block`, `quote`, `unmarkable block`, `image`, `formula block`) and generates a token stream.
-    - **Second-Pass:** Inline parsing runs only on terminal nodes that contains raw text content (e.g. `paragraph`, `heading`, `list_item`, `quote`, `unknown_text`).
-    - **Design Constraint:**  Inline Parsing does not decompose nodes further into atomic units. Once a `bold` or `underline` token is matched, its content is stored as-is. Breaking inline tokens down to the character level adds complexity without any practical benefit.
+- First-Pass: The engine scans the document to identify high-level structural blocks (e.g., caption block, heading, list block, code blocks, table block, quote, unmarkable block, image, formula block) and generates a token stream.
+- Second-Pass: Inline parsing runs only on terminal nodes that contain raw text content (e.g., paragraph, heading, list_item, quote, unknown_text).
+- Design Constraint: Inline Parsing does not decompose nodes further into atomic units. Once a token like bold or underline is matched, its content is stored as-is for performance stability.
 2. AST -> HTML
-    - The final output is generated via recursive tree-walk of the AST, ensuring that complex hierarchies are translated into valid, semantic HTML.
+- The final output is generated via an asynchronous tree-walk of the AST, translating complex structural hierarchies into valid, highly-styled Tailwind CSS semantic HTML.
 
-## Testing
+## Development & Contribution
 
-The Core AST generation logic is tested to parsing stability and regression prevention:
-- **70% Code Coverage** Focus is placed on critical structural components.
-- **Core Block Testing** High priority modules (tables, headers, lists, caption, paragraphs)
+If you want to clone the repository and hack on the compiler locally:
 
-![testing screenshot](./assets/testing_screenshot.png)
+```bash
+git clone [https://github.com/meugenom/markdown-ts-compiler.git](https://github.com/meugenom/markdown-ts-compiler.git)
+cd markdown-ts-compiler
+yarn install
+```
 
-## Technologies Used:
+1. Run the local development server (Webpack Dev Server):
 
-- npm v10.8.2, node v20.20.0
-- Typescript v5.3.2
-- Webpack v5.105.3
-- TS-Loader v9.5.4
-- Tailwind CSS from [website](https://tailwindcss.com) v4.0.12
-- Shiki v.4.0.2
-- Katex v.0.16.33
-- Jest v.30.2.0
+```bash
+ yarn start
+```
+2. Build the project:
 
-## How to use it:
+```bash
+yarn build
+```
+This triggers a dual-target build script:
+- `/dist` — Houses the pure production JS modules and TypeScript type definitions (.d.ts) meant for npm distribution.
+- `/dist-demo` — Contains the standalone compiled HTML/JS bundle for hosting the web demonstration site.
+3. Run Tests:
 
-1. Clone the repository:
-2. Install the dependencies:
-    ```bash
-    yarn
-    ```
-3. Run the compiler:
-    ```bash
-    yarn build
-    ```
-
-4. Open in your browser `http://localhost:8081`
-    ```bash
-    yarn start
-    ```
-
-5. For testing use command:
-    ```bash
-    yarn test
-    ```
-
-## API Reference:
- Please see entrypoint `./src/index.ts` for the API reference.
- 
- **API** functions:
-- _convertMDtoHTML(txt: string)_ - converts markdown text into HTML, return HTML string
-- _convertMDtoTokens(txt: string)_ - converts markdown text into tokens, return array of tokens
-- _convertMDtoAST(txt: string)_ - converts markdown text into AST, return Abstract Syntax Tree
-
-## How to use it in your project:
-
-**Directories:**
-- `./src` - the main compiler code:
-    - `../test` - the test code
-    - `../htmlblocks` - the html blocks to parse AST into HTML
-    - `../content` - the example text to parse
-    - `../static` - the static files index.html, css styles
-    - `../types` - integration with external libraries
-    
-- `/dist` - the compiled code and static files, need to run build command‚
-
-**Files:**
-- `./src/index.ts` - the entrypoint of the compiler
-- `./src/Grammar.ts` - the grammar with Regexp rules
-- `./src/Tokenizer.ts` - the tokenize class to make AST from MD text
-- `./src/Render.ts` - the compiler class to compile AST into HTML
-
+```bash
+yarn test
+```
 
 ### Author:
 
