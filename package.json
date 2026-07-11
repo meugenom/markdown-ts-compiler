@@ -1,14 +1,30 @@
 {
   "name": "markdown-tailwind-css-compiler",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "markdown compiler ts tailwind css",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "sideEffects": [
+    "*.css"
+  ],
   "author": "meugenom.com",
-  "license": "ISC",
+  "repository": {
+  "type": "git",
+  "url": "git+https://github.com/meugenom/markdown-ts-compiler.git"
+},
+"keywords": [
+  "markdown",
+  "compiler",
+  "tailwind",
+  "typescript",
+  "isomorphic",
+  "katex",
+  "shiki"
+],
+  "license": "MIT",
   "scripts": {
     "clean": "rimraf ./dist ./dist-demo",
     "build:lib": "tsc",

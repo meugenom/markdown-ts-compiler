@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.6.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.6.1-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -41,8 +41,8 @@ npm install markdown-tailwind-css-compiler
 
 **The codebase for the Project is entirely hand-coded.**
 Every line of code in the project was crafted by  a human developer.
-NO AI-generated Code was used in the development of this project.
-AI was strictly utilized only for architectural brainstorming and refining complex regular expression.
+NO AI-generated Code was used in the development  of this project.
+AI was strictly utilized only for architectural brainstorming and refining complex regular expressions.
 
 
 ## How to Use It in Your Project
@@ -114,7 +114,7 @@ Two-Pass Parsing Strategy
 If you want to clone the repository and hack on the compiler locally:
 
 ```bash
-git clone [https://github.com/meugenom/markdown-ts-compiler.git](https://github.com/meugenom/markdown-ts-compiler.git)
+git clone https://github.com/meugenom/markdown-ts-compiler.git
 cd markdown-ts-compiler
 yarn install
 ```
