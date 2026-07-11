@@ -5,10 +5,12 @@ const CopyPlugin = require("copy-webpack-plugin");
 const webpack = require("webpack");
 
 module.exports = {
+  // Entry point
   entry: "./src/index.ts",
   output: {
     filename: "[name].js",
-    path: path.resolve(__dirname, "dist"),
+    // dist-demo for html demo
+    path: path.resolve(__dirname, "dist-demo"),
     chunkFilename: "[name].[contenthash].chunk.js",
     clean: true,
   },
@@ -79,7 +81,6 @@ module.exports = {
       filename: "./index.html",
     }),
     new MiniCssExtractPlugin({
-      // Uses hashing 
       filename: "[name].[contenthash].css",
       chunkFilename: "[name].[contenthash].chunk.css",
     }),

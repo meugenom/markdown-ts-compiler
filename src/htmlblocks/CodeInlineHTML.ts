@@ -1,32 +1,32 @@
 'use strict'
 
-/**
- * Returns an html element <span> for badge
- * @param line as block of the text
- * @return dom element for badge <span> ...</span>
- */
+interface CodeInlineToken {
+    value: string;
+}
 
+/**
+ * Returns an HTML string for inline code
+ * @param token object containing the code value
+ * @return HTML string <code>...</code>
+ */
 export class CodeInlineHTML {
 
-	private token: any;
+    private token: CodeInlineToken;
 
-	constructor(token: any) {
-		this.token = token;
-	}
+    constructor(token: CodeInlineToken) {
+        this.token = token;
+    }
 
-	renderAsElement(): HTMLElement {
+    public render(): string {
+        // Escape HTML special characters to prevent XSS and ensure proper rendering
+        const escapedValue = this.token.value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
 
-		const CodeInlineNode = document.createElement("span")		
-
-		let text = "";
-        
-        text = `
-				<code class="inline-block py-1 px-2 bg-gray-300 dark:bg-gray-500 dark:text-slate-200 text-sm font-mono font-medium rounded">
-					${this.token.value}
-				</code>
-				`
-
-		CodeInlineNode.innerHTML = text;		
-		return CodeInlineNode;
-	}
+        // Return the clean HTML string without unnecessary <span> wrapper
+        return `<code class="inline-block py-1 px-2 bg-gray-300 dark:bg-gray-500 dark:text-slate-200 text-sm font-mono font-medium rounded">${escapedValue}</code>`;
+    }
 }

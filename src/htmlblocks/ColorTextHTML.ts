@@ -1,56 +1,52 @@
 'use strict'
 
-/**
- * Returns an html element <span> for badge
- * @param line as block of the text
- * @return dom element for badge <span> ...</span>
- */
+interface ColorTextToken {
+    color: string;
+    value: string;
+}
 
+/**
+ * Returns an HTML string for colored text
+ * @param token object containing the color and text value
+ * @return HTML string with a trailing space inside a span wrapper
+ */
 export class ColorTextHTML {
 
-	private token: any;
+    private token: ColorTextToken;
 
-	constructor(token: any) {
-		this.token = token;
-	}
+    constructor(token: ColorTextToken) {
+        this.token = token;
+    }
 
-	renderAsElement(): HTMLElement {		
-		let colorTextNode = document.createElement("a");				
-		colorTextNode.className = "underline md:decoration-solid decoration-3"; // Base class for all colors, color will be added based on the token value
-		let text = "";
-		let colorText: string|undefined;
+    public render(): string {        
+        // Base classes for underline and decoration
+        const baseClasses = "underline md:decoration-solid decoration-3";
 
-		switch (this.token.color) {
-			case "blue":
-				colorTextNode.className += " decoration-blue-500";				
-				break;
-			case "gray":
-				colorTextNode.className += " decoration-gray-500";
-				break;
-			case "red":
-				colorTextNode.className += " decoration-red-500";
-				break;
-			case "green":
-				colorTextNode.className += " decoration-green-500";
-				break;
-			case "yellow":
-				colorTextNode.className += " decoration-yellow-500";
-				break;
-			case "purple":
-				colorTextNode.className += " decoration-purple-500";
-				break;
-			case "pink":
-				colorTextNode.className += " decoration-pink-500";
-				break;
-			case "indigo":
-				colorTextNode.className += " decoration-indigo-500";
-				break;
-		}
+        // Colors Mapping
+        const colorMap: Record<string, string> = {
+            blue:   "decoration-blue-500",
+            gray:   "decoration-gray-500",
+            red:    "decoration-red-500",
+            green:  "decoration-green-500",
+            yellow: "decoration-yellow-500",
+            purple: "decoration-purple-500",
+            pink:   "decoration-pink-500",
+            indigo: "decoration-indigo-500",
+        };
 
-		colorTextNode.textContent = this.token.value;
-		const wrapper = document.createElement('span');
-		wrapper.appendChild(colorTextNode);
-		wrapper.appendChild(document.createTextNode(' '));
-		return wrapper;
-	}
+        // If the color doesn't match, use gray by default
+        const colorClass = colorMap[this.token.color] || colorMap.gray;
+
+        // Escape HTML special characters to prevent XSS and ensure proper rendering
+        const escapedValue = this.token.value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+
+        // Return the structure one-to-one as in the DOM version: 
+        // tag <a> inside <span> and a trailing space inside the <span> wrapper
+        return `<span><a class="${baseClasses} ${colorClass}">${escapedValue}</a> </span>`;
+    }
 }
