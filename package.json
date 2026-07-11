@@ -5,35 +5,48 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "package.json"
+    "dist"
   ],
   "author": "meugenom.com",
   "license": "ISC",
   "scripts": {
-    "build": "npm run build:clean && npm run webpack",
-    "build:clean": "rimraf ./dist",
-    "jest": "jest --watch",
+    "clean": "rimraf ./dist ./dist-demo",
+    "build:lib": "tsc",
+    "build:demo": "webpack",
+    "build": "yarn clean && yarn build:lib && yarn build:demo",
     "start": "webpack serve",
+    "jest": "jest --watch",
     "test": "jest",
     "type": "tsc --noEmit",
-    "webpack": "webpack"
+    "prepare": "yarn clean && yarn build:lib"
   },
   "devDependencies": {
     "@shikijs/twoslash": "^4.0.2",
     "@tailwindcss/postcss": "^4.2.1",
     "@types/jest": "^30.0.0",
     "@types/jsdom": "^28.0.0",
+    "autoprefixer": "^10.4.13",
     "copy-webpack-plugin": "^14.0.0",
+    "css-loader": "^7.1.4",
+    "cssnano": "^5.1.14",
+    "html-loader": "^5.0.1",
     "html-webpack-plugin": "^5.6.6",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
-    "katex": "^0.16.33",
     "mini-css-extract-plugin": "^1.6.2",
     "npm-run-all": "^4.1.5",
+    "postcss": "^8.5.15",
+    "postcss-import": "^15.1.0",
+    "postcss-loader": "^8.2.1",
+    "postcss-preset-env": "^9.3.0",
+    "raw-loader": "^4.0.2",
     "rimraf": "^6.1.3",
-    "shiki": "^4.0.2",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^4.0.12",
+    "ts-loader": "^9.5.4",
     "ts-jest": "^29.4.6",
+    "tsc": "^2.0.4",
+    "typescript": "^5.3.2",
     "webpack": "^5.105.3",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.3",
@@ -42,26 +55,13 @@
   "dependencies": {
     "@shikijs/langs": "^4.1.0",
     "@shikijs/themes": "^4.1.0",
-    "autoprefixer": "^10.4.13",
-    "css-loader": "^7.1.4",
-    "cssnano": "^5.1.14",
-    "html-loader": "^5.0.1",
-    "postcss": "^8.5.15",
-    "postcss-import": "^15.1.0",
-    "postcss-loader": "^8.2.1",
-    "postcss-preset-env": "^9.3.0",
-    "prismjs": "^1.30.0",
-    "raw-loader": "^4.0.2",
-    "sharp": "^0.34.5",
-    "style-loader": "^4.0.0",
-    "tailwindcss": "^4.0.12",
-    "ts-loader": "^9.5.4",
-    "tsc": "^2.0.4",
-    "typescript": "^5.3.2"
+    "shiki": "^4.0.2",
+    "katex": "^0.16.33"
   },
   "optionalDependencies": {
     "@tailwindcss/oxide-darwin-arm64": "^4.2.1",
     "@tailwindcss/oxide-darwin-x64": "^4.2.1",
-    "lightningcss-darwin-x64": "^1.31.1"
+    "lightningcss-darwin-x64": "^1.31.1",
+    "sharp": "^0.34.5"
   }
 }

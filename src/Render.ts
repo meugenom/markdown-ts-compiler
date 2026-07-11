@@ -1,10 +1,11 @@
+'use strict'
 import * as katex from 'katex';
 
 import { CaptionHTML } from "./htmlblocks/CaptionHTML"
 import { HeaderHTML } from "./htmlblocks/HeaderHTML";
 import { CodeBlockHTML } from "./htmlblocks/CodeBlockHTML";
 import { CodeInlineHTML } from "./htmlblocks/CodeInlineHTML";
-import {QuoteHTML} from "./htmlblocks/QuoteHTML";
+import { QuoteHTML } from "./htmlblocks/QuoteHTML";
 import { ImageHTML } from "./htmlblocks/ImageHTML";
 import { FormulaHTML } from "./htmlblocks/FormulaHTML";
 import { BadgeHTML } from "./htmlblocks/BadgeHTML";
@@ -12,350 +13,278 @@ import { ColorTextHTML } from "./htmlblocks/ColorTextHTML";
 import { TokenType } from "./Types";
 import { ASTNode } from "./interfaces/astNode";
 
+// Styles for lists and tables
 import './static/styles/list.css';
 import './static/styles/table.css';
 
-
-
 export class Render {
 
-	private ast : ASTNode;
-	public htmlOutput : HTMLElement | null;
-	private text: string = "";
+	private ast: ASTNode;
 
-	constructor(node : ASTNode, htmlOutput : HTMLElement | null) {
-		this.ast = node
-		this.htmlOutput = htmlOutput;
-		this.text="";
-
-		if (this.ast && this.htmlOutput) {
-			this.renderNodes(this.ast.children, this.htmlOutput);
-		}
+	// Added constructor to initialize the AST node
+	constructor(node: ASTNode) {
+		this.ast = node;
 	}
 
-	renderNodes(nodes: ASTNode[], container: HTMLElement) {
-    
-		let element: HTMLElement | Text | null;
+	/**
+	 * Main entry point for rendering the AST into HTML
+	 */
+	public async html(): Promise<string> {
+		if (!this.ast || !this.ast.children) {
+			return "";
+		}
+		return await this.renderNodes(this.ast.children);
+	}
 
-		nodes.forEach(node => {
+	/**
+	 * Recursive function to render AST nodes into HTML
+	 */
+	private async renderNodes(nodes: ASTNode[]): Promise<string> {
+		let result = "";
 
-			// every time we start processing a new node, we reset the element variable to null
-			element = null;			
+		// We doesnt use forEach here because we need to await inside the loop
+		for (const node of nodes) {
+			let chunk = "";
 
 			switch (node.type) {
 				
-				// Block Caption 
-				case TokenType.CAPTION:					
+				// 1. Caption block
+				case TokenType.CAPTION: {
 					const caption = new CaptionHTML(node.token as any);
-					element = caption.renderAsElement();
-					//console.log('Rendered Caption:', element);
+					chunk = caption.render();
 					break;
+				}
 
-				// Block Headers
+				// 2. H1->H5 headings
 				case TokenType.HEADING_FIRST:
 				case TokenType.HEADING_SECOND:
 				case TokenType.HEADING_THIRD:
 				case TokenType.HEADING_FOURTH:
-				case TokenType.HEADING_FIFTH:
-					if(node.children && node.children.length > 0) {
-						const header = new HeaderHTML(node.token as any);
-						const dept = header.getDept(node.token as any);
-						const sizeClass = header.getSizeClass(dept);
-						element = document.createElement('h' + dept);
-					element.className = `${sizeClass} font-mono font-bold mt-0 mb-3 pr-10 pt-6`;
-						this.renderNodes(node.children, element);
-					} else {
-
+				case TokenType.HEADING_FIFTH: {
 					const header = new HeaderHTML(node.token as any);
-					element = header.renderAsElement();
-					}
+					const dept = header.getDept(node.token as any);
+					const sizeClass = header.getSizeClass(dept);
+					const classes = `${sizeClass} font-mono font-bold mt-0 mb-3 pr-10 pt-6`;
 					
+					const headingText = node.token.value || '';
+					const headingId = headingText.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+					
+					// Inline content of the heading, if it has children, render them; otherwise, use the heading text
+					const content = node.children && node.children.length > 0 
+						? await this.renderNodes(node.children) 
+						: headingText;
+
+					chunk = `<h${dept} id="${headingId}" class="${classes}">${content}</h${dept}>`;
 					break;
+				}
 				
-				// Block Code
-				case TokenType.CODE_BLOCK:					
+				// 3. Codeblocks 
+				case TokenType.CODE_BLOCK:
+				case TokenType.CODE_IN_CODE: {					
 					const codeBlock = new CodeBlockHTML(node.token as any);
-					element = codeBlock.renderAsElement();					
-					// no need to render children
+					chunk = await codeBlock.render();					
 					break;
+				}
 				
-				// Block Code in Code
-				case TokenType.CODE_IN_CODE:					
-					const codeInCode = new CodeBlockHTML(node.token as any);
-					element = codeInCode.renderAsElement();
-					// no need to render children
-					break;
-				
-				// Block Code inline
-				case TokenType.CODE_INLINE:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement('div');
-						this.renderNodes(node.children, element);
+				// 4. Inline code
+				case TokenType.CODE_INLINE: {
+					if (node.children && node.children.length > 0) {
+						chunk = `<div>${await this.renderNodes(node.children)}</div>`;
 					} else {
 						const codeInline = new CodeInlineHTML(node.token as any);
-						element = codeInline.renderAsElement();
+						chunk = codeInline.render();
 					}
 					break;
+				}
 
-				// Block Quote
-				case TokenType.QUOTE:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement('p');
-						element.className = "mb-4 leading-7 font-mono text-slate-700 dark:text-slate-300 border-l-4 border-blue-400 pl-4";
-						this.renderNodes(node.children, element);
-					}else {
+				// 5. Quote block
+				case TokenType.QUOTE: {
+					if (node.children && node.children.length > 0) {
+						chunk = `<p class="mb-4 leading-7 font-mono text-slate-700 dark:text-slate-300 border-l-4 border-blue-400 pl-4">${await this.renderNodes(node.children)}</p>`;
+					} else {
 						const quote = new QuoteHTML(node.token as any);
-						element = quote.renderAsElement();
+						chunk = quote.render();
 					}						
 					break;
+				}
 				
-				// Formula Block
-				case TokenType.FORMULA_BLOCK:
+				// 6. Large formulas (KaTeX)
+				case TokenType.FORMULA_BLOCK: {
 					const formula = new FormulaHTML(node.token as any);
-					element = formula.renderAsElement();
-					//console.log('Rendered Formula:', element);
-					this.renderNodes(node.children, element);					
+					chunk = formula.render();
+					if (node.children && node.children.length > 0) {
+						chunk += await this.renderNodes(node.children);
+					}					
 					break;
+				}
 				
-				// Color Text INLINE
-				case TokenType.COLOR:
+				// 7. Colorful text
+				case TokenType.COLOR: {
 					const colorText = new ColorTextHTML(node.token as any);
-					element = colorText.renderAsElement();
-					//console.log('Rendered Color Text Inline:', element);
-					this.renderNodes(node.children, element);					
+					chunk = colorText.render();
+					if (node.children && node.children.length > 0) {
+						const childrenHtml = await this.renderNodes(node.children);
+						chunk = chunk.replace('</span>', `${childrenHtml}</span>`);
+					}					
 					break;
+				}
 
-				// Formula INLINE
-				case TokenType.FORMULA_INLINE:
-					element = document.createElement('span');
+				// 8. Inline formulas (KaTeX)
+				case TokenType.FORMULA_INLINE: {
 					let text = "";					
 					try {
-							text = katex.renderToString(node.token.formula, {
-								displayMode: false,
-								throwOnError: false
-								});
-						} catch (e) {
-							text = ' $' + node.token.formula + '$';
-						}
-					element.innerHTML = text + " "; // Ensure it's a string and add space after formula
-					//console.log('Rendered Formula Inline:', element);
-					this.renderNodes(node.children, element);					
+						text = katex.renderToString(node.token.formula, {
+							displayMode: false,
+							throwOnError: false
+						});
+					} catch (e) {
+						text = ` $${node.token.formula}$`;
+					}
+					const childrenHtml = node.children && node.children.length > 0 ? await this.renderNodes(node.children) : "";
+					chunk = `<span>${text} ${childrenHtml}</span>`;					
 					break;
+				}
 				
-				// LIST Block
-				case TokenType.LIST:
-    				element = document.createElement('div');
-    				element.className = "mt-3";
-					
-					// Title for the list block (if exists)
-    				if (node.token && node.token.title) {
-        				const titleP = document.createElement('p');
-        				titleP.className = "font-mono";
-        				titleP.textContent = node.token.title;
-        				element.appendChild(titleP);
-    				}
-
-					// UL Container for list items
-    				const ul = document.createElement('ul');
-    				ul.className = "mt-1 ml-2 space-y-1";
-
-    				// Recursively render list items into the UL container
-    				this.renderNodes(node.children, ul);
-    				element.appendChild(ul);
+				// 9. List Block (UL)
+				case TokenType.LIST: {
+    				const titleHtml = node.token && node.token.title 
+						? `<p class="font-mono">${node.token.title}</p>` 
+						: "";
+    				const ulContent = await this.renderNodes(node.children);
+    				chunk = `<div class="mt-3">${titleHtml}<ul class="mt-1 ml-2 space-y-1">${ulContent}</ul></div>`;
     				break;
+				}
 
-				
-				// LIST Items - FIX: Rendert jetzt den raw-Text korrekt
-				case TokenType.LIST_ITEM:    				
+				// 10. List Item (<li>)
+				case TokenType.LIST_ITEM: {    
 					const itemText = node.token.value.trim();    									
-    				
-					if (itemText.startsWith('[]')) {
-        				// Checkbox unchecked
-        				element = document.createElement('li');
-        				element.className = "task-list-item list-none ml-5 flex items-start gap-2";        				
+    				let liClass = "list-disc ml-5 font-mono text-sm leading-6";
 
+					if (itemText.startsWith('[]')) {
+        				liClass = "task-list-item list-none ml-5 flex items-start gap-2";        				
     				} else if (itemText.startsWith('[x]')) {
-        				// Checkbox checked
-        				element = document.createElement('li');        				
-        				element.className = "task-list-item task-list-item-checked list-none ml-5 flex items-start gap-2";        				
-						
-    				} else {
-        				// Normal bullet point
-        				element = document.createElement('li');
-        				element.className = "list-disc ml-5 font-mono text-sm leading-6";        										
-        				
-						
+        				liClass = "task-list-item task-list-item-checked list-none ml-5 flex items-start gap-2";        				
     				}
 
-					// FIX: Render inline children (für Links, Bold, etc. im List-Item)
-        			if (node.children && node.children.length > 0) {							
-            			this.renderNodes(node.children, element); 				
-        			}
+        			const innerContent = node.children && node.children.length > 0 							
+            			? await this.renderNodes(node.children)
+						: itemText; 				
+
+					chunk = `<li class="${liClass}">${innerContent}</li>`;
     				break;
-				
+				}
 
-				// Table Block
-				case TokenType.TABLE:
-																																						
-						const table = document.createElement('table');
-						table.className = "w-full border-collapse border border-slate-300 my-4 text-sm font-mono";
+				// 11. Table Block
+				case TokenType.TABLE: {
+					let headRowsHtml = "";
+					let bodyRowsHtml = "";
 						
-						const header = table.createTHead();
-						const body = table.createTBody();
-						
-						// Building Table
-						node.children.forEach((rowNode, index) => {
-							if(rowNode.type === TokenType.TABLE_HEAD_ROW) {
-								const tr = document.createElement('tr');								
-								rowNode.children.forEach(headNode => {									
-									const th = document.createElement('th');																										
-									th.className = "border border-slate-300 p-2 text-center";
-									// FIX: Render inline children (für Links, Bold, etc. im Table-Header)
-									this.renderNodes(headNode.children, th);																							
-									tr.appendChild(th);
-								});	
-								header.appendChild(tr);																		
-							} else if(rowNode.type === TokenType.TABLE_BODY_ROW) {
-								if(rowNode.type === TokenType.TABLE_BODY_ROW) {
-									const tr = document.createElement('tr');									
-									rowNode.children.forEach(bodyNode => {									
-										const td = document.createElement('td');																										
-										td.className = "border border-slate-300 p-2 text-center";
-										// FIX: Render inline children (für Links, Bold, etc. im Table-Body)
-										this.renderNodes(bodyNode.children, td);																							
-										tr.appendChild(td);
-									});	
-									body.appendChild(tr);
-								}
+					// Make table rows
+					for (const rowNode of node.children) {
+						if (rowNode.type === TokenType.TABLE_HEAD_ROW) {
+							let thsHtml = "";
+							for (const headNode of rowNode.children) {									
+								const cellContent = await this.renderNodes(headNode.children);
+								thsHtml += `<th class="border border-slate-300 p-2 text-center">${cellContent}</th>`;
 							}	
-						});												
+							headRowsHtml += `<tr>${thsHtml}</tr>`;																		
+						} else if (rowNode.type === TokenType.TABLE_BODY_ROW) {
+							let tdsHtml = "";									
+							for (const bodyNode of rowNode.children) {									
+								const cellContent = await this.renderNodes(bodyNode.children);
+								tdsHtml += `<td class="border border-slate-300 p-2 text-center">${cellContent}</td>`;
+							}	
+							bodyRowsHtml += `<tr>${tdsHtml}</tr>`;
+						}	
+					}												
 						
-						
-						element = table;
-						//this.renderNodes(node.children, element); // Render body rows and cells					
-					
+					chunk = `<table class="w-full border-collapse border border-slate-300 my-4 text-sm font-mono"><thead>${headRowsHtml}</thead><tbody>${bodyRowsHtml}</tbody></table>`;
 					break;
+				}
 				
-				// Badge Block
-				case TokenType.BADGE:
+				// 12. Badge block
+				case TokenType.BADGE: {
 					const badge = new BadgeHTML(node.token as any);
-					element = badge.renderAsElement();
-					//console.log('Rendered Badge:', element);
-					this.renderNodes(node.children, element);					
+					chunk = badge.render();
+					if (node.children && node.children.length > 0) {
+						chunk += await this.renderNodes(node.children);
+					}					
 					break;
+				}
 
-				// Image Block
-				case TokenType.IMAGE:
-					element = document.createElement('img');
+				// 13. Image block
+				case TokenType.IMAGE: {
 					const img = new ImageHTML(node.token as any);
-					element = img.renderAsElement();
-					//console.log('Rendered Image:', element);
-					// No children for images, so we don't call renderNodes here					
+					chunk = img.render();					
 					break;
+				}
 				
-				// Link Block
-				case TokenType.LINK:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement('div');						
-						this.renderNodes(node.children, element);
-					}else {
-
-						element = document.createElement('a');
-						element.setAttribute('href', node.token.url);
-					element.className = "font-mono text-blue-800 hover:text-blue-500 underline";
-
-						// FIX: Render link text from token or children
-						if (node.token.name) {
-							element.textContent = node.token.name + " ";
-						}
+				// 14. Links
+				case TokenType.LINK: {
+					if (node.children && node.children.length > 0) {
+						chunk = `<div>${await this.renderNodes(node.children)}</div>`;
+					} else {
+						const linkName = node.token.name ? `${node.token.name} ` : "";
+						chunk = `<a href="${node.token.url}" class="font-mono text-blue-800 hover:text-blue-500 underline">${linkName}</a>`;
 					}
 					break;	
+				}
 
-				// Strong Text
-				case TokenType.STRONG:
-					
-					element = document.createElement('strong');
-					element.className = "font-mono font-bold";
-					element.textContent = node.token.value + " "; // Ensure it's a string
-					this.renderNodes(node.children, element);
+				// 15. Bold text
+				case TokenType.STRONG: {
+					const strongContent = node.token.value + " ";
+					const strongChildren = node.children && node.children.length > 0 ? await this.renderNodes(node.children) : "";
+					chunk = `<strong class="font-mono font-bold">${strongContent}${strongChildren}</strong>`;
 					break;
+				}
 				
-				// Underline Text
-				case TokenType.UNDER_LINE:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement('div');
-						this.renderNodes(node.children, element);
+				// 16. Underlined text
+				case TokenType.UNDER_LINE: {
+					if (node.children && node.children.length > 0) {
+						chunk = `<div>${await this.renderNodes(node.children)}</div>`;
 					} else {
-						const underlined = document.createElement('span');
-						underlined.className = "underline decoration-sky-500 md:decoration-solid decoration-3";
-						underlined.textContent = node.token.value;
-						const wrapper = document.createElement('span');
-						wrapper.appendChild(underlined);
-						wrapper.appendChild(document.createTextNode(' '));
-						element = wrapper;
+						chunk = `<span><span class="underline decoration-sky-500 md:decoration-solid decoration-3">${node.token.value}</span> </span>`;
 					}
 					break;
+				}
 
-				// Unmarkable inline text
-				case TokenType.UNMARKABLE:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement('div');
-						this.renderNodes(node.children, element);					
+				// 17. Unmarkable text (parsing errors)
+				case TokenType.UNMARKABLE: {
+					if (node.children && node.children.length > 0) {
+						chunk = `<div>${await this.renderNodes(node.children)}</div>`;					
 					} else {	
-						element = document.createElement('div');
-						element.className = "font-mono italic text-md opacity-50";
-						
-						// FIX: Proper newline handling ohne concatenation
-						//console.log(node.token.value);
-						//console.log('Rendering Unmarkable Text:', node);
 						const lines = node.token.value.split('\n');
-						lines.forEach((line: string, idx: number) => {
-							if (idx > 0) element.appendChild(document.createElement('br'));
-							element.appendChild(document.createTextNode(line));
-						});
+						const escapedLines = lines
+							.map((line: string) => line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"))
+							.join('<br/>');
+						chunk = `<div class="font-mono italic text-md opacity-50">${escapedLines}</div>`;
 					}
-					
 					break;
+				}
 
-				// Plain text node - FIX: Direkt als TextNode ohne Wrapper
-				case TokenType.TEXT:
-					element = document.createTextNode(node.token.value);
+				// 18. Regular flat text (We escape it for safety)
+				case TokenType.TEXT: {
+					chunk = (node.token.value || "")
+						.replace(/&/g, "&amp;")
+						.replace(/</g, "&lt;")
+						.replace(/>/g, "&gt;");
 					break;
+				}
 
-				// Block Paragraph - default type for text without any specific formatting
+				// 19. Default paragraph blocks
             	case TokenType.PARAGRAPH:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement("p");
-						element.className = "block leading-7 font-mono mt-4";
-						this.renderNodes(node.children, element);
-					} else {	
-						const ParagraphNode = document.createElement("p")
-						ParagraphNode.className = "block leading-7 font-mono mt-4";
-						element = ParagraphNode;
-					}
+            	default: {
+					const pContent = node.children && node.children.length > 0 ? await this.renderNodes(node.children) : "";
+					chunk = `<p class="block leading-7 font-mono mt-4">${pContent}</p>`;
                 	break;
+				}
+        	}
 
-				// Block Paragraph - default type for text without any specific formatting
-            	default:
-					if(node.children && node.children.length > 0) {
-						element = document.createElement("p");
-						element.className = "block leading-7 font-mono mt-4";
-						this.renderNodes(node.children, element);
-					} else {	
-						const ParagraphNode = document.createElement("p")
-						ParagraphNode.className = "block leading-7 font-mono mt-4";
-						element = ParagraphNode;
-					}
+			// Append the rendered chunk to the result
+			result += chunk;
+    	}
 
-            // ... when something new to add
-        }
-
-		if (element) {
-            container.appendChild(element);
-        }
-        	// ... and so on for all types
-
-
-    	});
+		// Return the final rendered HTML as a string
+		return result;
 	}
 }

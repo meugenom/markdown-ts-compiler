@@ -89,7 +89,7 @@ export class CodeBlockHTML {
     this.token = token;
   }
 
-  public async rrender(): Promise<string> {
+  public async render(): Promise<string> {
     const lang = this.token.language || "text";
     let rawCode = this.token.code;
 
