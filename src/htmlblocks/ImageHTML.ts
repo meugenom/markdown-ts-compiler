@@ -1,35 +1,41 @@
 "use strict";
 
+interface ImageToken {
+  url: string;
+  alt?: string;
+}
+
 /**
- * Returns an html element <span> for badge
- * @param line as block of the text
- * @return dom element for badge <span> ...</span>
+ * Renders an image markdown token into a valid HTML string
+ * @param token object containing image metadata
+ * @return HTML string with figure and optional caption
  */
-
 export class ImageHTML {
-  private token: any;
+  private token: ImageToken;
 
-  constructor(token: any) {
+  constructor(token: ImageToken) {
     this.token = token;
   }
 
-  renderAsElement(): HTMLElement {
-    const ImageNode = document.createElement("span");
-    ImageNode.className = "block leading-7 font-mono mt-4";
+  public render(): string {
+    // Remove path prefix "./" or "/" from the image URL if present
+    const imgSrc = this.token.url ? this.token.url.replace(/^\.?\//, "") : "";
+    const altText = this.token.alt || "";
 
-    let text = "";
+    // Prepare the figcaption block only if alt text is provided
+    const figcaptionBlock = altText
+      ? `<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">${altText}</figcaption>`
+      : "";
 
-    const imgSrc = this.token.url.replace(/^\.?\//, "");
-    text =
-      text +
-      `
-				<figure class="flex flex-col items-center my-5">
-					<img src="${imgSrc}" alt="${this.token.alt}" class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
-					${this.token.alt ? `<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">${this.token.alt}</figcaption>` : ""}
-				</figure>
-				`;
-
-    ImageNode.innerHTML = text;
-    return ImageNode;
+    // Return the monolithic valid HTML string.
+    // Replaced <span> with <div>, removed the block class (since div is block-level by default)
+    return `
+<div class="leading-7 font-mono mt-4">
+    <figure class="flex flex-col items-center my-5">
+        <img src="${imgSrc}" alt="${altText}" class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
+        ${figcaptionBlock}
+    </figure>
+</div>
+    `.trim();
   }
 }
