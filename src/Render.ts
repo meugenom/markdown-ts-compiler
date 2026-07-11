@@ -13,9 +13,6 @@ import { ColorTextHTML } from "./htmlblocks/ColorTextHTML";
 import { TokenType } from "./Types";
 import { ASTNode } from "./interfaces/astNode";
 
-// Styles for lists and tables
-import './static/styles/list.css';
-import './static/styles/table.css';
 
 export class Render {
 

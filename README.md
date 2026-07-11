@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.6.2-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.6.3-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -44,7 +44,6 @@ Every line of code in the project was crafted by  a human developer.
 NO AI-generated Code was used in the development  of this project.
 AI was strictly utilized only for architectural brainstorming and refining complex regular expressions.
 
-
 ## How to Use It in Your Project
 1. Basic HTML Compilation (Asynchronous)
 Since the compiler uses Shiki for syntax highlighting, the HTML generation is asynchronous.
@@ -53,6 +52,10 @@ Since the compiler uses Shiki for syntax highlighting, the HTML generation is as
 import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
 // Import KaTeX styles for formulas to render correctly in the browser
 import 'katex/dist/katex.min.css';
+// Import Tailwind CSS styles for Markdown rendering
+import 'markdown-tailwind-css-compiler/dist/styles/style.css';
+import 'markdown-tailwind-css-compiler/dist/styles/list.css';
+import 'markdown-tailwind-css-compiler/dist/styles/table.css';
 
 const markdownText = `
 # My Article
