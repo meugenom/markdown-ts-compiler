@@ -312,7 +312,7 @@ This is an
 
         // 1. FIX: Updated to verify data-src for thumbnail since we use lazy loading now
         expect(normalized).toContain('How to Write Text </h3>');
-        expect(normalized).toContain('data-src="thumbnails/writing.png"');
+        expect(normalized).toContain('data-src="/thumbnails/writing.png"');
 
         // 2. Verify Headings compilation & slugification
         expect(normalized).toContain('<h2 id="formatting-syntax"');
@@ -336,7 +336,7 @@ This is an
         expect(normalized).toContain('bg-blue-100'); 
 
         // 7. FIX: Updated to verify data-src for general images
-        expect(normalized).toContain('data-src="images/github.png"');
+        expect(normalized).toContain('data-src="/images/github.png"');
         expect(normalized).toContain('class="lazy');
 
         // 8. Verify Blockquote layout distribution

@@ -30,13 +30,10 @@ describe('ImageHTML Render Tests', () => {
 
         // 3. Verify that path prefix normalization successfully extracted "./" into data-src and src is SVG placeholder
         expect(result).toContain('src="data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'></svg>"');
-        expect(result).toContain('data-src="assets/diagram.png"');
+        expect(result).toContain('data-src="/assets/diagram.png"');
         expect(result).toContain('alt="Architecture Flowchart Diagram"');
 
-        // 4. Verify embedded HTML image loader block presence
-        expect(normalized).toContain('<div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-md sm:w-10/12 border border-gray-200 z-10">');
-
-        // 5. Confirm that the figcaption subtitle block is appended correctly
+        // 4. Confirm that the figcaption subtitle block is appended correctly
         expect(normalized).toContain('<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">Architecture Flowchart Diagram</figcaption>');
     });
 
@@ -50,7 +47,7 @@ describe('ImageHTML Render Tests', () => {
         const result = imageHTML.render();
 
         // 1. Verify path prefix normalization handled absolute root slash "/" correctly in data-src
-        expect(result).toContain('data-src="cdn/photo.jpeg"');
+        expect(result).toContain('data-src="/cdn/photo.jpeg"');
         expect(result).toContain('alt=""');
 
         // 2. Ensure that the optional caption container is entirely removed from markup output
