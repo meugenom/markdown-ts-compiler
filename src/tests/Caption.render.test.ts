@@ -26,14 +26,22 @@ describe('Caption Render Tests', () => {
         };
 
         const captionHTML = new CaptionHTML(token);
-        const renderedHTML = captionHTML.render();        
+        const renderedHTML = captionHTML.render();
         
-        // Expected HTML result (corrected path src="thumbnails/writing.png")
+        // Expected HTML result updated with the new relative container, lazy-loaded img, and loader
         const expectedHTML = `
             <div>
                 <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex-none">
-                        <img src="thumbnails/writing.png" class="float-left object-contain h-64 w-full max-w-xs"/>
+                    <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
+                        <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-transparent z-10">
+                            <span class="animate-pulse text-[10px] text-slate-400 font-mono">Loading...</span>
+                        </div>
+                        <img 
+                            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>"
+                            data-src="thumbnails/writing.png" 
+                            class="lazy opacity-0 transition-opacity duration-500 object-contain w-full h-full z-20"
+                            alt="Test Caption"
+                        />
                     </div>
                     <div class="flex-auto justify-start">
                         <h3 class="text-3xl font-sans font-semibold leading-tight mt-0 mb-2">

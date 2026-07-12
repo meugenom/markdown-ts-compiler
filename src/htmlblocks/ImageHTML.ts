@@ -6,9 +6,9 @@ interface ImageToken {
 }
 
 /**
- * Renders an image markdown token into a valid HTML string
+ * Renders an image markdown token into a valid HTML string with lazy loading support
  * @param token object containing image metadata
- * @return HTML string with figure and optional caption
+ * @return HTML string with figure, loader, and optional caption
  */
 export class ImageHTML {
   private token: ImageToken;
@@ -28,11 +28,24 @@ export class ImageHTML {
       : "";
 
     // Return the monolithic valid HTML string.
-    // Replaced <span> with <div>, removed the block class (since div is block-level by default)
+    // 1. Added a relative container and a static text-based loader block.
+    // 2. Swapped src for an inline transparent SVG placeholder to preserve layout aspect ratios.
+    // 3. Stored the actual path in data-src and added animation/opacity classes.
     return `
 <div class="leading-7 font-mono mt-4">
-    <figure class="flex flex-col items-center my-5">
-        <img src="${imgSrc}" alt="${altText}" class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
+    <figure class="relative flex flex-col items-center my-5 overflow-hidden group">
+        
+        <!-- Built-in HTML Loader (No document.createElement required) -->
+        <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-md sm:w-10/12 border border-gray-200 z-10">
+            <span class="animate-pulse text-xs text-slate-400 font-mono">Loading image...</span>
+        </div>
+
+        <img 
+            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>" 
+            data-src="${imgSrc}" 
+            alt="${altText}" 
+            class="lazy opacity-0 transition-opacity duration-500 shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200 z-20">
+        
         ${figcaptionBlock}
     </figure>
 </div>

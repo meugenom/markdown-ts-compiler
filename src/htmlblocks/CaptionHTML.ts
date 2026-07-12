@@ -53,9 +53,20 @@ export class CaptionHTML {
       rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
 
     const thumbnailBlock = hasThumbnail
-      ? `<div class="flex-none">
-                <img src="${rawThumbnail}" class="float-left object-contain h-64 w-full max-w-xs"/>
-               </div>`
+      ? `
+        <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">            
+            <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-transparent z-10">
+                <span class="animate-pulse text-[10px] text-slate-400 font-mono">Loading...</span>
+            </div>
+            
+            <img 
+                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>"
+                data-src="${rawThumbnail}" 
+                class="lazy opacity-0 transition-opacity duration-500 object-contain w-full h-full z-20"
+                alt="${this.token.title || 'Thumbnail'}"
+            />
+        </div>
+        `.trim()
       : "";
 
     // 4. Check if the cluster section should be displayed based on the order and valid cluster
