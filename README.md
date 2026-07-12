@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.7.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.7.1-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -55,7 +55,7 @@ import 'markdown-tailwind-css-compiler/src/static/styles/table.css';
 import 'markdown-tailwind-css-compiler/src/static/styles/style.css';
 import 'katex/dist/katex.min.css';
 // Import Lazy Loading utility for images
-import { InitLazyImages } from 'markdown-tailwind-css-compiler/services/utils';
+import { InitLazyImages } from 'markdown-tailwind-css-compiler/dist/services/utils';
 
 // Import the main function to convert Markdown to HTML
 import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';

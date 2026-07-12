@@ -32,13 +32,10 @@ describe('Caption Render Tests', () => {
         const expectedHTML = `
             <div>
                 <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
-                        <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-transparent z-10">
-                            <span class="animate-pulse text-[10px] text-slate-400 font-mono">Loading...</span>
-                        </div>
+                    <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">                        
                         <img 
                             src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>"
-                            data-src="thumbnails/writing.png" 
+                            data-src="/thumbnails/writing.png" 
                             class="lazy opacity-0 transition-opacity duration-500 object-contain w-full h-full z-20"
                             alt="Test Caption"
                         />

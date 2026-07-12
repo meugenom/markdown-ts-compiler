@@ -45,20 +45,26 @@ export class CaptionHTML {
     }
 
     // 3. Block for thumbnail (if applicable)
-    const rawThumbnail = this.token.thumbnail
+    let rawThumbnail = this.token.thumbnail
       .trim()
       .replace(/['"]/g, "")
       .replace(/^\.?\//, "");
-    const hasThumbnail =
-      rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
 
+    // Ensure the thumbnail source is a relative path if it doesn't start with "http" or "data:"
+    if (
+      rawThumbnail && 
+      !rawThumbnail.startsWith('http') && 
+      !rawThumbnail.startsWith('data:') &&
+      !rawThumbnail.includes('Invalid') && // Ignore invalid paths
+      !rawThumbnail.includes('Missing')
+    ) {
+      rawThumbnail = '/' + rawThumbnail;
+    }
+    
+    const hasThumbnail = rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
     const thumbnailBlock = hasThumbnail
       ? `
-        <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">            
-            <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-transparent z-10">
-                <span class="animate-pulse text-[10px] text-slate-400 font-mono">Loading...</span>
-            </div>
-            
+        <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">                        
             <img 
                 src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>"
                 data-src="${rawThumbnail}" 

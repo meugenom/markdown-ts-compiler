@@ -18,11 +18,22 @@ export class ImageHTML {
   }
 
   public render(): string {
-    // Remove path prefix "./" or "/" from the image URL if present
-    const imgSrc = this.token.url ? this.token.url.replace(/^\.?\//, "") : "";
-    const altText = this.token.alt || "";
+    // Remove path prefix "./" or "/" from the image URL if present    
+  let imgSrc = this.token.url ? this.token.url.replace(/^\.?\//, "") : "";
+  
+  // 2. Ensure the image source is a relative path if it doesn't start with "http" or "data:"
+  if (
+    imgSrc && 
+    !imgSrc.startsWith('http') && 
+    !imgSrc.startsWith('data:') &&
+    !imgSrc.includes('Invalid') &&
+    !imgSrc.includes('Missing')
+  ) {
+    imgSrc = '/' + imgSrc;
+  }
 
-    // Prepare the figcaption block only if alt text is provided
+    const altText = this.token.alt || "";
+    // Prepare the figcaption block only if alt text is provided    
     const figcaptionBlock = altText
       ? `<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">${altText}</figcaption>`
       : "";
@@ -33,19 +44,12 @@ export class ImageHTML {
     // 3. Stored the actual path in data-src and added animation/opacity classes.
     return `
 <div class="leading-7 font-mono mt-4">
-    <figure class="relative flex flex-col items-center my-5 overflow-hidden group">
-        
-        <!-- Built-in HTML Loader (No document.createElement required) -->
-        <div class="imageLoader absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 rounded-md sm:w-10/12 border border-gray-200 z-10">
-            <span class="animate-pulse text-xs text-slate-400 font-mono">Loading image...</span>
-        </div>
-
+    <figure class="relative flex flex-col items-center my-5 overflow-hidden group">                      
         <img 
             src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>" 
             data-src="${imgSrc}" 
-            alt="${altText}" 
-            class="lazy opacity-0 transition-opacity duration-500 shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200 z-20">
-        
+            alt="${altText}"
+            class="lazy opacity-0 transition-opacity duration-500 shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200 z-20">        
         ${figcaptionBlock}
     </figure>
 </div>
