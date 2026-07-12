@@ -41,7 +41,9 @@ export class FormulaHTML {
     
     <!-- Header -->
     <div class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <span class="text-[11px] font-bold uppercase tracking-widest opacity-50">Formula</span>
+      <span class="text-[11px] font-bold uppercase tracking-widest opacity-50">
+        Formula
+      </span>
     </div>
 
     <!-- Body -->

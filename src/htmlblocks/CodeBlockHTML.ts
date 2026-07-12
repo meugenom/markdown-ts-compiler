@@ -25,6 +25,7 @@ async function getShikiHighlighter() {
     langSql,
     langYaml,
     langMarkdown,
+    langMatlab,
     langXml,
     langCss,
     themeLight,
@@ -41,6 +42,7 @@ async function getShikiHighlighter() {
     import("@shikijs/langs/sql"),
     import("@shikijs/langs/yaml"),
     import("@shikijs/langs/markdown"),
+    import("@shikijs/langs/matlab"),
     import("@shikijs/langs/xml"),
     import("@shikijs/langs/css"),
     import("@shikijs/themes/github-light"),
@@ -62,6 +64,7 @@ async function getShikiHighlighter() {
       langSql.default,
       langYaml.default,
       langMarkdown.default,
+      langMatlab.default,
       langXml.default,
       langCss.default,
     ],
@@ -129,7 +132,12 @@ export class CodeBlockHTML {
       console.error("Shiki highlighting error, falling back to raw text:", err);
       // Fallback in case Shiki fails or the language is not supported
       const escapedCode = rawCode.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-      codeContainerHtml = `<pre class="leading-6 p-4 bg-transparent text-[13px]"><code>${escapedCode}</code></pre>`;
+      codeContainerHtml = 
+      `<pre class="leading-6 p-4 overflow-x-auto !bg-transparent text-[13px]">
+          <code class="leading-6 text-[13px] !bg-transparent">
+            ${escapedCode}
+          </code>
+        </pre>`;
     }
 
     // Inline JS-script for the Copy Button
@@ -161,11 +169,11 @@ export class CodeBlockHTML {
         <div class="flex overflow-x-auto">
             <!-- Line Numbers -->
             <div class="select-none text-right leading-6 pr-4 pl-3 py-4 text-[13px] text-slate-400 dark:text-slate-600 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex-shrink-0">
-                ${lineNumbersHtml}
+                <div>${lineNumbersHtml}</div>
             </div>
             
             <!-- Code Container -->
-            <div class="code-content-target flex-1 min-w-0">
+            <div class="flex-1 min-w-0">
                 ${codeContainerHtml}
             </div>
         </div>

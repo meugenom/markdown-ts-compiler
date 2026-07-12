@@ -97,7 +97,10 @@ export class Render {
 				// 5. Quote block
 				case TokenType.QUOTE: {
 					if (node.children && node.children.length > 0) {
-						chunk = `<p class="mb-4 leading-7 font-mono text-slate-700 dark:text-slate-300 border-l-4 border-blue-400 pl-4">${await this.renderNodes(node.children)}</p>`;
+						chunk = 
+							`<p class="mb-4 leading-7 font-mono text-slate-700 dark:text-slate-300 border-l-4 border-blue-400 pl-4">
+								${await this.renderNodes(node.children)}
+							</p>`;
 					} else {
 						const quote = new QuoteHTML(node.token as any);
 						chunk = quote.render();
