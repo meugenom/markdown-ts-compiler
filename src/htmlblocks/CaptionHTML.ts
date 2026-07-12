@@ -53,7 +53,7 @@ export class CaptionHTML {
       rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
 
     const thumbnailBlock = hasThumbnail
-      ? `<div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
+      ? `<div class="flex-none">
                 <img src="${rawThumbnail}" class="float-left object-contain h-64 w-full max-w-xs" alt="${this.token.title}"/>
                </div>`
       : "";
