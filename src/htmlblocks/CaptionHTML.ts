@@ -45,34 +45,17 @@ export class CaptionHTML {
     }
 
     // 3. Block for thumbnail (if applicable)
-    let rawThumbnail = this.token.thumbnail
+    const rawThumbnail = this.token.thumbnail
       .trim()
       .replace(/['"]/g, "")
       .replace(/^\.?\//, "");
+    const hasThumbnail =
+      rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
 
-    // Ensure the thumbnail source is a relative path if it doesn't start with "http" or "data:"
-    if (
-      rawThumbnail && 
-      !rawThumbnail.startsWith('http') && 
-      !rawThumbnail.startsWith('data:') &&
-      !rawThumbnail.includes('Invalid') && // Ignore invalid paths
-      !rawThumbnail.includes('Missing')
-    ) {
-      rawThumbnail = '/' + rawThumbnail;
-    }
-    
-    const hasThumbnail = rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
     const thumbnailBlock = hasThumbnail
-      ? `
-        <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">                        
-            <img 
-                src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'></svg>"
-                data-src="${rawThumbnail}" 
-                class="lazy opacity-0 transition-opacity duration-500 object-contain w-full h-full z-20"
-                alt="${this.token.title || 'Thumbnail'}"
-            />
-        </div>
-        `.trim()
+      ? `<div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
+                <img src="${rawThumbnail}" class="float-left object-contain h-64 w-full max-w-xs" alt="${this.token.title}"/>
+               </div>`
       : "";
 
     // 4. Check if the cluster section should be displayed based on the order and valid cluster

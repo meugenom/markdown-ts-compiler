@@ -310,9 +310,9 @@ This is an
         const htmlResult = await convertMDtoHTML(sampleArticleMarkdown);
         const normalized = normalizeHTML(htmlResult);
 
-        // 1. FIX: Updated to verify data-src for thumbnail since we use lazy loading now
+        // 1. FIX: Verified clean relative path for thumbnail inside standard src attribute
         expect(normalized).toContain('How to Write Text </h3>');
-        expect(normalized).toContain('data-src="/thumbnails/writing.png"');
+        expect(normalized).toContain('src="thumbnails/writing.png"');
 
         // 2. Verify Headings compilation & slugification
         expect(normalized).toContain('<h2 id="formatting-syntax"');
@@ -329,15 +329,14 @@ This is an
 
         // 5. Verify Table parsing and internal alignment wrappers
         expect(normalized).toContain('<table');
-        expect(normalized).toContain('Dresden </strong>'); // FIX: Added space to match the inner token spacing
+        expect(normalized).toContain('Dresden </strong>');
 
         // 6. Verify Text color and Badges processors mappings
         expect(normalized).toContain('decoration-green-500');
         expect(normalized).toContain('bg-blue-100'); 
 
-        // 7. FIX: Updated to verify data-src for general images
-        expect(normalized).toContain('data-src="/images/github.png"');
-        expect(normalized).toContain('class="lazy');
+        // 7. FIX: Verified clean relative path for standard images inside src attribute
+        expect(normalized).toContain('src="images/github.png"');
 
         // 8. Verify Blockquote layout distribution
         expect(normalized).toContain('border-l-4 border-blue-400');

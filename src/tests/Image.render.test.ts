@@ -21,16 +21,15 @@ describe('ImageHTML Render Tests', () => {
         const result = imageHTML.render();
         const normalized = normalizeHTML(result);
 
-        // 1. Verify layout wrappers and responsive Tailwind utility classes with new relative/overflow specs
+        // 1. Verify basic layout wrappers and clean utility classes without overflow/group specs
         expect(result).toContain('<div class="leading-7 font-mono mt-4">');
-        expect(result).toContain('<figure class="relative flex flex-col items-center my-5 overflow-hidden group">');
+        expect(result).toContain('<figure class="flex flex-col items-center my-5">');
         
-        // 2. Verify image tag contains the new lazy loading specific attributes and transitions
-        expect(result).toContain('class="lazy opacity-0 transition-opacity duration-500 shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200 z-20"');
+        // 2. Verify image tag contains the clean classic responsive attributes
+        expect(result).toContain('class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200"');
 
-        // 3. Verify that path prefix normalization successfully extracted "./" into data-src and src is SVG placeholder
-        expect(result).toContain('src="data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'></svg>"');
-        expect(result).toContain('data-src="/assets/diagram.png"');
+        // 3. Verify that path prefix normalization successfully extracted "./" directly into src
+        expect(result).toContain('src="assets/diagram.png"');
         expect(result).toContain('alt="Architecture Flowchart Diagram"');
 
         // 4. Confirm that the figcaption subtitle block is appended correctly
@@ -46,8 +45,8 @@ describe('ImageHTML Render Tests', () => {
         const imageHTML = new ImageHTML(token);
         const result = imageHTML.render();
 
-        // 1. Verify path prefix normalization handled absolute root slash "/" correctly in data-src
-        expect(result).toContain('data-src="/cdn/photo.jpeg"');
+        // 1. Verify path prefix normalization handled absolute root slash "/" correctly in src
+        expect(result).toContain('src="cdn/photo.jpeg"');
         expect(result).toContain('alt=""');
 
         // 2. Ensure that the optional caption container is entirely removed from markup output
@@ -64,8 +63,8 @@ describe('ImageHTML Render Tests', () => {
         const imageHTML = new ImageHTML(token);
         const result = imageHTML.render();
 
-        // Confirm it fallbacks to an empty string for data-src instead of producing undefined leaks
-        expect(result).toContain('data-src=""');
+        // Confirm it fallbacks to an empty string for src instead of producing leaks
+        expect(result).toContain('src=""');
         expect(result).toContain('alt="Broken Link fallback image description"');
     });
 });
