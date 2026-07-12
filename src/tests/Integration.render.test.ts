@@ -100,47 +100,47 @@ $$
 
 ## Code Block:
 
-\\\\*		
+\\\\*       
 \`\`\`javascript
-  	let getMin = async (min)=> {
-		return \`
-    		minimal value is \${min}
-    	\`
-	}
+    let getMin = async (min)=> {
+        return \`
+            minimal value is \${min}
+        \`
+    }
 \`\`\`
 \\\\* 
 
 \`\`\`javascript
-	let getMin = async (min)=> {
-		return \`
-    		minimal value is \${min}
-    		\`
-	}
+    let getMin = async (min)=> {
+        return \`
+            minimal value is \${min}
+            \`
+    }
 \`\`\`
 
 ## Code In Code Block
 
 \\\\*
-	\`\`\`\`bash
-		\`\`\`javascript
-			let getMin = async (min)=> {
-				return \`
-					minimal value is \${min}
-					\`
-			}
-		\`\`\`
-	\`\`\`\`
+    \`\`\`\`bash
+        \`\`\`javascript
+            let getMin = async (min)=> {
+                return \`
+                    minimal value is \${min}
+                    \`
+            }
+        \`\`\`
+    \`\`\`\`
 \\\\*
 
 
 \`\`\`\`bash
-	\`\`\`javascript
-		let getMin = async (min)=> {
-			return \`
-				minimal value is \${min}
-				\`
-		}
-	\`\`\`
+    \`\`\`javascript
+        let getMin = async (min)=> {
+            return \`
+                minimal value is \${min}
+                \`
+        }
+    \`\`\`
 \`\`\`\`
 
 ## Code Inline
@@ -155,49 +155,49 @@ in out:
 ## Lists
 
 \\\\*
-	List 1 :
-	  - the formula $a^2 + b^2 = c^2$
-	  - the \`code inline\`
-	  - _the underdashed text_
+    List 1 :
+      - the formula $a^2 + b^2 = c^2$
+      - the \`code inline\`
+      - _the underdashed text_
 
-	List 2 :
-	  [] the formula $a^2 + b^2 = c^2$
-	  [] the \`code inline\`
-	  [] [[the underdashed text:yellow]]
+    List 2 :
+      [] the formula $a^2 + b^2 = c^2$
+      [] the \`code inline\`
+      [] [[the underdashed text:yellow]]
 
-	List  simple 3:
-	  [x] the formula $a^2 + b^2 = c^2$
-	  [x] the \`code inline\`
-	  [x] [[the underdashed text:pink]]
+    List  simple 3:
+      [x] the formula $a^2 + b^2 = c^2$
+      [x] the \`code inline\`
+      [x] [[the underdashed text:pink]]
 
-	List 4 with mixed attributes:
-	   - the formula $a^2 + b^2 = c^2$
-	  [] the the \`code inline\`
-	  [x] [[the underdashed text:purple]]
+    List 4 with mixed attributes:
+       - the formula $a^2 + b^2 = c^2$
+      [] the the \`code inline\`
+      [x] [[the underdashed text:purple]]
 
 \\\\*
 
 in out:
 
 List 1:
-	- the formula $a^2 + b^2 = c^2$
-	- the \`code inline\`
-	- _the underdashed text_
+    - the formula $a^2 + b^2 = c^2$
+    - the \`code inline\`
+    - _the underdashed text_
 
 List 2:
-	[] the formula $a^2 + b^2 = c^2$
-	[] the \`code inline\`
-	[] [[the underdashed text:yellow]]
+    [] the formula $a^2 + b^2 = c^2$
+    [] the \`code inline\`
+    [] [[the underdashed text:yellow]]
 
 List 3:
-	[x] the formula $a^2 + b^2 = c^2$
-	[x] the \`code inline\`
-	[x] [[the underdashed text:pink]]
+    [x] the formula $a^2 + b^2 = c^2$
+    [x] the \`code inline\`
+    [x] [[the underdashed text:pink]]
 
 List 4 with mixed attributes:
-	- the formula $a^2 + b^2 = c^2$
-	[] the \`code inline\`
-	[x] [[the underdashed text:purple]]
+    - the formula $a^2 + b^2 = c^2$
+    [] the \`code inline\`
+    [x] [[the underdashed text:purple]]
 
 
 ## Table
@@ -224,7 +224,7 @@ List 4 with mixed attributes:
 
 \\\\*
     > This is a
-	> quoting text
+    > quoting text
 \\\\* 
 
 in out:
@@ -237,7 +237,7 @@ in out:
 You can create an inline link by wrapping link text in brackets, and then wrapping the URL in parentheses:
 
 \\\\*
-	This site was built using [Javascript ES6](https://en.wikipedia.org/wiki/ECMAScript)  and it's an example.
+    This site was built using [Javascript ES6](https://en.wikipedia.org/wiki/ECMAScript)  and it's an example.
 \\\\* 
 
 in out:
@@ -256,14 +256,14 @@ _underdash_
 ## Color Underline decoration
 
 \\\\*
-	[[Blue:blue]] color
-	[[Gray:gray]] color
-	[[Red:red]] color
-	[[Green:green]] color
-	[[Yellow:yellow]] color
-	[[Indigo:indigo]] color 
-	[[Purple:purple]] color
-	[[Pink:pink]] color
+    [[Blue:blue]] color
+    [[Gray:gray]] color
+    [[Red:red]] color
+    [[Green:green]] color
+    [[Yellow:yellow]] color
+    [[Indigo:indigo]] color 
+    [[Purple:purple]] color
+    [[Pink:pink]] color
 \\\\*
 
 in out:
@@ -273,14 +273,14 @@ in out:
 ## Color Badges
 
 \\\\*
-	[[Blue::blue color]]
-	[[Gray::gray color]]
-	[[Red::red color]]
-	[[Green::green color]]
-	[[Yellow::yellow color]]
-	[[Indigo::indigo color]]
-	[[Purple::purple color]]
-	[[Pink::pink color]]
+    [[Blue::blue color]]
+    [[Gray::gray color]]
+    [[Red::red color]]
+    [[Green::green color]]
+    [[Yellow::yellow color]]
+    [[Indigo::indigo color]]
+    [[Purple::purple color]]
+    [[Pink::pink color]]
 \\\\* 
 
 in out:
@@ -310,17 +310,17 @@ This is an
         const htmlResult = await convertMDtoHTML(sampleArticleMarkdown);
         const normalized = normalizeHTML(htmlResult);
 
-        // 1. FIX: Verify using the normalized string to handle hidden newlines in H3
+        // 1. FIX: Updated to verify data-src for thumbnail since we use lazy loading now
         expect(normalized).toContain('How to Write Text </h3>');
-        expect(normalized).toContain('src="thumbnails/writing.png"');
+        expect(normalized).toContain('data-src="thumbnails/writing.png"');
 
         // 2. Verify Headings compilation & slugification
         expect(normalized).toContain('<h2 id="formatting-syntax"');
         expect(normalized).toContain('<h1 id="the-h1-heading"');
 
         // 3. Verify Mocked CodeBlock structural integration
-        expect(normalized).toContain('class="code-block-outer my-5"');        		
-		expect(normalized).toContain('code-copy-btn');
+        expect(normalized).toContain('class="code-block-outer my-5"');              
+        expect(normalized).toContain('code-copy-btn');
         expect(normalized).toContain('javascript');
 
         // 4. Verify KaTeX Block and Inline math equation rendering structures
@@ -335,8 +335,9 @@ This is an
         expect(normalized).toContain('decoration-green-500');
         expect(normalized).toContain('bg-blue-100'); 
 
-        // 7. Verify Image paths normalization
-        expect(normalized).toContain('src="images/github.png"');
+        // 7. FIX: Updated to verify data-src for general images
+        expect(normalized).toContain('data-src="images/github.png"');
+        expect(normalized).toContain('class="lazy');
 
         // 8. Verify Blockquote layout distribution
         expect(normalized).toContain('border-l-4 border-blue-400');

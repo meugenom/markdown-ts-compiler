@@ -23,8 +23,8 @@ import { Render } from "./Render";
 
 export async function convertMDtoHTML(text: string): Promise<string> {
     const tokenizer = new Tokenizer(text);    
-    const renderer = new Render(tokenizer.getAST());
-    return await renderer.html();
+    const renderer = new Render(tokenizer.getAST());    
+    return renderer.html();
 }
 
 export function convertMDtoAST(text: string) {
