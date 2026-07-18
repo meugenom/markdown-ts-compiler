@@ -1,5 +1,6 @@
 'use strict';
 
+import { describe, expect, it } from '@jest/globals';
 import { CodeBlockHTML } from "../htmlblocks/CodeBlockHTML";
 import { codeBlockToken } from "../Token";
 

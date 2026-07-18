@@ -8,6 +8,7 @@ dist/
 dist-demo/
 node_modules/
 /coverage
+/tmp
 
 # Env files
 .env

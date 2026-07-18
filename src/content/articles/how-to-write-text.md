@@ -261,7 +261,7 @@ in out:
 
 in out:
 
-[[Lorem ipsum::green]] [[Lorem ipsum::indigo]] [[dolor::red]] [[sit::purple]] [[amet::pink]] [[consectetur::yellow]] [[adipisicing::blue]] [[elit@test:pink]]
+[[Lorem ipsum::green]] [[Lorem ipsum::indigo]] [[dolor::red]] [[sit::purple]] [[amet::pink]] [[consectetur::yellow]] [[adipisicing::blue]] [[elit@test::pink]]
 
 ## Ignoring Markdown formatting
 
