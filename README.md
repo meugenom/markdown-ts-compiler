@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.7.3-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.8.0-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -129,6 +129,7 @@ yarn install
 ```bash
  yarn start
 ```
+
 2. Build the project:
 
 ```bash
@@ -138,6 +139,24 @@ This triggers a dual-target build script:
 - `/dist` — Houses the pure production JS modules and TypeScript type definitions (.d.ts) meant for npm distribution.
 - `/dist-demo` — Contains the standalone compiled HTML/JS bundle for hosting the web demonstration site.
 3. Run Tests:
+
+## Dark Mode Support
+
+The compiler supports seamless switching between Light and Dark themes out of the box.
+
+To trigger the dark theme, simply toggle the `dark` class on your root `<html>` element:
+
+```html
+<!-- Light Mode -->
+<html>
+  ...
+</html>
+
+<!-- Dark Mode -->
+<html class="dark">
+  ...
+</html>
+
 
 ```bash
 yarn test

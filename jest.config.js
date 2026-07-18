@@ -6,6 +6,8 @@ module.exports = {
     '\\.html$': '<rootDir>/jest/HtmlStub.js',
     '\\.(css|less|scss|sass)$': '<rootDir>/src/tests/styleMock.js',
     '^raw-loader!.*$': '<rootDir>/src/tests/stringMock.js',    
+    '^shiki/core$': '<rootDir>/src/tests/shikiMock.js',
+    '^@shikijs/engine-oniguruma$': '<rootDir>/src/tests/onigurumaMock.js',
     '^@shikijs/(.*)$': '<rootDir>/src/tests/styleMock.js',
   },
   rootDir: '.',

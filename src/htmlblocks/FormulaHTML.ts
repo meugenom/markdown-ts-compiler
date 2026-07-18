@@ -20,30 +20,26 @@ export class FormulaHTML {
     let bodyContent = "";
 
     try {
-      // Method render generates HTML for the formula, with displayMode set to true for block-level rendering
       bodyContent = katex.renderToString(this.token.formula, {
         displayMode: true,
         throwOnError: false,
       });
     } catch (e) {
       console.error("KaTeX rendering error:", e);
-      // If KaTeX fails to render, we fall back to escaping the formula for safe display
       bodyContent = this.token.formula
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
     }
 
-    // Make the structure together
+    // Собираем структуру: переводим тег с текстом Formula в одну строку
     return `
 <div class="code-block-outer my-5">
   <div class="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden z-10">
     
     <!-- Header -->
     <div class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <span class="text-[11px] font-bold uppercase tracking-widest opacity-50">
-        Formula
-      </span>
+      <span class="text-[11px] font-bold uppercase tracking-widest opacity-50">Formula</span>
     </div>
 
     <!-- Body -->

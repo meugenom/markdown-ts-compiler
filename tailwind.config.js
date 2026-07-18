@@ -2,12 +2,9 @@ module.exports = {
 	prefix: '',
 	important: false,
 	separator: ':',
-	
+	darkMode: 'class',
 	content: [
-	  './src/**/*.html',
-	  './src/**/*.tsx',
-	  './src/**/*.js',
-	  './src/**/*.ts',
+	  "./src/**/*.{html,ts,js,jsx,tsx}",
 	],
 
 	theme: {

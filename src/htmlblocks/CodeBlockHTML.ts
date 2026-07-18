@@ -173,7 +173,7 @@ export class CodeBlockHTML {
             </div>
             
             <!-- Code Container -->
-            <div class="flex-1 min-w-0">
+            <div class="code-content-target flex-1 min-w-0">
                 ${codeContainerHtml}
             </div>
         </div>

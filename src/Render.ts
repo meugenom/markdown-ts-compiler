@@ -225,7 +225,7 @@ export class Render {
 						chunk = `<div>${await this.renderNodes(node.children)}</div>`;
 					} else {
 						const linkName = node.token.name ? `${node.token.name} ` : "";
-						chunk = `<a href="${node.token.url}" class="font-mono text-blue-800 hover:text-blue-500 underline">${linkName}</a>`;
+						chunk = `<a href="${node.token.url}" class="font-mono text-blue-500 hover:text-blue-300 underline">${linkName}</a>`;
 					}
 					break;	
 				}
