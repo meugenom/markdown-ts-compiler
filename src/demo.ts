@@ -1,7 +1,5 @@
 import { convertMDtoHTML } from "./index";
 import "./static/styles/style.css";
-import "./static/styles/list.css";
-import "./static/styles/table.css";
 import 'katex/dist/katex.min.css';
 import example from 'raw-loader!./content/articles/how-to-write-text.md';
 
@@ -15,7 +13,7 @@ function getTemplate(articleHtml: string): string {
     <div class="w-full border-b border-gray-300 dark:border-gray-700">
         <div class="container mx-auto px-4">            
             <nav class="flex items-center justify-start gap-4 py-4 border-b border-gray-200 dark:border-gray-800">                
-                <div class="font-bold text-lg">Demo "markdown-ts-compiler"</div>                                
+                <div class="font-bold text-lg">Demo "markdown-ts-compiler" v.0.9.0</div>                                
                 <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 focus:outline-none" style="font-size: 1.5rem; cursor: pointer; line-height: 1;">
                     ${currentIcon}
                 </button>
