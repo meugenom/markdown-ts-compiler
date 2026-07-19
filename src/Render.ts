@@ -82,23 +82,26 @@ export class Render {
 
         // 4. Inline code
         case TokenType.CODE_INLINE: {
-          if (node.children && node.children.length > 0) {
-            chunk = `<div>${await this.renderNodes(node.children)}</div>`;
-          } else {
-            const codeInline = new CodeInlineHTML(node.token as any);
-            chunk = codeInline.render();
-          }
+          const content =
+            node.children && node.children.length > 0
+              ? await this.renderNodes(node.children)
+              : (node.token.value || "")
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;");
+
+          chunk = `<code class="md-inline-code">${content}</code>`;
           break;
         }
 
         // 5. Quote block
         case TokenType.QUOTE: {
-          if (node.children && node.children.length > 0) { 
+          if (node.children && node.children.length > 0) {
             chunk = `<p class="md-quote-p">${await this.renderNodes(node.children)}</p>`;
           } else {
             const quote = new QuoteHTML(node.token as any);
             chunk = quote.render();
-          }						
+          }
           break;
         }
 
@@ -115,11 +118,13 @@ export class Render {
         // 7. Colorful text
         case TokenType.COLOR: {
           const colorText = new ColorTextHTML(node.token as any);
-          chunk = colorText.render();
-          if (node.children && node.children.length > 0) {
-            const childrenHtml = await this.renderNodes(node.children);
-            chunk = chunk.replace("</span>", `${childrenHtml}</span>`);
-          }
+
+          const childrenHtml =
+            node.children && node.children.length > 0
+              ? await this.renderNodes(node.children)
+              : "";
+
+          chunk = colorText.render(childrenHtml);
           break;
         }
 
@@ -161,7 +166,8 @@ export class Render {
           if (itemText.startsWith("[]")) {
             liClass = "task-list-item md-list-item-task";
           } else if (itemText.startsWith("[x]")) {
-            liClass = "task-list-item task-list-item-checked md-list-item-task-checked";
+            liClass =
+              "task-list-item task-list-item-checked md-list-item-task-checked";
           }
 
           const innerContent =
@@ -173,7 +179,7 @@ export class Render {
           break;
         }
 
-        // 11. Table Block 
+        // 11. Table Block
         case TokenType.TABLE: {
           let headRowsHtml = "";
           let bodyRowsHtml = "";
@@ -219,33 +225,35 @@ export class Render {
 
         // 14. Links
         case TokenType.LINK: {
-          if (node.children && node.children.length > 0) {
-            chunk = `<div>${await this.renderNodes(node.children)}</div>`;
-          } else {
-            const linkName = node.token.name ? `${node.token.name} ` : "";
-            chunk = `<a href="${node.token.url}" class="md-link">${linkName}</a>`;
-          }
+          const linkName = node.token.name ? `${node.token.name} ` : "";
+          const content =
+            node.children && node.children.length > 0
+              ? await this.renderNodes(node.children)
+              : linkName;
+
+          chunk = `<a href="${node.token.url}" class="md-link">${content}</a>`;
           break;
         }
 
         // 15. Bold text
         case TokenType.STRONG: {
-          const strongContent = node.token.value + " ";
-          const strongChildren =
+          const content =
             node.children && node.children.length > 0
               ? await this.renderNodes(node.children)
-              : "";
-          chunk = `<strong class="md-strong">${strongContent}${strongChildren}</strong>`;
+              : node.token.value || "";
+
+          chunk = `<strong class="md-strong">${content}</strong>`;
           break;
         }
 
         // 16. Underlined text
         case TokenType.UNDER_LINE: {
-          if (node.children && node.children.length > 0) {
-            chunk = `<div>${await this.renderNodes(node.children)}</div>`;
-          } else {
-            chunk = `<span><span class="md-underline">${node.token.value}</span> </span>`;
-          }
+          const content =
+            node.children && node.children.length > 0
+              ? await this.renderNodes(node.children)
+              : node.token.value;
+
+          chunk = `<span><span class="md-underline">${content}</span></span>`;
           break;
         }
 

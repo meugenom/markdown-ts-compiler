@@ -1,6 +1,6 @@
 {
   "name": "markdown-tailwind-css-compiler",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "markdown compiler ts tailwind css",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,7 +28,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf ./dist ./dist-demo",
-    "build:lib": "tsc",
+    "build:lib": "tsc --emitDeclarationOnly",
     "build:css": "postcss src/static/styles/style.css -o dist/main.css",
     "build:demo": "webpack",
     "build": "yarn clean && yarn build:css && yarn build:lib && yarn build:demo",
@@ -36,7 +36,7 @@
     "jest": "jest --watch",
     "test": "jest",
     "type": "tsc --noEmit",
-    "prepare": "yarn clean && yarn build:lib"
+    "prepare": "yarn clean && yarn build:css && yarn build:lib"
   },
   "devDependencies": {
     "@shikijs/twoslash": "^4.0.2",

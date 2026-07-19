@@ -11,8 +11,7 @@ module.exports = {
     filename: "[name].js",
     // dist-demo for html demo
     path: path.resolve(__dirname, "dist-demo"),
-    chunkFilename: "[name].[contenthash].chunk.js",
-    clean: true,
+    chunkFilename: "[name].[contenthash].chunk.js",    
   },
   mode: "production",
   performance: {
