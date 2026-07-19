@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.9.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.9.1-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -55,8 +55,10 @@ npm install markdown-tailwind-css-compiler
 Since the compiler uses Shiki for rich code syntax highlighting, the HTML generation process is asynchronous.
 
 ```typescript
-import 'markdown-tailwind-css-compiler/src/static/styles/style.css';
-import 'katex/dist/katex.min.css'; // Required for formulas
+// Required as compiled pure css
+import 'markdown-tailwind-css-compiler/dist/main.css';
+// Required for formulas
+import 'katex/dist/katex.min.css'; 
 
 import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
 
@@ -160,10 +162,16 @@ yarn install
 ```bash
 yarn build
 ```
+
 This triggers a dual-target build script:
 - `/dist` — Houses the pure production JS modules and TypeScript type definitions (.d.ts) meant for npm distribution.
 - `/dist-demo` — Contains the standalone compiled HTML/JS bundle for hosting the web demonstration site.
+
 3. Run Tests:
+
+```bash
+yarn test
+```
 
 ## Dark Mode Support
 
@@ -181,10 +189,6 @@ To trigger the dark theme, simply toggle the `dark` class on your root `<html>` 
 <html class="dark">
   ...
 </html>
-
-
-```bash
-yarn test
 ```
 
 ### Author:
