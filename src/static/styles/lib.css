@@ -1,0 +1,19 @@
+@import "tailwindcss/theme";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* Components */
+@import "./components/badge.css";
+@import "./components/caption.css";
+@import "./components/codeblock.css";
+@import "./components/codeinline.css";
+@import "./components/colortext.css";
+@import "./components/formula.css";
+@import "./components/header.css";
+@import "./components/image.css";
+@import "./components/quote.css";
+@import "./components/list.css";
+@import "./components/table.css";
+
+/* Landing elements */
+@import "./components/landing.css";

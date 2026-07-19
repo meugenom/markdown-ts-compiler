@@ -1,24 +1,10 @@
+/* Require Kernel */
 @import "tailwindcss";
 
-@variant dark (&:where(.dark, .dark *));
+/* Require our lib */
+@import "./lib.css";
 
-/* Components */
-@import "./components/badge.css";
-@import "./components/caption.css";
-@import "./components/codeblock.css";
-@import "./components/codeinline.css";
-@import "./components/colortext.css";
-@import "./components/formula.css";
-@import "./components/header.css";
-@import "./components/image.css";
-@import "./components/quote.css";
-@import "./components/list.css";
-@import "./components/table.css";
-
-/* Landing elements */
-@import "./components/landing.css";
-
-/* Global reset */
+/* Global Style for demo site */
 html, body {
   margin: 0;
   padding: 0;
@@ -29,7 +15,6 @@ html, body {
   transition: background-color 0.2s, color 0.2s;
 }
 
-/* When dark mode active */
 html.dark body {
   background-color: #0f172a;
   color: #f1f5f9;
