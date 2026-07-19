@@ -15,8 +15,8 @@ describe('HeaderHTML Render Tests', () => {
         const headerHTML = new HeaderHTML(token as any);
         const result = headerHTML.render();
 
-        // Expect full exact match of the tag, id, and style list attributes
-        expect(result).toBe('<h1 id="introduction-to-compiler-design" class="text-2xl font-mono font-bold mt-0 mb-3 pr-10 pt-6">Introduction to Compiler Design</h1>');
+        // Expect full exact match of the tag, id, and style list attributes        
+        expect(result).toBe('<h1 id="introduction-to-compiler-design" class="md-heading md-h1">Introduction to Compiler Design</h1>');
     });
 
     // Test case 2: Verifying mid-level heading scale transformations (H3 example)
@@ -31,7 +31,7 @@ describe('HeaderHTML Render Tests', () => {
 
         // Confirm it uses h3 wrapper and maps to text-lg class size rule
         expect(result).toContain('<h3 id="sub-section-topic"');
-        expect(result).toContain('class="text-lg font-mono font-bold');
+        expect(result).toContain('class="md-heading md-h3"');
     });
 
     // Test case 3: Confirming fallback safeguards for unidentified token types
@@ -44,8 +44,8 @@ describe('HeaderHTML Render Tests', () => {
         const headerHTML = new HeaderHTML(token as any);
         const result = headerHTML.render();
 
-        // Validate that fallback logic caught the issue and safely downgraded to h6 / text-xs
-        expect(result).toBe('<h6 id="fallback-title" class="text-xs font-mono font-bold mt-0 mb-3 pr-10 pt-6">Fallback Title</h6>');
+        // Validate that fallback logic caught the issue and safely downgraded to h6 / text-xs    
+        expect(result).toBe('<h6 id="fallback-title" class="md-heading md-h6">Fallback Title</h6>');
     });
 
     // Test case 4: Validating sanitization regex rules for anchor id attribute generation

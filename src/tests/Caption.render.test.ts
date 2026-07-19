@@ -5,7 +5,7 @@ import { captionToken } from "../Token";
 
 describe('Caption Render Tests', () => {
 
-    // Normalization function to remove whitespace differences for comparison
+    // Normalization Function
     const normalizeHTML = (html: string): string => 
         html.replace(/\s+/g, ' ')
             .replace(/>\s+</g, '><')
@@ -28,32 +28,18 @@ describe('Caption Render Tests', () => {
         const captionHTML = new CaptionHTML(token);
         const renderedHTML = captionHTML.render();
         
-        // Expected HTML result matched exactly with the pure clean relative paths
         const expectedHTML = `
             <div>
-                <div class="flex flex-col md:flex-row gap-6">
-                    <div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
-                        <img src="thumbnails/writing.png" class="float-left object-contain h-64 w-full max-w-xs" alt="Test Caption"/>
+                <div class="md-caption">
+                    <div class="md-caption-image-wrapper">
+                        <img src="thumbnails/writing.png" class="md-caption-image" alt="Test Caption"/>
                     </div>
-                    <div class="flex-auto justify-start">
-                        <h3 class="text-3xl font-sans font-semibold leading-tight mt-0 mb-2">
-                            Test Caption
-                        </h3>
-                        <time class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-blue-400 last:mr-0 mr-1">
-                            2026-11-07
-                        </time> 
-                        <div class="tag-container mt-3 py-1">
-                            <a navigateLinkTo="/tag/test," href="/tag/test," class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-orange-400 hover:bg-orange-600 last:mr-0 mr-1">
-                                test,
-                            </a>
-                            <a navigateLinkTo="/tag/caption" href="/tag/caption" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-orange-400 hover:bg-orange-600 last:mr-0 mr-1">
-                                caption
-                            </a>
-                        </div>              
-                        <div class="mt-2 py-1">
-                            <a navigateLinkTo="/article/test-caption" href="/article/test-caption" class="text-xs font-semibold inline-block py-1 px-2 rounded text-white bg-gray-400 hover:bg-gray-600 uppercase last:mr-0 mr-1">
-                                -> Return to Main Article 
-                            </a>
+                    <div class="md-caption-content">
+                        <h3 class="md-caption-title">Test Caption</h3>
+                        <time class="md-caption-time">2026-11-07</time> 
+                        <div class="md-caption-tags-wrapper"><a href="/tag/test," class="md-caption-tag">test,</a><a href="/tag/caption" class="md-caption-tag">caption</a></div>              
+                        <div class="md-caption-nav-wrapper">
+                            <a href="/article/test-caption" class="md-caption-nav-link">-> Return to Main Article</a>
                         </div>
                     </div>
                 </div>
@@ -61,7 +47,6 @@ describe('Caption Render Tests', () => {
             </div>
         `;
 
-        // Compare the normalized strings
         expect(normalizeHTML(renderedHTML)).toBe(normalizeHTML(expectedHTML));
     });
 });

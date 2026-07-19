@@ -14,7 +14,7 @@ describe('CodeInlineHTML Render Tests', () => {
         const result = codeInlineHTML.render();
 
         // Check if the expected container tag and utility classes are present
-        expect(result).toContain('<code class="inline-block py-1 px-2 bg-gray-300 dark:bg-gray-500 dark:text-slate-200 text-sm font-mono font-medium rounded">');
+        expect(result).toContain('<code class="md-inline-code">');
         expect(result).toContain('const total = 42;</code>');
     });
 

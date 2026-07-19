@@ -14,8 +14,8 @@ describe('ColorTextHTML Render Tests', () => {
         const colorTextHTML = new ColorTextHTML(token);
         const result = colorTextHTML.render();
 
-        // Validate the entire inner wrapper hierarchy and the crucial trailing space inside span
-        expect(result).toBe('<span><a class="underline md:decoration-solid decoration-3 decoration-green-500">Status OK</a> </span>');
+        // Validate the entire inner wrapper hierarchy and the crucial trailing space inside span        
+        expect(result).toBe('<span><a class="md-color-text md-color-text-green">Status OK</a> </span>');
     });
 
     // Test case 2: Verifying fallback logic when an unrecognized color string is passed
@@ -29,7 +29,7 @@ describe('ColorTextHTML Render Tests', () => {
         const result = colorTextHTML.render();
 
         // Check if the fallback mapper caught the error and assigned decoration-gray-500
-        expect(result).toContain('decoration-gray-500');
+        expect(result).toContain('md-color-text-gray');
         expect(result).not.toContain('decoration-unknown-rainbow-color');
     });
 

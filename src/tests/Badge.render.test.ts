@@ -18,7 +18,7 @@ describe('Badge Render Tests', () => {
         const badgeHTML = new BadgeHTML(token);
         const renderedHTML = badgeHTML.render();        
         console.log(renderedHTML);
-        expect(renderedHTML).toContain('<span class=\"bg-blue-100 text-blue-800 dark:bg-blue-200 dark:text-blue-800 text-sm font-semibold mr-2 px-2.5 py-0.5 rounded\">Test Badge</span>');
+        expect(renderedHTML).toContain('<span class=\"md-badge md-badge-blue\">Test Badge</span>');
 
     });
 
