@@ -21,17 +21,17 @@ export class ColorTextHTML {
         this.token = token;
     }
 
-    public render(): string {        
-        // by default gray
-        const color = this.validColors.includes(this.token.color) ? this.token.color : 'gray';
+    public render(childrenHtml: string = ""): string {        
+    // by invalid is gray
+    const color = this.validColors.includes(this.token.color) ? this.token.color : 'gray';
 
-        const escapedValue = this.token.value
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-        return `<span><a class="md-color-text md-color-text-${color}">${escapedValue}</a> </span>`;
-    }
+    const escapedValue = this.token.value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    
+    return `<span><a class="md-color-text md-color-text-${color}">${escapedValue}</a> ${childrenHtml}</span>`;
+}
 }
