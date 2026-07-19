@@ -1,6 +1,6 @@
 {
   "name": "markdown-tailwind-css-compiler",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "markdown compiler ts tailwind css",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -29,7 +29,7 @@
   "scripts": {
     "clean": "rimraf ./dist ./dist-demo",
     "build:lib": "tsc", 
-    "build:css": "postcss src/static/styles/style.css -o dist/main.css",
+    "build:css": "postcss src/static/styles/lib.css -o dist/main.css",
     "build:demo": "webpack",
     "build": "yarn clean && yarn build:css && yarn build:lib && yarn build:demo",
     "start": "webpack serve",
