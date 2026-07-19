@@ -1,13 +1,13 @@
 {
   "name": "markdown-tailwind-css-compiler",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "markdown compiler ts tailwind css",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "src/static/styles"
+    "dist"
   ],
+  "style": "./dist/main.css",
   "sideEffects": [
     "*.css"
   ],
