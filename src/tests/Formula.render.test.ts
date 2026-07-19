@@ -15,9 +15,9 @@ describe('FormulaHTML Render Tests', () => {
         const result = formulaHTML.render();
 
         // 1. Validate our structural outer component layout classes
-        expect(result).toContain('class="code-block-outer my-5"');
+        expect(result).toContain('class="md-formula-outer"');
         expect(result).toContain('>Formula</span>');
-        expect(result).toContain('class="p-5 overflow-x-auto bg-white dark:bg-gray-900');
+        expect(result).toContain('class="md-formula-body"');
 
         // 2. Validate that KaTeX processed the string and injected its mathematical components
         expect(result).toContain('class="katex"');

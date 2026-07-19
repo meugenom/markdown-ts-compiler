@@ -1,0 +1,24 @@
+/* src/static/styles/components/image.css */
+
+.md-image-outer {
+  @apply leading-7 font-mono mt-4;
+}
+
+.md-image-figure {
+  @apply flex flex-col items-center my-5;
+}
+
+.md-image {
+  @apply shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200;
+}
+
+.md-image-caption {
+  @apply mt-2 text-[12px] font-mono text-slate-400 text-center;
+}
+
+/* Dark Mode Fixes for transparent images */
+.dark {
+  & figure img, & img {
+    background-color: white !important;
+  }
+}

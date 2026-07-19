@@ -1,12 +1,6 @@
 "use strict";
 import * as Token from "../Token";
 
-/**
- * Returns an HTML string for a caption block
- * @param token block
- * @return HTML string for the caption block
- */
-
 export class CaptionHTML {
   private token: Token.captionToken;
 
@@ -15,76 +9,44 @@ export class CaptionHTML {
   }
 
   public render(): string {
-    // Block for tags
-    const tagsList = this.token.tags
-      ? this.token.tags.toString().split(" ")
-      : [];
+    const tagsList = this.token.tags ? this.token.tags.toString().split(" ") : [];
+    
     const tagsBlock = tagsList
       .filter((tag: string) => tag.length > 0)
-      .map((tag: string) =>
-        `
-                <a navigateLinkTo="/tag/${tag}" href="/tag/${tag}" class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-orange-400 hover:bg-orange-600 last:mr-0 mr-1">
-                    ${tag}
-                </a>
-            `.trim(),
-      )
-      .join("");
+      .map((tag: string) => 
+        `<a href="/tag/${tag}" class="md-caption-tag">${tag}</a>`
+      ).join("");
 
-    // 2. Block for cluster navigation (if applicable)
     let clusterBlock = "";
-    const validCluster =
-      this.token.cluster &&
-      /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(this.token.cluster.trim());
-    if (validCluster) {
-      const cluster = this.token.cluster.trim();
-      clusterBlock = `
-                <a navigateLinkTo="/article/${cluster}" href="/article/${cluster}" class="text-xs font-semibold inline-block py-1 px-2 rounded text-white bg-gray-400 hover:bg-gray-600 uppercase last:mr-0 mr-1">
-                    -> Return to Main Article 
-                </a>
-            `.trim();
+    const validCluster = this.token.cluster && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(this.token.cluster.trim());
+    
+    if (validCluster && this.token.order !== "0") {
+      clusterBlock = `<div class="md-caption-nav-wrapper">
+                        <a href="/article/${this.token.cluster.trim()}" class="md-caption-nav-link">-> Return to Main Article</a>
+                      </div>`;
     }
 
-    // 3. Block for thumbnail (if applicable)
-    const rawThumbnail = this.token.thumbnail
-      .trim()
-      .replace(/['"]/g, "")
-      .replace(/^\.?\//, "");
-    const hasThumbnail =
-      rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
+    const rawThumbnail = this.token.thumbnail.trim().replace(/['"]/g, "").replace(/^\.?\//, "");
+    const hasThumbnail = rawThumbnail.length > 0 && /\.(png|jpg|jpeg|webp)$/i.test(rawThumbnail);
 
     const thumbnailBlock = hasThumbnail
-      ? `<div class="flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md">
-                <img src="${rawThumbnail}" class="float-left object-contain h-64 w-full max-w-xs" alt="${this.token.title}"/>
-               </div>`
+      ? `<div class="md-caption-image-wrapper">
+           <img src="${rawThumbnail}" class="md-caption-image" alt="${this.token.title}"/>
+         </div>`
       : "";
 
-    // 4. Check if the cluster section should be displayed based on the order and valid cluster
-    const clusterSection =
-      this.token.order !== "0" && validCluster
-        ? `<div class="mt-2 py-1">${clusterBlock}</div>`
-        : "";
-
-    // 5. Final caption block assembly
-    const captionBlock = `
-<div class="flex flex-col md:flex-row gap-6">
-    ${thumbnailBlock}
-    <div class="flex-auto justify-start">
-        <h3 class="text-3xl font-sans font-semibold leading-tight mt-0 mb-2">
-            ${this.token.title}
-        </h3>
-        <time class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-blue-400 last:mr-0 mr-1">
-            ${this.token.date}
-        </time> 
-        <div class="tag-container mt-3 py-1">
-            ${tagsBlock}
-        </div>              
-        ${clusterSection}
-    </div>
-</div>
-<hr/>
-        `.trim();
-
-    // Return the final caption block wrapped in a div
-    return `<div>${captionBlock}</div>`;
+    return `
+      <div>
+        <div class="md-caption">
+            ${thumbnailBlock}
+            <div class="md-caption-content">
+                <h3 class="md-caption-title">${this.token.title}</h3>
+                <time class="md-caption-time">${this.token.date}</time> 
+                <div class="md-caption-tags-wrapper">${tagsBlock}</div>              
+                ${clusterBlock}
+            </div>
+        </div>
+        <hr/>
+      </div>`.trim();
   }
 }

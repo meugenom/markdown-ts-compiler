@@ -1,0 +1,16 @@
+/* src/static/styles/components/colortext.css */
+
+/* Base styles for color texts */
+.md-color-text {
+  @apply underline md:decoration-solid decoration-3;
+}
+
+/* Lines color modificators */
+.md-color-text-blue   { @apply decoration-blue-500; }
+.md-color-text-gray   { @apply decoration-gray-500; }
+.md-color-text-red    { @apply decoration-red-500; }
+.md-color-text-green  { @apply decoration-green-500; }
+.md-color-text-yellow { @apply decoration-yellow-500; }
+.md-color-text-purple { @apply decoration-purple-500; }
+.md-color-text-pink   { @apply decoration-pink-500; }
+.md-color-text-indigo { @apply decoration-indigo-500; }

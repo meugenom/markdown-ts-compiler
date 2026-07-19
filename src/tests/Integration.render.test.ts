@@ -305,41 +305,41 @@ This is an
 ![Github image](./images/github.png)
 `;
 
-    it('should successfully compile the massive mixed markdown article into valid styled HTML string without crashing', async () => {
+   it('should successfully compile the massive mixed markdown article into valid styled HTML string without crashing', async () => {
         
         const htmlResult = await convertMDtoHTML(sampleArticleMarkdown);
         const normalized = normalizeHTML(htmlResult);
 
-        // 1. FIX: Verified clean relative path for thumbnail inside standard src attribute
-        expect(normalized).toContain('How to Write Text </h3>');
+        // 1. Testing block copilation
+        expect(normalized).toContain('How to Write Text</h3>'); 
         expect(normalized).toContain('src="thumbnails/writing.png"');
 
-        // 2. Verify Headings compilation & slugification
+        // 2. check headers compilation and generation ID's
         expect(normalized).toContain('<h2 id="formatting-syntax"');
         expect(normalized).toContain('<h1 id="the-h1-heading"');
 
-        // 3. Verify Mocked CodeBlock structural integration
-        expect(normalized).toContain('class="code-block-outer my-5"');              
-        expect(normalized).toContain('code-copy-btn');
+        // 3. Check Codeblock's structure
+        expect(normalized).toContain('class="md-code-block-outer"'); 
+        expect(normalized).toContain('md-code-block-copy');          
         expect(normalized).toContain('javascript');
 
-        // 4. Verify KaTeX Block and Inline math equation rendering structures
+        // 4. Check KaTeX (blocks and inline)
         expect(normalized).toContain('class="katex"');
         expect(normalized).toContain('class="katex-display"');
 
-        // 5. Verify Table parsing and internal alignment wrappers
+        // 5. Check tables and cells
         expect(normalized).toContain('<table');
         expect(normalized).toContain('Dresden </strong>');
 
-        // 6. Verify Text color and Badges processors mappings
-        expect(normalized).toContain('decoration-green-500');
-        expect(normalized).toContain('bg-blue-100'); 
+        // 6. Check color modificators badges and colortexts
+        expect(normalized).toContain('md-color-text-green'); 
+        expect(normalized).toContain('md-badge-blue');       
 
-        // 7. FIX: Verified clean relative path for standard images inside src attribute
+        // 7. Check clean path for standart images
         expect(normalized).toContain('src="images/github.png"');
 
-        // 8. Verify Blockquote layout distribution
-        expect(normalized).toContain('border-l-4 border-blue-400');
+        // 8. Check quote structure
+        expect(normalized).toContain('md-quote-p'); 
         expect(normalized).toContain('quoting text');
     });
 });

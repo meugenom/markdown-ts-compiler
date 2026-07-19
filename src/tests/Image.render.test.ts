@@ -22,18 +22,18 @@ describe('ImageHTML Render Tests', () => {
         const normalized = normalizeHTML(result);
 
         // 1. Verify basic layout wrappers and clean utility classes without overflow/group specs
-        expect(result).toContain('<div class="leading-7 font-mono mt-4">');
-        expect(result).toContain('<figure class="flex flex-col items-center my-5">');
+        expect(result).toContain('<div class="md-image-outer">');
+        expect(result).toContain('<figure class="md-image-figure">');
         
         // 2. Verify image tag contains the clean classic responsive attributes
-        expect(result).toContain('class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200"');
+        expect(result).toContain('class="md-image"');
 
         // 3. Verify that path prefix normalization successfully extracted "./" directly into src
         expect(result).toContain('src="assets/diagram.png"');
         expect(result).toContain('alt="Architecture Flowchart Diagram"');
 
         // 4. Confirm that the figcaption subtitle block is appended correctly
-        expect(normalized).toContain('<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">Architecture Flowchart Diagram</figcaption>');
+        expect(normalized).toContain('<figcaption class="md-image-caption">Architecture Flowchart Diagram</figcaption>');       
     });
 
     // Test case 2: Minimal options rendering without optional alt text captioning

@@ -17,7 +17,7 @@
 
 ![Human Made](https://img.shields.io/badge/Hand--coded-100%25-orange?style=for-the-badge)
 ![AI-Assisted Architecture](https://img.shields.io/badge/AI--Assisted-Architecture-blue?style=for-the-badge)
-![Version](https://img.shields.io/badge/version-0.8.0-blue.svg?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-0.9.0-blue.svg?style=for-the-badge)
 ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwindcss&logoColor=white)
 
@@ -27,9 +27,18 @@ An isomorphic, high-performance Markdown compiler built with TypeScript and Tail
 
 ---
 
+# Key Features & Architecture
+
+* **Pure Semantic HTML & Separation of Concerns:** The compiler logic is entirely divorced from styling hardcodes. It outputs clean HTML blocks wrapped in predictable semantic classes (`.md-paragraph`, `.md-heading`, `.md-table`, etc.)
+* **Easy Customization:** Want to change padding, colors, or fonts? You don't need to rebuild the TypeScript package. Just tweak the CSS layer using standard utilities or Tailwind's `@apply`.
+* **Full Math & Code Highlight Support:** Out-of-the-box integration with KaTeX for math equations and Shiki for stunning, light/dark-aware syntax highlighting.
+* **No DOM Dependency:** Runs perfectly on the server (Node.js), in the browser, or inside Edge Workers.
+
+---
+
 ## Installation
 
-Install the package into your project via Yarn or npm:
+Install the package via Yarn or npm:
 
 ```bash
 yarn add markdown-tailwind-css-compiler
@@ -37,31 +46,23 @@ yarn add markdown-tailwind-css-compiler
 npm install markdown-tailwind-css-compiler
 ```
 
-## IMPORTANT!
+> 💡 **Note on Development:** The core compilation engine is 100% hand-coded. AI was utilized strictly for architectural brainstorming and optimizing heavy regular expressions.
 
-**The codebase for the Project is entirely hand-coded.**
-Every line of code in the project was crafted by  a human developer.
-NO AI-generated Code was used in the development  of this project.
-AI was strictly utilized only for architectural brainstorming and refining complex regular expressions.
+
 
 ## How to Use It in Your Project
 1. Basic HTML Compilation (Asynchronous)
-Since the compiler uses Shiki for syntax highlighting, the HTML generation is asynchronous.
+Since the compiler uses Shiki for rich code syntax highlighting, the HTML generation process is asynchronous.
 
 ```typescript
-// Import the required CSS styles for Tailwind and KaTeX
-import 'markdown-tailwind-css-compiler/src/static/styles/list.css';
-import 'markdown-tailwind-css-compiler/src/static/styles/table.css';
 import 'markdown-tailwind-css-compiler/src/static/styles/style.css';
-import 'katex/dist/katex.min.css';
+import 'katex/dist/katex.min.css'; // Required for formulas
 
-// Import the main function to convert Markdown to HTML
 import { convertMDtoHTML } from 'markdown-tailwind-css-compiler';
-
 
 const markdownText = `
 # My Article
-This is an inline code \`const a = 1;\` and a formula: $E = mc^2$
+This is inline code \`const a = 1;\` and a formula: $E = mc^2$
 
 \`\`\`typescript
 const hello = "world";
@@ -80,19 +81,43 @@ async function render() {
 render();
 ```
 
-2. Working with AST and Tokens (Synchronous)
-If you only need to parse the structure without rendering, these methods run completely synchronously:
+### 2. Working with AST and Tokens (Synchronous)
+If you only need to analyze the structural tree or extract token data without rendering HTML, these methods run completely synchronously:
 
 ```typescript
 import { convertMDtoAST, convertMDtoTokens } from 'markdown-tailwind-css-compiler';
 
-const markdown = "# Hello";
+const markdown = "# Hello World";
 
 // Get the Abstract Syntax Tree (AST)
 const ast = convertMDtoAST(markdown);
 
-// Get a flat array of processed tokens
+// Get a flat array of all processed tokens
 const tokens = convertMDtoTokens(markdown);
+```
+
+---
+
+## Semantic CSS Customization
+
+The compiler styles are modularized and easily overridable[cite: 3]. You can customize specific markdown blocks by adjusting their respective classes[cite: 3]:
+
+| Component | Target HTML Element | Class Name |
+|---|---|---|
+| **Paragraph** | `<p>` | `.md-paragraph` |
+| **Headings** | `<h1>` to `<h5>` | `.md-heading`, `.md-h1` ... `.md-h5` |
+| **Table** | `<table>`, `<th>`, `<td>` | `.md-table`, `.md-table-th`, `.md-table-td` |
+| **Links** | `<a>` | `.md-link` |
+| **Code Block** | Container, Lines, Copy button | `.md-code-block-container`, `.md-code-block-lines`, `.md-code-block-copy` |
+
+Example of custom override in your local CSS:
+```css
+.md-link {
+  @apply text-indigo-600 hover:text-indigo-800 transition-colors duration-150;
+}
+.md-table-th {
+  @apply bg-slate-50 font-bold text-left;
+}
 ```
 
 ## API Reference

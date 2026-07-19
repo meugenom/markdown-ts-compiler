@@ -2,6 +2,22 @@
 
 @variant dark (&:where(.dark, .dark *));
 
+/* Components */
+@import "./components/badge.css";
+@import "./components/caption.css";
+@import "./components/codeblock.css";
+@import "./components/codeinline.css";
+@import "./components/colortext.css";
+@import "./components/formula.css";
+@import "./components/header.css";
+@import "./components/image.css";
+@import "./components/quote.css";
+@import "./components/list.css";
+@import "./components/table.css";
+
+/* Landing elements */
+@import "./components/landing.css";
+
 /* Global reset */
 html, body {
   margin: 0;
@@ -13,7 +29,7 @@ html, body {
   transition: background-color 0.2s, color 0.2s;
 }
 
-/* when activate class .dark*/
+/* When dark mode active */
 html.dark body {
   background-color: #0f172a;
   color: #f1f5f9;
@@ -26,37 +42,4 @@ html.dark body {
 #content {  
   width: 100%;
   padding-top: 10px;
-}
-
-/* ==========================================================================
-   Library Light/Dark Theme Normalization
-   ========================================================================== */
-
-.dark {
-  /* 1. Fonts and table borders */
-  & table, & th, & td {
-    color: #f1f5f9 !important;
-    border-color: #334155 !important;
-  }
-
-  /* 2. Whole background (#1e293b) */
-  /* for code blocks, stroke numbers and formuls */
-  & .code-block-outer > div,
-  & .code-block-outer > div > div {
-    background-color: #1e293b !important;
-  }
-  
-  /* background for png-images */
-  & figure img {
-    background-color: white !important;
-  }
-
-  img {
-    background-color: white !important;
-  }
-
-  /* 3. Shuki tokens synchro */
-  & .shiki span {
-    color: var(--shiki-dark) !important;
-  }
 }

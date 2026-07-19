@@ -1,0 +1,5 @@
+/* src/static/styles/components/quote.css */
+
+.md-quote-p {
+  @apply mb-4 leading-7 font-mono text-slate-700 dark:text-slate-300 border-l-4 border-blue-400 pl-4;
+}
