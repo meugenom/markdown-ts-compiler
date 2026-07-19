@@ -18,7 +18,7 @@ export class CodeInlineHTML {
     }
 
     public render(): string {
-        // Escape HTML special characters to prevent XSS and ensure proper rendering
+        // Security by XSS
         const escapedValue = this.token.value
             .replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
@@ -26,7 +26,7 @@ export class CodeInlineHTML {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
 
-        // Return the clean HTML string without unnecessary <span> wrapper
-        return `<code class="inline-block py-1 px-2 bg-gray-300 dark:bg-gray-500 dark:text-slate-200 text-sm font-mono font-medium rounded">${escapedValue}</code>`;
+        // Retrun clear HTML
+        return `<code class="md-inline-code">${escapedValue}</code>`;
     }
 }

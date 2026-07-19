@@ -1,0 +1,35 @@
+/* src/static/styles/components/caption.css */
+
+.md-caption { @apply flex flex-col md:flex-row gap-6; }
+
+.md-caption-image-wrapper { 
+  @apply flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md; 
+}
+
+.md-caption-image { 
+  @apply float-left object-contain h-64 w-full max-w-xs; 
+}
+
+.md-caption-content { @apply flex-auto justify-start; }
+
+.md-caption-title { @apply text-3xl font-sans font-semibold leading-tight mt-0 mb-2; }
+
+.md-caption-time { 
+  @apply text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-blue-400 last:mr-0 mr-1; 
+}
+
+.md-caption-tag { 
+  @apply text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-white bg-orange-400 hover:bg-orange-600 last:mr-0 mr-1; 
+}
+
+.md-caption-nav-link { 
+  @apply text-xs font-semibold inline-block py-1 px-2 rounded text-white bg-gray-400 hover:bg-gray-600 uppercase last:mr-0 mr-1; 
+}
+
+.md-caption-tags-wrapper {
+  @apply mt-3 py-1;
+}
+
+.md-caption-nav-wrapper {
+  @apply mt-2 py-1;
+}

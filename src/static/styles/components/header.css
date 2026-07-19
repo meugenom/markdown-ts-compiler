@@ -1,0 +1,14 @@
+/* src/static/styles/components/header.css */
+
+/* base class for headers */
+.md-heading {
+  @apply font-mono font-bold mt-0 mb-3 pr-10 pt-6;
+}
+
+/* Modificatros for header levels */
+.md-h1 { @apply text-2xl; }
+.md-h2 { @apply text-xl; }
+.md-h3 { @apply text-lg; }
+.md-h4 { @apply text-base; }
+.md-h5 { @apply text-sm; }
+.md-h6 { @apply text-xs; }

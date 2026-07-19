@@ -24,3 +24,10 @@
   background-color: #60a5fa !important; /* Checked Color*/
   border-color: #60a5fa !important; 
 }
+
+.md-list-outer { @apply mt-3; }
+.md-list-title { @apply font-mono; }
+.md-list-ul { @apply mt-1 ml-2 space-y-1; }
+.md-list-item-disc { @apply list-disc ml-5 font-mono text-sm leading-6; }
+.md-list-item-task { @apply list-none ml-5 flex items-start gap-2; }
+.md-list-item-task-checked { @apply list-none ml-5 flex items-start gap-2; }

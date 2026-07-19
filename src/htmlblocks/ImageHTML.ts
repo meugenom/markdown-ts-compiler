@@ -18,20 +18,20 @@ export class ImageHTML {
   }
 
   public render(): string {
-    // Remove path prefix "./" or "/" from the image URL if present
+    // Remove paths prefixes "./" or "/" from URL
     const imgSrc = this.token.url ? this.token.url.replace(/^\.?\//, "") : "";
     const altText = this.token.alt || "";
 
-    // Prepare the figcaption block only if alt text is provided
+    // Prepare alt for image
     const figcaptionBlock = altText
-      ? `<figcaption class="mt-2 text-[12px] font-mono text-slate-400 text-center">${altText}</figcaption>`
+      ? `<figcaption class="md-image-caption">${altText}</figcaption>`
       : "";
 
-    // Return the monolithic valid HTML string.    
+    // Retunr clean HTML
     return `
-    <div class="leading-7 font-mono mt-4">
-      <figure class="flex flex-col items-center my-5">
-        <img src="${imgSrc}" alt="${altText}" class="shadow-md rounded-md max-w-full h-auto w-full sm:w-10/12 border border-gray-200">
+    <div class="md-image-outer">
+      <figure class="md-image-figure">
+        <img src="${imgSrc}" alt="${altText}" class="md-image">
           ${figcaptionBlock}
       </figure>
     </div>

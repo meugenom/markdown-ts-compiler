@@ -1,0 +1,13 @@
+td, th { min-width: 100px; }
+
+.md-table { @apply w-full border-collapse border border-slate-300 my-4 text-sm font-mono; }
+.md-table-th { @apply border border-slate-300 p-2 text-center; }
+.md-table-td { @apply border border-slate-300 p-2 text-center; }
+
+/* Dark Mode Fixes */
+.dark {
+  & table, & th, & td {
+    color: #f1f5f9 !important;
+    border-color: #334155 !important;
+  }
+}

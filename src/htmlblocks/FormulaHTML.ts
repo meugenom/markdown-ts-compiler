@@ -32,18 +32,18 @@ export class FormulaHTML {
         .replace(/>/g, "&gt;");
     }
 
-    // Собираем структуру: переводим тег с текстом Formula в одну строку
+    // clean Structure
     return `
-<div class="code-block-outer my-5">
-  <div class="rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden z-10">
+<div class="md-formula-outer">
+  <div class="md-formula-container">
     
     <!-- Header -->
-    <div class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-      <span class="text-[11px] font-bold uppercase tracking-widest opacity-50">Formula</span>
+    <div class="md-formula-header">
+      <span class="md-formula-title">Formula</span>
     </div>
 
     <!-- Body -->
-    <div class="p-5 overflow-x-auto bg-white dark:bg-gray-900 dark:text-slate-200 text-center">
+    <div class="md-formula-body">
       ${bodyContent}
     </div>
 

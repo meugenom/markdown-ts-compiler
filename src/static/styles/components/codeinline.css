@@ -1,0 +1,5 @@
+/* src/static/styles/components/codeinline.css */
+
+.md-inline-code {
+  @apply inline-block py-1 px-2 bg-gray-300 dark:bg-gray-500 dark:text-slate-200 text-sm font-mono font-medium rounded;
+}

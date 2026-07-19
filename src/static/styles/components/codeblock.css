@@ -1,0 +1,56 @@
+/* src/static/styles/components/codeblock.css */
+
+.md-code-block-outer {
+  @apply my-5;
+}
+
+.md-code-block-container {
+  @apply relative rounded-md border border-gray-200 dark:border-gray-700 overflow-hidden font-mono z-10 bg-white dark:bg-[#1e293b];
+}
+
+/* Header block (Language + Button) */
+.md-code-block-header {
+  @apply flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700;
+}
+
+.md-code-block-lang {
+  @apply text-[11px] font-mono font-bold uppercase tracking-widest opacity-50 text-slate-700 dark:text-slate-300;
+}
+
+.md-code-block-copy {
+  @apply text-[11px] font-mono opacity-50 hover:opacity-100 transition-opacity text-slate-700 dark:text-slate-300;
+}
+
+/* Block body and strokes number */
+.md-code-block-body {
+  @apply flex overflow-x-auto;
+}
+
+.md-code-block-lines {
+  @apply select-none text-right leading-6 pr-4 pl-3 py-4 text-[13px] text-slate-400 dark:text-slate-600 border-r border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex-shrink-0;
+}
+
+.md-code-block-content {
+  @apply flex-1 min-w-0;
+}
+
+/* Automatic stylization Shiki-content and Fallback without class injection in TS */
+.md-code-block-content pre {
+  @apply leading-6 p-4 text-[13px] overflow-x-auto !bg-transparent;
+}
+
+.md-code-block-content code {
+  @apply leading-6 text-[13px] !bg-transparent;
+}
+
+/* Dark Mode Fixes & Shiki Synchronization */
+.dark {
+  & .md-code-block-outer > div,
+  & .md-code-block-outer > div > div {
+    background-color: #1e293b !important;
+  }
+  
+  & .shiki span {
+    color: var(--shiki-dark) !important;
+  }
+}
