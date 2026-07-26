@@ -3,11 +3,11 @@
 .md-caption { @apply flex flex-col md:flex-row gap-6; }
 
 .md-caption-image-wrapper { 
-  @apply flex-none relative overflow-hidden h-64 w-full max-w-xs rounded-md shadow-md; 
+  @apply flex-none relative overflow-hidden h-64 w-full max-w-xs
 }
 
 .md-caption-image { 
-  @apply float-left object-contain h-64 w-full max-w-xs; 
+  @apply float-left object-contain h-64 w-full max-w-xs;
 }
 
 .md-caption-content { @apply flex-auto justify-start; }
