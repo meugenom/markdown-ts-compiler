@@ -232,14 +232,14 @@ _underdash_
 ## Color Underline decoration
 
 \*
-	[[Blue:blue]] color
-	[[Gray:gray]] color
-	[[Red:red]] color
-	[[Green:green]] color
-	[[Yellow:yellow]] color
-	[[Indigo:indigo]] color 
-	[[Purple:purple]] color
-	[[Pink:pink]] color
+	[[Blue:blue]]
+	[[Gray:gray]]
+	[[Red:red]]
+	[[Green:green]]
+	[[Yellow:yellow]]
+	[[Indigo:indigo]]
+	[[Purple:purple]]
+	[[Pink:pink]]
 \*
 
 in out:
@@ -249,14 +249,14 @@ in out:
 ## Color Badges
 
 \*
-	[[Blue::blue color]]
-	[[Gray::gray color]]
-	[[Red::red color]]
-	[[Green::green color]]
-	[[Yellow::yellow color]]
-	[[Indigo::indigo color]]
-	[[Purple::purple color]]
-	[[Pink::pink color]]
+	[[Blue::blue]]
+	[[Gray::gray]]
+	[[Red::red]]
+	[[Green::green]]
+	[[Yellow::yellow]]
+	[[Indigo::indigo]]
+	[[Purple::purple]]
+	[[Pink::pink]]
 \* 
 
 in out:

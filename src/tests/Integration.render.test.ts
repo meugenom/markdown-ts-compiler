@@ -256,14 +256,14 @@ _underdash_
 ## Color Underline decoration
 
 \\\\*
-    [[Blue:blue]] color
-    [[Gray:gray]] color
-    [[Red:red]] color
-    [[Green:green]] color
-    [[Yellow:yellow]] color
-    [[Indigo:indigo]] color 
-    [[Purple:purple]] color
-    [[Pink:pink]] color
+    [[Blue:blue]]
+    [[Gray:gray]]
+    [[Red:red]]
+    [[Green:green]]
+    [[Yellow:yellow]]
+    [[Indigo:indigo]]
+    [[Purple:purple]]
+    [[Pink:pink]]
 \\\\*
 
 in out:
@@ -273,14 +273,14 @@ in out:
 ## Color Badges
 
 \\\\*
-    [[Blue::blue color]]
-    [[Gray::gray color]]
-    [[Red::red color]]
-    [[Green::green color]]
-    [[Yellow::yellow color]]
-    [[Indigo::indigo color]]
-    [[Purple::purple color]]
-    [[Pink::pink color]]
+    [[Blue::blue]]
+    [[Gray::gray]]
+    [[Red::red]]
+    [[Green::green]]
+    [[Yellow::yellow]]
+    [[Indigo::indigo]]
+    [[Purple::purple]]
+    [[Pink::pink]]
 \\\\* 
 
 in out:
@@ -329,7 +329,7 @@ This is an
 
         // 5. Check tables and cells
         expect(normalized).toContain('<table');
-        expect(normalized).toContain('Dresden </strong>');
+        expect(normalized).toContain('<strong class="md-strong">Dresden</strong>');
 
         // 6. Check color modificators badges and colortexts
         expect(normalized).toContain('md-color-text-green'); 
