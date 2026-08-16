@@ -1,5 +1,88 @@
+/* old version */
+/*
 .md-paragraph { @apply block leading-7 font-mono mt-4; }
 .md-link { @apply font-mono text-blue-500 hover:text-blue-300 underline; }
 .md-strong { @apply font-mono font-bold; }
 .md-underline { @apply underline decoration-sky-500 md:decoration-solid decoration-3; }
 .md-unmarkable { @apply font-mono italic text-base opacity-50; }
+*/
+
+/* src/static/styles/components/landing.css */
+
+/* --- 1. Fließtext & Basis-Elemente --- */
+.md-paragraph { 
+  @apply block font-sans text-base leading-relaxed text-slate-800 dark:text-slate-200 mt-4 mb-2; 
+}
+
+.md-link { 
+  @apply font-sans font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 underline underline-offset-4 decoration-indigo-300 dark:decoration-indigo-600 hover:decoration-indigo-500 transition-colors duration-150; 
+}
+
+.md-strong { 
+  @apply font-sans font-semibold text-slate-900 dark:text-white; 
+}
+
+.md-underline { 
+  @apply underline decoration-sky-500 decoration-2 underline-offset-4; 
+}
+
+.md-unmarkable { 
+  @apply font-mono text-xs italic text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/60 p-3 rounded-lg border border-slate-200 dark:border-slate-700/60 my-3 block opacity-90; 
+}
+
+/* --- 2. Überschriften (Typography Hierarchy) --- */
+.md-heading { 
+  @apply font-sans font-bold tracking-tight text-slate-900 dark:text-slate-100 mt-8 mb-3 pt-2; 
+}
+
+.md-h1 { @apply text-3xl sm:text-4xl border-b border-slate-200 dark:border-slate-800 pb-2; }
+.md-h2 { @apply text-2xl sm:text-3xl border-b border-slate-100 dark:border-slate-800/60 pb-1.5; }
+.md-h3 { @apply text-xl sm:text-2xl font-semibold; }
+.md-h4 { @apply text-lg sm:text-xl font-semibold; }
+.md-h5 { @apply text-base font-semibold text-slate-700 dark:text-slate-300; }
+.md-h6 { @apply text-sm font-semibold text-slate-600 dark:text-slate-400 uppercase tracking-wider; }
+
+/* --- 3. Zitate (Blockquotes) --- */
+.md-quote-p { 
+  @apply font-sans italic text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/40 border-l-4 border-indigo-500 py-2.5 px-4 rounded-r-lg my-4 leading-relaxed; 
+}
+
+/* --- 4. Listen (Lists & Task Lists) --- */
+.md-list-outer { @apply my-4; }
+.md-list-title { @apply font-sans font-semibold text-slate-900 dark:text-slate-100 mb-2 text-base; }
+.md-list-ul { @apply space-y-1.5 ml-2; }
+
+.md-list-item-disc { 
+  @apply list-disc ml-5 font-sans text-base leading-relaxed text-slate-800 dark:text-slate-200; 
+}
+
+.md-list-item-task,
+.md-list-item-task-checked { 
+  @apply list-none ml-1 flex items-start gap-2.5 font-sans text-base leading-relaxed text-slate-800 dark:text-slate-200 my-1; 
+}
+
+/* --- 5. Tabellen (Tables) --- */
+.md-table { 
+  @apply w-full font-sans text-sm border-collapse rounded-lg overflow-hidden my-6 border border-slate-200 dark:border-slate-800 shadow-xs; 
+}
+
+.md-table-th { 
+  @apply border-b border-slate-200 dark:border-slate-700 bg-slate-100/80 dark:bg-slate-800 px-4 py-3 text-left font-semibold text-slate-900 dark:text-slate-100; 
+}
+
+.md-table-td { 
+  @apply border-b border-slate-100 dark:border-slate-800 px-4 py-2.5 text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-900/40; 
+}
+
+/* --- 6. Inline Code --- */
+.md-inline-code { 
+  @apply font-mono text-[0.875em] py-0.5 px-1.5 bg-slate-100 dark:bg-slate-800 text-pink-600 dark:text-pink-400 font-medium rounded border border-slate-200/80 dark:border-slate-700/80; 
+}
+
+/* --- 7. Bilder (Images) --- */
+.md-image-outer { @apply my-6; }
+.md-image-figure { @apply flex flex-col items-center; }
+.md-image { @apply rounded-xl shadow-md max-w-full h-auto border border-slate-200 dark:border-slate-800; }
+.md-image-caption { @apply mt-2.5 text-xs font-sans text-slate-500 dark:text-slate-400 text-center italic; }
+
+
